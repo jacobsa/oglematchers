@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package ogletest
+
 // Matchers use a tri-state logic in order to make the semantics of matchers
 // that wrap other matchers make more sense. The constants below represent the
 // three values that a matcher may return.
@@ -64,10 +66,10 @@ type Matcher interface {
 	//     Expected: is a string with substring "taco"
 	//     Actual:   17, which is not a string
 	//
-	func Matches(val interface{}) (result MatchResult, error string)
+	Matches(val interface{}) (result MatchResult, error string)
 
 	// Description returns a string describing the property that values matching
 	// this matcher have, as a verb phrase where the subject is the value. For
 	// example, "is greather than 17" or "is a string with substring "taco"".
-	func Description() string
+	Description() string
 }
