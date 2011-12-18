@@ -2,7 +2,7 @@ include $(GOROOT)/src/Make.inc
 
 TARG=mypackage
 GOFILES=\
-	equality_matchers.go \
+	equals.go \
 	matcher.go \
 
 include $(GOROOT)/src/Make.pkg
