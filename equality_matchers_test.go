@@ -228,3 +228,66 @@ func TestPositiveInt8(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+////////////////////////////////////////////////////////////
+// int16
+////////////////////////////////////////////////////////////
+
+func TestNegativeInt16(t *testing.T) {
+	matcher := Equals(int16(-32766))
+	desc := matcher.Description()
+	expectedDesc := "-32766"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of -32766.
+		testCase{-32766, MATCH_TRUE, ""},
+		testCase{-32766.0, MATCH_TRUE, ""},
+		testCase{-32766 + 0i, MATCH_TRUE, ""},
+		testCase{int(-32766), MATCH_TRUE, ""},
+		testCase{int16(-32766), MATCH_TRUE, ""},
+		testCase{int32(-32766), MATCH_TRUE, ""},
+		testCase{int64(-32766), MATCH_TRUE, ""},
+		testCase{float32(-32766), MATCH_TRUE, ""},
+		testCase{float64(-32766), MATCH_TRUE, ""},
+		testCase{complex64(-32766), MATCH_TRUE, ""},
+		testCase{complex128(-32766), MATCH_TRUE, ""},
+		testCase{interface{}(int(-32766)), MATCH_TRUE, ""},
+
+		// Values that would be -32766 in two's complement.
+		testCase{uint((1 << 32) - 32766), MATCH_FALSE, ""},
+		testCase{uint16((1 << 16) - 32766), MATCH_FALSE, ""},
+		testCase{uint32((1 << 32) - 32766), MATCH_FALSE, ""},
+		testCase{uint64((1 << 64) - 32766), MATCH_FALSE, ""},
+
+		// Non-equal values of signed integer type.
+		testCase{int(-16), MATCH_FALSE, ""},
+		testCase{int8(-16), MATCH_FALSE, ""},
+		testCase{int16(-16), MATCH_FALSE, ""},
+		testCase{int32(-16), MATCH_FALSE, ""},
+		testCase{int64(-16), MATCH_FALSE, ""},
+
+		// Non-equal values of other numeric types.
+		testCase{float32(-32766.1), MATCH_FALSE, ""},
+		testCase{float32(-32765.9), MATCH_FALSE, ""},
+		testCase{complex64(-32766.1), MATCH_FALSE, ""},
+		testCase{complex64(-32766 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr((1 << 32) - 32766), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{-32766}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{-32766}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"-32766", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
