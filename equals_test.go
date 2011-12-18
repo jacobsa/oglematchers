@@ -2080,3 +2080,46 @@ func TestComplex64AboveExactIntegerRange(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+func TestComplex64WithNonZeroImaginaryPart(t *testing.T) {
+	const kRealPart = 17
+	const kImagPart = 0.25i
+	const kExpected = kRealPart + kImagPart
+	matcher := Equals(complex64(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "17 + 0.25i"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of the expected value.
+		testCase{kExpected, MATCH_TRUE, ""},
+		testCase{kRealPart + kImagPart, MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{int(kRealPart), MATCH_FALSE, ""},
+		testCase{int8(kRealPart), MATCH_FALSE, ""},
+		testCase{int16(kRealPart), MATCH_FALSE, ""},
+		testCase{int32(kRealPart), MATCH_FALSE, ""},
+		testCase{int64(kRealPart), MATCH_FALSE, ""},
+		testCase{uint(kRealPart), MATCH_FALSE, ""},
+		testCase{uint8(kRealPart), MATCH_FALSE, ""},
+		testCase{uint16(kRealPart), MATCH_FALSE, ""},
+		testCase{uint32(kRealPart), MATCH_FALSE, ""},
+		testCase{uint64(kRealPart), MATCH_FALSE, ""},
+		testCase{float32(kRealPart), MATCH_FALSE, ""},
+		testCase{float64(kRealPart), MATCH_FALSE, ""},
+		testCase{complex64(kRealPart), MATCH_FALSE, ""},
+		testCase{complex64(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
+		testCase{complex64(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
+		testCase{complex128(kRealPart), MATCH_FALSE, ""},
+		testCase{complex128(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
+		testCase{complex128(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
