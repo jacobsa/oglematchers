@@ -49,12 +49,13 @@ func isUnsignedInteger(v reflect.Value) bool {
 }
 
 func isFloat(v reflect.Value) bool {
-	switch v.Kind() {
-	case reflect.Float32, reflect.Float64:
-		return true
-	}
+	k := v.Kind()
+	return k == reflect.Float32 || k == reflect.Float64
+}
 
-	return false
+func isComplex(v reflect.Value) bool {
+	k := v.Kind()
+	return k == reflect.Complex64 || k == reflect.Complex128
 }
 
 func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
@@ -73,6 +74,11 @@ func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
 
 	case isFloat(v):
 		if (float64(e) == v.Float()) {
+			res = MATCH_TRUE
+		}
+
+	case isComplex(v):
+		if (complex(float64(e), 0) == v.Complex()) {
 			res = MATCH_TRUE
 		}
 
