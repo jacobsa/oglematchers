@@ -89,7 +89,7 @@ func TestNegativeInt8 (t *testing.T) {
 		testCase{ complex64(-16), MATCH_FALSE, "" },
 		testCase{ complex64(-17 + 2i), MATCH_FALSE, "" },
 
-		// Other types.
+		// Non-numeric types.
 		testCase{ uintptr((1 << 32) - 17), MATCH_UNDEFINED, "which is not numeric" },
 		testCase{ true, MATCH_UNDEFINED, "which is not numeric" },
 		testCase{ [...]int { -17 }, MATCH_UNDEFINED, "which is not numeric" },
