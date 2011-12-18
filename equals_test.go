@@ -22,7 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): array
 // TODO(jacobsa): chan
 // TODO(jacobsa): func
 // TODO(jacobsa): interface
@@ -3517,4 +3516,27 @@ func TestComplex128WithNonZeroImaginaryPart(t *testing.T) {
 	}
 
 	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
+// array
+////////////////////////////////////////////////////////////
+
+func TestArray(t *testing.T) {
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	var someArray [3]int
+	Equals(someArray)
 }
