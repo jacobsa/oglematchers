@@ -1164,3 +1164,122 @@ func TestZeroFloat32(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+func TestPositiveIntegralFloat32(t *testing.T) {
+	matcher := Equals(float32(32769))
+	desc := matcher.Description()
+	expectedDesc := "32769.0"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of 32769.
+		testCase{32769.0, MATCH_TRUE, ""},
+		testCase{32769 + 0i, MATCH_TRUE, ""},
+		testCase{int(32769), MATCH_TRUE, ""},
+		testCase{int32(32769), MATCH_TRUE, ""},
+		testCase{int64(32769), MATCH_TRUE, ""},
+		testCase{uint(32769), MATCH_TRUE, ""},
+		testCase{uint32(32769), MATCH_TRUE, ""},
+		testCase{uint64(32769), MATCH_TRUE, ""},
+		testCase{float32(32769), MATCH_TRUE, ""},
+		testCase{float64(32769), MATCH_TRUE, ""},
+		testCase{complex64(32769), MATCH_TRUE, ""},
+		testCase{complex128(32769), MATCH_TRUE, ""},
+		testCase{interface{}(float32(32769)), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{int64(32770), MATCH_FALSE, ""},
+		testCase{uint64(32770), MATCH_FALSE, ""},
+		testCase{float32(32769.1), MATCH_FALSE, ""},
+		testCase{float32(32768.9), MATCH_FALSE, ""},
+		testCase{float64(32769.1), MATCH_FALSE, ""},
+		testCase{float64(32768.9), MATCH_FALSE, ""},
+		testCase{complex128(32768), MATCH_FALSE, ""},
+		testCase{complex128(32769 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestPositiveNonIntegralFloat32(t *testing.T) {
+	matcher := Equals(float32(32769.1))
+	desc := matcher.Description()
+	expectedDesc := "32769.1"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of 32769.1.
+		testCase{32769.1, MATCH_TRUE, ""},
+		testCase{32769.1 + 0i, MATCH_TRUE, ""},
+		testCase{float32(32769.1), MATCH_TRUE, ""},
+		testCase{float64(32769.1), MATCH_TRUE, ""},
+		testCase{complex64(32769.1), MATCH_TRUE, ""},
+		testCase{complex128(32769.1), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{int32(32769), MATCH_FALSE, ""},
+		testCase{int32(32770), MATCH_FALSE, ""},
+		testCase{uint64(32769), MATCH_FALSE, ""},
+		testCase{uint64(32770), MATCH_FALSE, ""},
+		testCase{float32(32769.2), MATCH_FALSE, ""},
+		testCase{float32(32769.0), MATCH_FALSE, ""},
+		testCase{float64(32769.2), MATCH_FALSE, ""},
+		testCase{complex128(32769.1 + 2i), MATCH_FALSE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestLargePositiveFloat32(t *testing.T) {
+	const kExpected = 1 << 65
+	matcher := Equals(float32(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	floatExpected := float32(kExpected)
+	castedInt := uint64(floatExpected)
+
+	cases := []testCase{
+		// Equal values of numeric type.
+		testCase{kExpected + 0i, MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
+		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{castedInt, MATCH_FALSE, ""},
+		testCase{int64(0), MATCH_FALSE, ""},
+		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		testCase{uint64(0), MATCH_FALSE, ""},
+		testCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
+		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
