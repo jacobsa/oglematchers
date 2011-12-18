@@ -67,7 +67,7 @@ type Matcher interface {
 	//     Expected: is a string with substring "taco"
 	//     Actual:   17, which is not a string
 	//
-	Matches(val interface{}) (result MatchResult, error string)
+	Matches(candidate interface{}) (result MatchResult, error string)
 
 	// Description returns a string describing the property that values matching
 	// this matcher have, as a verb phrase where the subject is the value. For

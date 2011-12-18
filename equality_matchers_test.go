@@ -72,6 +72,13 @@ func TestNegativeInt8 (t *testing.T) {
 		testCase{ uint32((1 << 32) - 17), MATCH_FALSE, "" },
 		testCase{ uint64((1 << 64) - 17), MATCH_FALSE, "" },
 
+		// Non-equal values of signed integer type.
+		testCase{ int(-16), MATCH_FALSE, "" },
+		testCase{ int8(-16), MATCH_FALSE, "" },
+		testCase{ int16(-16), MATCH_FALSE, "" },
+		testCase{ int32(-16), MATCH_FALSE, "" },
+		testCase{ int64(-16), MATCH_FALSE, "" },
+
 		// Other types.
 		testCase{ uintptr((1 << 32) - 17), MATCH_UNDEFINED, "which is not numeric" },
 		testCase{ true, MATCH_UNDEFINED, "which is not numeric" },

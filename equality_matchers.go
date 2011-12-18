@@ -15,6 +15,10 @@
 
 package ogletest
 
+import (
+	"reflect"
+)
+
 // Equals returns a matcher that matches any value v such that v == x, with the
 // exception that if x is a numeric type, Equals(x) will match equivalent
 // numeric values of any type.
@@ -26,7 +30,19 @@ type equalsMatcher struct {
 	expected interface{}
 }
 
-func (m *equalsMatcher) Matches(val interface{}) (result MatchResult, err string) {
+func checkAgainstInt(expected int64, candidateValue reflect.Value) (MatchResult, string) {
+	return MATCH_UNDEFINED, "TODO"
+}
+
+func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
+	expectedValue := reflect.ValueOf(m.expected)
+	candidateValue := reflect.ValueOf(candidate)
+
+	switch expectedValue.Kind() {
+	case reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64:
+		return checkAgainstInt(expectedValue.Int(), candidateValue)
+	}
+
 	return MATCH_UNDEFINED, "TODO"
 }
 
