@@ -68,7 +68,7 @@ func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
 		}
 
 	case isUnsignedInteger(v):
-		if (uint64(e) == v.Uint()) {
+		if (e >= 0 && uint64(e) == v.Uint()) {
 			res = MATCH_TRUE
 		}
 
