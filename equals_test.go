@@ -24,7 +24,6 @@ var someInt int = -17
 
 // TODO(jacobsa): uint
 // TODO(jacobsa): uint8
-// TODO(jacobsa): uint16
 // TODO(jacobsa): uintptr
 // TODO(jacobsa): array
 // TODO(jacobsa): chan
@@ -1212,6 +1211,118 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 }
 
 ////////////////////////////////////////////////////////////
+// uint16
+////////////////////////////////////////////////////////////
+
+func TestSmallUint16(t *testing.T) {
+	const kExpected = 17
+	matcher := Equals(uint16(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "17"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of the expected value.
+		testCase{17, MATCH_TRUE, ""},
+		testCase{17.0, MATCH_TRUE, ""},
+		testCase{17 + 0i, MATCH_TRUE, ""},
+		testCase{int(kExpected), MATCH_TRUE, ""},
+		testCase{int8(kExpected), MATCH_TRUE, ""},
+		testCase{int16(kExpected), MATCH_TRUE, ""},
+		testCase{int32(kExpected), MATCH_TRUE, ""},
+		testCase{int64(kExpected), MATCH_TRUE, ""},
+		testCase{uint(kExpected), MATCH_TRUE, ""},
+		testCase{uint8(kExpected), MATCH_TRUE, ""},
+		testCase{uint16(kExpected), MATCH_TRUE, ""},
+		testCase{uint32(kExpected), MATCH_TRUE, ""},
+		testCase{uint64(kExpected), MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
+		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric types.
+		testCase{kExpected + 1, MATCH_FALSE, ""},
+		testCase{int(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int8(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int16(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint8(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint16(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{float32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{float64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{complex64(kExpected + 2i), MATCH_TRUE, ""},
+		testCase{complex64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 2i), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 1), MATCH_TRUE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestLargeUint16(t *testing.T) {
+	const kExpected = (1 << 8) + 17
+	matcher := Equals(uint16(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "273"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of the expected value.
+		testCase{273, MATCH_TRUE, ""},
+		testCase{273.0, MATCH_TRUE, ""},
+		testCase{273 + 0i, MATCH_TRUE, ""},
+		testCase{int16(kExpected), MATCH_TRUE, ""},
+		testCase{int32(kExpected), MATCH_TRUE, ""},
+		testCase{int64(kExpected), MATCH_TRUE, ""},
+		testCase{uint16(kExpected), MATCH_TRUE, ""},
+		testCase{uint32(kExpected), MATCH_TRUE, ""},
+		testCase{uint64(kExpected), MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
+		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric types.
+		testCase{int8(17), MATCH_TRUE, ""},
+		testCase{int16(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint8(17), MATCH_TRUE, ""},
+		testCase{uint16(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{float64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 2i), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 1), MATCH_TRUE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
 // uint32
 ////////////////////////////////////////////////////////////
 
@@ -1305,11 +1416,9 @@ func TestLargeUint32(t *testing.T) {
 		testCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{int(17), MATCH_TRUE, ""},
 		testCase{int16(17), MATCH_TRUE, ""},
 		testCase{int32(kExpected + 1), MATCH_TRUE, ""},
 		testCase{int64(kExpected + 1), MATCH_TRUE, ""},
-		testCase{uint(17), MATCH_TRUE, ""},
 		testCase{uint16(17), MATCH_TRUE, ""},
 		testCase{uint32(kExpected + 1), MATCH_TRUE, ""},
 		testCase{uint64(kExpected + 1), MATCH_TRUE, ""},
