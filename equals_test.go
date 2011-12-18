@@ -23,6 +23,10 @@ import (
 var someInt int = -17
 
 // TODO(jacobsa): uint
+// TODO(jacobsa): uint8
+// TODO(jacobsa): uint16
+// TODO(jacobsa): uint32
+// TODO(jacobsa): uint64
 // TODO(jacobsa): uintptr
 // TODO(jacobsa): array
 // TODO(jacobsa): chan
