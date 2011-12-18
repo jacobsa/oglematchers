@@ -43,6 +43,12 @@ func checkTestCases(t *testing.T, matcher Matcher, cases []testCase) {
 
 func TestNegativeInt8 (t *testing.T) {
 	matcher := Equals(int8(-17))
+	desc := matcher.Description()
+	expectedDesc := "-17"
+
+	if (desc != expectedDesc) {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
 
 	cases := []testCase {
 		// Various types of -17.
