@@ -64,22 +64,22 @@ func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
 
 	switch {
 	case isSignedInteger(v):
-		if (e == v.Int()) {
+		if e == v.Int() {
 			res = MATCH_TRUE
 		}
 
 	case isUnsignedInteger(v):
-		if (e >= 0 && uint64(e) == v.Uint()) {
+		if e >= 0 && uint64(e) == v.Uint() {
 			res = MATCH_TRUE
 		}
 
 	case isFloat(v):
-		if (float64(e) == v.Float()) {
+		if float64(e) == v.Float() {
 			res = MATCH_TRUE
 		}
 
 	case isComplex(v):
-		if (complex(float64(e), 0) == v.Complex()) {
+		if complex(float64(e), 0) == v.Complex() {
 			res = MATCH_TRUE
 		}
 
