@@ -991,3 +991,60 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+////////////////////////////////////////////////////////////
+// float32
+////////////////////////////////////////////////////////////
+
+func TestNegativeIntegralFloat32(t *testing.T) {
+	matcher := Equals(float32(-32769))
+	desc := matcher.Description()
+	expectedDesc := "-32769.0"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of -32769.
+		testCase{-32769.0, MATCH_TRUE, ""},
+		testCase{-32769 + 0i, MATCH_TRUE, ""},
+		testCase{int32(-32769), MATCH_TRUE, ""},
+		testCase{int64(-32769), MATCH_TRUE, ""},
+		testCase{float32(-32769), MATCH_TRUE, ""},
+		testCase{float64(-32769), MATCH_TRUE, ""},
+		testCase{complex64(-32769), MATCH_TRUE, ""},
+		testCase{complex128(-32769), MATCH_TRUE, ""},
+		testCase{interface{}(float32(-32769)), MATCH_TRUE, ""},
+		testCase{interface{}(int64(-32769)), MATCH_TRUE, ""},
+
+		// Values that would be -32769 in two's complement.
+		testCase{uint64((1 << 64) - 32769), MATCH_FALSE, ""},
+
+		// Non-equal values of signed integer type.
+		testCase{int64(-1099511627775), MATCH_FALSE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{int64(-32770), MATCH_FALSE, ""},
+		testCase{float32(-32769.1), MATCH_FALSE, ""},
+		testCase{float32(-32768.9), MATCH_FALSE, ""},
+		testCase{float64(-32769.1), MATCH_FALSE, ""},
+		testCase{float64(-32768.9), MATCH_FALSE, ""},
+		testCase{complex128(-32768), MATCH_FALSE, ""},
+		testCase{complex128(-32769 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
