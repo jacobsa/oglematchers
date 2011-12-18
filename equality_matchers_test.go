@@ -957,7 +957,7 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 	const kTwoTo54 = 1 << 54;
 	matcher := Equals(int64(kTwoTo54 + 1))
 	desc := matcher.Description()
-	expectedDesc := "18014398509482001"
+	expectedDesc := "18014398509481985"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
