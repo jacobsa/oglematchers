@@ -19,4 +19,17 @@ package ogletest
 // exception that if x is a numeric type, Equals(x) will match equivalent
 // numeric values of any type.
 func Equals(x interface{}) Matcher {
+	return &equalsMatcher{x}
+}
+
+type equalsMatcher struct {
+	expected interface{}
+}
+
+func (m *equalsMatcher) Matches(val interface{}) (result MatchResult, err string) {
+	return MATCH_UNDEFINED, "TODO"
+}
+
+func (m *equalsMatcher) Description() string {
+	return "TODO"
 }
