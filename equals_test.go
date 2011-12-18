@@ -1112,3 +1112,55 @@ func TestLargeNegativeFloat32(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+func TestZeroFloat32(t *testing.T) {
+	matcher := Equals(float32(0))
+	desc := matcher.Description()
+	expectedDesc := "0"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of zero.
+		testCase{0.0, MATCH_TRUE, ""},
+		testCase{0 + 0i, MATCH_TRUE, ""},
+		testCase{int(0), MATCH_TRUE, ""},
+		testCase{int8(0), MATCH_TRUE, ""},
+		testCase{int16(0), MATCH_TRUE, ""},
+		testCase{int32(0), MATCH_TRUE, ""},
+		testCase{int64(0), MATCH_TRUE, ""},
+		testCase{uint(0), MATCH_TRUE, ""},
+		testCase{uint8(0), MATCH_TRUE, ""},
+		testCase{uint16(0), MATCH_TRUE, ""},
+		testCase{uint32(0), MATCH_TRUE, ""},
+		testCase{uint64(0), MATCH_TRUE, ""},
+		testCase{float32(0), MATCH_TRUE, ""},
+		testCase{float64(0), MATCH_TRUE, ""},
+		testCase{complex64(0), MATCH_TRUE, ""},
+		testCase{complex128(0), MATCH_TRUE, ""},
+		testCase{interface{}(float32(0)), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{int64(1), MATCH_FALSE, ""},
+		testCase{int64(-1), MATCH_FALSE, ""},
+		testCase{float32(1), MATCH_FALSE, ""},
+		testCase{float32(-1), MATCH_FALSE, ""},
+		testCase{complex128(0 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
