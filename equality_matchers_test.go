@@ -285,6 +285,54 @@ func TestPositiveIntegralFloatingPointLiteral(t *testing.T) {
 	checkTestCases(t, matcher, cases)
 }
 
+func TestNonIntegralFloatingPointLiteral(t *testing.T) {
+	matcher := Equals(17.5)
+	desc := matcher.Description()
+	expectedDesc := "17.5"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of 17.1.
+		testCase{17.1, MATCH_TRUE, ""},
+		testCase{17.1, MATCH_TRUE, ""},
+		testCase{17.1 + 0i, MATCH_TRUE, ""},
+		testCase{float32(17.1), MATCH_TRUE, ""},
+		testCase{float64(17.1), MATCH_TRUE, ""},
+		testCase{complex64(17.1), MATCH_TRUE, ""},
+		testCase{complex128(17.1), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{17, MATCH_FALSE, ""},
+		testCase{17.2, MATCH_FALSE, ""},
+		testCase{18, MATCH_FALSE, ""},
+		testCase{int(17), MATCH_FALSE, ""},
+		testCase{int(18), MATCH_FALSE, ""},
+		testCase{int32(17), MATCH_FALSE, ""},
+		testCase{int64(17), MATCH_FALSE, ""},
+		testCase{uint(17), MATCH_FALSE, ""},
+		testCase{uint32(17), MATCH_FALSE, ""},
+		testCase{uint64(17), MATCH_FALSE, ""},
+		testCase{complex128(17.1 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
 ////////////////////////////////////////////////////////////
 // int8
 ////////////////////////////////////////////////////////////
