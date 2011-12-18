@@ -22,7 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): func
 // TODO(jacobsa): interface
 // TODO(jacobsa): map
 // TODO(jacobsa): ptr
@@ -3641,6 +3640,54 @@ func TestNonNilChan(t *testing.T) {
 		testCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
 		testCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
 		testCase{testCase{}, MATCH_UNDEFINED, "which is not a chan int"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
+// func
+////////////////////////////////////////////////////////////
+
+func TestFunctions(t *testing.T) {
+	func1 := func() {}
+	func2 := func() {}
+	func3 := func(x int) {}
+
+	matcher := Equals(func1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Functions.
+		testCase{func1, MATCH_TRUE, ""},
+		testCase{func2, MATCH_FALSE, ""},
+		testCase{func3, MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a function"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a function"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a function"},
+		testCase{true, MATCH_UNDEFINED, "which is not a function"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a function"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a function"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a function"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a function"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a function"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a function"},
 	}
 
 	checkTestCases(t, matcher, cases)
