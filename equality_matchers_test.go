@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"math"
 	"testing"
 )
 
@@ -1073,6 +1074,40 @@ func TestNegativeNonIntegralFloat32(t *testing.T) {
 		testCase{float32(-32769.0), MATCH_FALSE, ""},
 		testCase{float64(-32769.2), MATCH_FALSE, ""},
 		testCase{complex128(-32769.1 + 2i), MATCH_FALSE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestLargeNegativeFloat32(t *testing.T) {
+	const kExpected = -1 * (1 << 65)
+	matcher := Equals(float32(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	floatExpected := float32(kExpected)
+	castedInt := int64(floatExpected)
+
+	cases := []testCase{
+		// Equal values of numeric type.
+		testCase{kExpected + 0i, MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
+		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{castedInt, MATCH_FALSE, ""},
+		testCase{int64(0), MATCH_FALSE, ""},
+		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
