@@ -914,13 +914,13 @@ func TestInt64NotExactlyRepresentableByFloat32(t *testing.T) {
 
 	cases := []testCase{
 		// Integers.
-		testCase{int64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		testCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		testCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
 		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
@@ -938,13 +938,13 @@ func TestInt64NotExactlyRepresentableByFloat32(t *testing.T) {
 		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 - 1), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_FALSE, ""},
+		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
