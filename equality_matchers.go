@@ -30,23 +30,41 @@ type equalsMatcher struct {
 	expected interface{}
 }
 
+func isSignedInteger(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return true
+	}
+
+	return false
+}
+
+func isUnsignedInteger(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return true
+	}
+
+	return false
+}
+
 func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
 	res = MATCH_FALSE
 
-	switch v.Kind() {
-	default:
-		res = MATCH_UNDEFINED
-		err = "which is not numeric"
-
-	case reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64:
+	switch {
+	case isSignedInteger(v):
 		if (e == v.Int()) {
 			res = MATCH_TRUE
 		}
 
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+	case isUnsignedInteger(v):
 		if (uint64(e) == v.Uint()) {
 			res = MATCH_TRUE
 		}
+
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
 	}
 
 	return
@@ -56,8 +74,8 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 	expectedValue := reflect.ValueOf(m.expected)
 	candidateValue := reflect.ValueOf(candidate)
 
-	switch expectedValue.Kind() {
-	case reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64:
+	switch {
+	case isSignedInteger(expectedValue):
 		return checkAgainstInt(expectedValue.Int(), candidateValue)
 	}
 
