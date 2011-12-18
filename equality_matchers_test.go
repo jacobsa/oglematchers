@@ -918,6 +918,7 @@ func TestInt64NotRepresentableByFloats(t *testing.T) {
 		testCase{float32(9007199254740991), MATCH_TRUE, ""},
 		testCase{float64(9007199254740991), MATCH_TRUE, ""},
 		testCase{complex64(9007199254740991), MATCH_TRUE, ""},
+		testCase{complex128(9007199254740991), MATCH_TRUE, ""},
 
 		// One less.
 		testCase{9007199254740990.0, MATCH_TRUE, ""},
@@ -927,6 +928,7 @@ func TestInt64NotRepresentableByFloats(t *testing.T) {
 		testCase{float32(9007199254740990), MATCH_TRUE, ""},
 		testCase{float64(9007199254740990), MATCH_TRUE, ""},
 		testCase{complex64(9007199254740990), MATCH_TRUE, ""},
+		testCase{complex128(9007199254740990), MATCH_TRUE, ""},
 
 		// One more.
 		testCase{9007199254740992.0, MATCH_FALSE, ""},
@@ -936,6 +938,7 @@ func TestInt64NotRepresentableByFloats(t *testing.T) {
 		testCase{float32(9007199254740992), MATCH_FALSE, ""},
 		testCase{float64(9007199254740992), MATCH_FALSE, ""},
 		testCase{complex64(9007199254740992), MATCH_FALSE, ""},
+		testCase{complex128(9007199254740992), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
