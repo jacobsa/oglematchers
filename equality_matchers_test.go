@@ -910,34 +910,40 @@ func TestInt64NotRepresentableByFloats(t *testing.T) {
 	}
 
 	cases := []testCase{
-		// Same integer.
-		testCase{9007199254740991.0, MATCH_TRUE, ""},
-		testCase{9007199254740991 + 0i, MATCH_TRUE, ""},
-		testCase{int64(9007199254740991), MATCH_TRUE, ""},
-		testCase{uint64(9007199254740991), MATCH_TRUE, ""},
-		testCase{float32(9007199254740991), MATCH_TRUE, ""},
-		testCase{float64(9007199254740991), MATCH_TRUE, ""},
-		testCase{complex64(9007199254740991), MATCH_TRUE, ""},
-		testCase{complex128(9007199254740991), MATCH_TRUE, ""},
-
-		// One less.
-		testCase{9007199254740990.0, MATCH_TRUE, ""},
-		testCase{9007199254740990 + 0i, MATCH_TRUE, ""},
+		// Integers.
 		testCase{int64(9007199254740990), MATCH_FALSE, ""},
 		testCase{uint64(9007199254740990), MATCH_FALSE, ""},
-		testCase{float32(9007199254740990), MATCH_TRUE, ""},
-		testCase{float64(9007199254740990), MATCH_TRUE, ""},
-		testCase{complex64(9007199254740990), MATCH_TRUE, ""},
-		testCase{complex128(9007199254740990), MATCH_TRUE, ""},
 
-		// One more.
-		testCase{9007199254740992.0, MATCH_FALSE, ""},
-		testCase{9007199254740992 + 0i, MATCH_FALSE, ""},
+		testCase{int64(9007199254740991), MATCH_TRUE, ""},
+		testCase{uint64(9007199254740991), MATCH_TRUE, ""},
+
 		testCase{int64(9007199254740992), MATCH_FALSE, ""},
 		testCase{uint64(9007199254740992), MATCH_FALSE, ""},
+
+		// Single-precision floating point.
+		testCase{9007199254740990.0, MATCH_TRUE, ""},
+		testCase{9007199254740990 + 0i, MATCH_TRUE, ""},
+		testCase{float32(9007199254740990), MATCH_TRUE, ""},
+		testCase{complex64(9007199254740990), MATCH_TRUE, ""},
+
+		testCase{9007199254740991.0, MATCH_TRUE, ""},
+		testCase{9007199254740991 + 0i, MATCH_TRUE, ""},
+		testCase{float32(9007199254740991), MATCH_TRUE, ""},
+		testCase{complex64(9007199254740991), MATCH_TRUE, ""},
+
+		testCase{9007199254740992.0, MATCH_FALSE, ""},
+		testCase{9007199254740992 + 0i, MATCH_FALSE, ""},
 		testCase{float32(9007199254740992), MATCH_FALSE, ""},
-		testCase{float64(9007199254740992), MATCH_FALSE, ""},
 		testCase{complex64(9007199254740992), MATCH_FALSE, ""},
+
+		// Double-precision floating point.
+		testCase{float64(9007199254740990), MATCH_TRUE, ""},
+		testCase{complex128(9007199254740990), MATCH_TRUE, ""},
+
+		testCase{float64(9007199254740991), MATCH_TRUE, ""},
+		testCase{complex128(9007199254740991), MATCH_TRUE, ""},
+
+		testCase{float64(9007199254740992), MATCH_FALSE, ""},
 		testCase{complex128(9007199254740992), MATCH_FALSE, ""},
 	}
 
