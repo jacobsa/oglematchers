@@ -22,7 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): uintptr
 // TODO(jacobsa): array
 // TODO(jacobsa): chan
 // TODO(jacobsa): func
@@ -1915,7 +1914,7 @@ func TestNilUintptr(t *testing.T) {
 
 	matcher := Equals(ptr1)
 	desc := matcher.Description()
-	expectedDesc := "false"
+	expectedDesc := "TODO"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -1927,6 +1926,48 @@ func TestNilUintptr(t *testing.T) {
 		testCase{ptr2, MATCH_TRUE, ""},
 		testCase{uintptr(0), MATCH_TRUE, ""},
 		testCase{uintptr(17), MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{true, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a uintptr"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a uintptr"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestNonNilUintptr(t *testing.T) {
+	matcher := Equals(uintptr(17))
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// uintptrs
+		testCase{uintptr(17), MATCH_TRUE, ""},
+		testCase{uintptr(16), MATCH_FALSE, ""},
+		testCase{uintptr(0), MATCH_FALSE, ""},
 
 		// Other types.
 		testCase{0, MATCH_UNDEFINED, "which is not a uintptr"},
