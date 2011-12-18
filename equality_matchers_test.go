@@ -32,7 +32,12 @@ func checkTestCases(t *testing.T, matcher Matcher, cases []testCase) {
 		result, err := matcher.Matches(c.candidate)
 
 		if result != c.expectedResult {
-			t.Errorf("Case %d: expected %v, got %v", i, c.expectedResult, result)
+			t.Errorf(
+				"Case %d (candidate %v): expected %v, got %v",
+				i,
+				c.candidate,
+				c.expectedResult,
+				result)
 		}
 
 		if err != c.expectedError {
