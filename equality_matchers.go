@@ -30,8 +30,26 @@ type equalsMatcher struct {
 	expected interface{}
 }
 
-func checkAgainstInt(e int64, v reflect.Value) (MatchResult, string) {
-	return MATCH_UNDEFINED, "TODO"
+func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
+	res = MATCH_FALSE
+
+	switch v.Kind() {
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
+
+	case reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64:
+		if (e == v.Int()) {
+			res = MATCH_TRUE
+		}
+
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		if (uint64(e) == v.Uint()) {
+			res = MATCH_TRUE
+		}
+	}
+
+	return
 }
 
 func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
