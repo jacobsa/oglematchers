@@ -919,7 +919,7 @@ func TestInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
-	const kTwoTo25 = 1 << 25;
+	const kTwoTo25 = 1 << 25
 	matcher := Equals(int64(kTwoTo25 + 1))
 	desc := matcher.Description()
 	expectedDesc := "33554433"
@@ -970,7 +970,7 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
-	const kTwoTo54 = 1 << 54;
+	const kTwoTo54 = 1 << 54
 	matcher := Equals(int64(kTwoTo54 + 1))
 	desc := matcher.Description()
 	expectedDesc := "18014398509481985"
@@ -1303,7 +1303,7 @@ func TestFloat32AboveExactIntegerRange(t *testing.T) {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
-	const kTwoTo25 = 1 << 25;
+	const kTwoTo25 = 1 << 25
 	matcher := Equals(float32(kTwoTo25 + 1))
 	desc := matcher.Description()
 	expectedDesc := "33554432.0"
@@ -1654,7 +1654,7 @@ func TestFloat64AboveExactIntegerRange(t *testing.T) {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
-	const kTwoTo54 = 1 << 54;
+	const kTwoTo54 = 1 << 54
 	matcher := Equals(float64(kTwoTo54 + 1))
 	desc := matcher.Description()
 	expectedDesc := "18014398509481984.0"
@@ -2020,7 +2020,7 @@ func TestComplex64AboveExactIntegerRange(t *testing.T) {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
-	const kTwoTo25 = 1 << 25;
+	const kTwoTo25 = 1 << 25
 	matcher := Equals(complex64(kTwoTo25 + 1))
 	desc := matcher.Description()
 	expectedDesc := "33554433"
@@ -2444,7 +2444,7 @@ func TestComplex128AboveExactIntegerRange(t *testing.T) {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
-	const kTwoTo54 = 1 << 54;
+	const kTwoTo54 = 1 << 54
 	matcher := Equals(complex128(kTwoTo54 + 1))
 	desc := matcher.Description()
 	expectedDesc := "18014398509481984.0"
