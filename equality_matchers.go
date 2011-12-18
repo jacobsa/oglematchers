@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"fmt"
 	"reflect"
 )
 
@@ -103,5 +104,5 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 }
 
 func (m *equalsMatcher) Description() string {
-	return "TODO"
+	return fmt.Sprintf("%v", m.expected)
 }
