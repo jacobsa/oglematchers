@@ -899,11 +899,14 @@ func TestPositiveInt64(t *testing.T) {
 	checkTestCases(t, matcher, cases)
 }
 
-func TestInt64NotRepresentableByFloats(t *testing.T) {
-	// 2^53 + 1
-	matcher := Equals(int64(9007199254740991))
+func TestInt64NotExactlyRepresentableByFloat32(t *testing.T) {
+	// Single-precision floats don't have enough bits to represent the integers
+	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
+	// and should be treated as equivalent when floats are in the mix.
+	const kTwoTo25 = 1 << 25;
+	matcher := Equals(int64(kTwoTo25 + 1))
 	desc := matcher.Description()
-	expectedDesc := "9007199254740991"
+	expectedDesc := "33554433"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -911,40 +914,37 @@ func TestInt64NotRepresentableByFloats(t *testing.T) {
 
 	cases := []testCase{
 		// Integers.
-		testCase{int64(9007199254740990), MATCH_FALSE, ""},
-		testCase{uint64(9007199254740990), MATCH_FALSE, ""},
+		testCase{int64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		testCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
 
-		testCase{int64(9007199254740991), MATCH_TRUE, ""},
-		testCase{uint64(9007199254740991), MATCH_TRUE, ""},
-
-		testCase{int64(9007199254740992), MATCH_FALSE, ""},
-		testCase{uint64(9007199254740992), MATCH_FALSE, ""},
+		testCase{uint64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		testCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{9007199254740990.0, MATCH_TRUE, ""},
-		testCase{9007199254740990 + 0i, MATCH_TRUE, ""},
-		testCase{float32(9007199254740990), MATCH_TRUE, ""},
-		testCase{complex64(9007199254740990), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{9007199254740991.0, MATCH_TRUE, ""},
-		testCase{9007199254740991 + 0i, MATCH_TRUE, ""},
-		testCase{float32(9007199254740991), MATCH_TRUE, ""},
-		testCase{complex64(9007199254740991), MATCH_TRUE, ""},
-
-		testCase{9007199254740992.0, MATCH_FALSE, ""},
-		testCase{9007199254740992 + 0i, MATCH_FALSE, ""},
-		testCase{float32(9007199254740992), MATCH_FALSE, ""},
-		testCase{complex64(9007199254740992), MATCH_FALSE, ""},
+		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(9007199254740990), MATCH_TRUE, ""},
-		testCase{complex128(9007199254740990), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		testCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
 
-		testCase{float64(9007199254740991), MATCH_TRUE, ""},
-		testCase{complex128(9007199254740991), MATCH_TRUE, ""},
-
-		testCase{float64(9007199254740992), MATCH_FALSE, ""},
-		testCase{complex128(9007199254740992), MATCH_FALSE, ""},
+		testCase{complex128(kTwoTo25 - 1), MATCH_FALSE, ""},
+		testCase{complex128(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo25 + 1), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
