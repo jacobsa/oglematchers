@@ -30,7 +30,7 @@ type equalsMatcher struct {
 	expected interface{}
 }
 
-func checkAgainstInt(expected int64, candidateValue reflect.Value) (MatchResult, string) {
+func checkAgainstInt(e int64, v reflect.Value) (MatchResult, string) {
 	return MATCH_UNDEFINED, "TODO"
 }
 
