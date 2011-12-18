@@ -25,7 +25,7 @@ const (
 	// MATCH_FALSE indicates that the supplied value didn't match. For example,
 	// IsNil would return this when presented with any non-nil value, and
 	// GreaterThan(17) would return this when presented with 16.
-	MATCH_FALSE MatchResult= 0
+	MATCH_FALSE MatchResult = 0
 
 	// MATCH_TRUE indicates that the supplied value did match. For example, IsNil
 	// would return this when presented with nil, and GreaterThan(17) would
@@ -53,11 +53,12 @@ type Matcher interface {
 	// Matches returns a MatchResult indicating whether the supplied value
 	// belongs to the set defined by the matcher.
 	//
-	// If the result is MATCH_FALSE or MATCH_UNDEFINED, it additionally returns
-	// an error string describing why the value doesn't match. Error strings are
-	// relative clauses that are suitable for being placed after the value. For
-	// example, a predicate that matches strings with a particular substring may,
-	// when presented with a numerical value, return the following string:
+	// If the result is MATCH_FALSE or MATCH_UNDEFINED, it may additionally
+	// return an error string describing why the value doesn't match. Error
+	// strings are relative clauses that are suitable for being placed after the
+	// value. For example, a predicate that matches strings with a particular
+	// substring may, when presented with a numerical value, return the following
+	// string:
 	//
 	//     "which is not a string"
 	//
