@@ -164,6 +164,67 @@ func TestPositiveIntegerLiteral(t *testing.T) {
 }
 
 ////////////////////////////////////////////////////////////
+// Floating point literals
+////////////////////////////////////////////////////////////
+
+func TestNegativeIntegralFloatingPointLiteral(t *testing.T) {
+	// -2^30
+	matcher := Equals(-1073741824.0)
+	desc := matcher.Description()
+	expectedDesc := "-1073741824.0"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of -1073741824.
+		testCase{-1073741824, MATCH_TRUE, ""},
+		testCase{-1073741824.0, MATCH_TRUE, ""},
+		testCase{-1073741824 + 0i, MATCH_TRUE, ""},
+		testCase{int(-1073741824), MATCH_TRUE, ""},
+		testCase{int32(-1073741824), MATCH_TRUE, ""},
+		testCase{int64(-1073741824), MATCH_TRUE, ""},
+		testCase{float32(-1073741824), MATCH_TRUE, ""},
+		testCase{float64(-1073741824), MATCH_TRUE, ""},
+		testCase{complex64(-1073741824), MATCH_TRUE, ""},
+		testCase{complex128(-1073741824), MATCH_TRUE, ""},
+		testCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
+		testCase{interface{}(float64(-1073741824)), MATCH_TRUE, ""},
+
+		// Values that would be -1073741824 in two's complement.
+		testCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		testCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		testCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
+
+		// Non-equal values of signed integer type.
+		testCase{int(-1073741823), MATCH_FALSE, ""},
+		testCase{int32(-1073741823), MATCH_FALSE, ""},
+		testCase{int64(-1073741823), MATCH_FALSE, ""},
+
+		// Non-equal values of other numeric types.
+		testCase{float64(-1073741824.1), MATCH_FALSE, ""},
+		testCase{float64(-1073741823.9), MATCH_FALSE, ""},
+		testCase{complex128(-1073741823), MATCH_FALSE, ""},
+		testCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
 // int8
 ////////////////////////////////////////////////////////////
 
