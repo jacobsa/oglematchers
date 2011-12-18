@@ -899,7 +899,7 @@ func TestPositiveInt64(t *testing.T) {
 	checkTestCases(t, matcher, cases)
 }
 
-func TestInt64NotExactlyRepresentableByFloat32(t *testing.T) {
+func TestInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -923,19 +923,19 @@ func TestInt64NotExactlyRepresentableByFloat32(t *testing.T) {
 		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
-
 		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
 		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
 		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
 		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
 		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
 		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+
+		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
 		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
@@ -945,6 +945,48 @@ func TestInt64NotExactlyRepresentableByFloat32(t *testing.T) {
 		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
 		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
 		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
+	// Single-precision floats don't have enough bits to represent the integers
+	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
+	// and should be treated as equivalent when floats are in the mix.
+	const kTwoTo54 = 1 << 54;
+	matcher := Equals(int64(kTwoTo54 + 1))
+	desc := matcher.Description()
+	expectedDesc := "18014398509482001"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Integers.
+		testCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		testCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		testCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+
+		testCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		testCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		testCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+
+		// Double-precision floating point.
+		testCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		testCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+
+		testCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
+		testCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
