@@ -22,7 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): uint
 // TODO(jacobsa): uintptr
 // TODO(jacobsa): array
 // TODO(jacobsa): chan
@@ -1204,6 +1203,165 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		testCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
 		testCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
 		testCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
+// uint
+////////////////////////////////////////////////////////////
+
+func TestSmallUint(t *testing.T) {
+	const kExpected = 17
+	matcher := Equals(uint(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "17"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of the expected value.
+		testCase{17, MATCH_TRUE, ""},
+		testCase{17.0, MATCH_TRUE, ""},
+		testCase{17 + 0i, MATCH_TRUE, ""},
+		testCase{int(kExpected), MATCH_TRUE, ""},
+		testCase{int8(kExpected), MATCH_TRUE, ""},
+		testCase{int16(kExpected), MATCH_TRUE, ""},
+		testCase{int32(kExpected), MATCH_TRUE, ""},
+		testCase{int64(kExpected), MATCH_TRUE, ""},
+		testCase{uint(kExpected), MATCH_TRUE, ""},
+		testCase{uint8(kExpected), MATCH_TRUE, ""},
+		testCase{uint16(kExpected), MATCH_TRUE, ""},
+		testCase{uint32(kExpected), MATCH_TRUE, ""},
+		testCase{uint64(kExpected), MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
+		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric types.
+		testCase{kExpected + 1, MATCH_FALSE, ""},
+		testCase{int(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int8(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int16(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint8(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint16(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{float32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{float64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{complex64(kExpected + 2i), MATCH_TRUE, ""},
+		testCase{complex64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 2i), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 1), MATCH_TRUE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestLargeUint(t *testing.T) {
+	const kExpected = (1 << 16) + 17
+	matcher := Equals(uint(kExpected))
+	desc := matcher.Description()
+	expectedDesc := "65553"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of the expected value.
+		testCase{65553, MATCH_TRUE, ""},
+		testCase{65553.0, MATCH_TRUE, ""},
+		testCase{65553 + 0i, MATCH_TRUE, ""},
+		testCase{int32(kExpected), MATCH_TRUE, ""},
+		testCase{int64(kExpected), MATCH_TRUE, ""},
+		testCase{uint32(kExpected), MATCH_TRUE, ""},
+		testCase{uint64(kExpected), MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
+		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
+		testCase{complex128(kExpected), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric types.
+		testCase{int16(17), MATCH_TRUE, ""},
+		testCase{int32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{int64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint16(17), MATCH_TRUE, ""},
+		testCase{uint32(kExpected + 1), MATCH_TRUE, ""},
+		testCase{uint64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{float64(kExpected + 1), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 2i), MATCH_TRUE, ""},
+		testCase{complex128(kExpected + 1), MATCH_TRUE, ""},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestUintNotExactlyRepresentableBySinglePrecision(t *testing.T) {
+	// Single-precision floats don't have enough bits to represent the integers
+	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
+	// and should be treated as equivalent when floats are in the mix.
+	const kTwoTo25 = 1 << 25
+	matcher := Equals(uint(kTwoTo25 + 1))
+	desc := matcher.Description()
+	expectedDesc := "33554433"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Integers.
+		testCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+
+		testCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+
+		// Single-precision floating point.
+		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+
+		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+
+		// Double-precision floating point.
+		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+
+		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
+		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
