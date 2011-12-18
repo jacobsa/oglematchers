@@ -1,6 +1,6 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=mypackage
+TARG=github.com/jacobsa/ogletest
 GOFILES=\
 	equals.go \
 	matcher.go \
