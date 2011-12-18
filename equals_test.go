@@ -22,7 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): bool
 // TODO(jacobsa): int
 // TODO(jacobsa): uint
 // TODO(jacobsa): uintptr
@@ -382,6 +381,49 @@ func TestFalse(t *testing.T) {
 		testCase{uint32(0), MATCH_UNDEFINED, "which is not a bool"},
 		testCase{uint64(0), MATCH_UNDEFINED, "which is not a bool"},
 		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{true, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a bool"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a bool"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestTrue(t *testing.T) {
+	matcher := Equals(true)
+	desc := matcher.Description()
+	expectedDesc := "true"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// bools
+		testCase{true, MATCH_TRUE, ""},
+		testCase{bool(true), MATCH_TRUE, ""},
+
+		testCase{false, MATCH_FALSE, ""},
+		testCase{bool(false), MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{int(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int8(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int16(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int32(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int64(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint8(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint16(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint32(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint64(1), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uintptr(1), MATCH_UNDEFINED, "which is not a bool"},
 		testCase{true, MATCH_UNDEFINED, "which is not a bool"},
 		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
 		testCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
