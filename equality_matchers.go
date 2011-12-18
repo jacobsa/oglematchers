@@ -48,6 +48,15 @@ func isUnsignedInteger(v reflect.Value) bool {
 	return false
 }
 
+func isFloat(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Float32, reflect.Float64:
+		return true
+	}
+
+	return false
+}
+
 func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
 	res = MATCH_FALSE
 
@@ -59,6 +68,11 @@ func checkAgainstInt(e int64, v reflect.Value) (res MatchResult, err string) {
 
 	case isUnsignedInteger(v):
 		if (uint64(e) == v.Uint()) {
+			res = MATCH_TRUE
+		}
+
+	case isFloat(v):
+		if (float64(e) == v.Float()) {
 			res = MATCH_TRUE
 		}
 
