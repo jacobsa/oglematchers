@@ -350,6 +350,53 @@ func TestNonIntegralFloatingPointLiteral(t *testing.T) {
 }
 
 ////////////////////////////////////////////////////////////
+// bool
+////////////////////////////////////////////////////////////
+
+func TestFalse(t *testing.T) {
+	matcher := Equals(false)
+	desc := matcher.Description()
+	expectedDesc := "false"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// bools
+		testCase{false, MATCH_TRUE, ""},
+		testCase{bool(false), MATCH_TRUE, ""},
+
+		testCase{true, MATCH_FALSE, ""},
+		testCase{bool(true), MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{int(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{true, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a bool"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a bool"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
 // int8
 ////////////////////////////////////////////////////////////
 
