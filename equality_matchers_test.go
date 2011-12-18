@@ -798,3 +798,103 @@ func TestPositiveInt32(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+////////////////////////////////////////////////////////////
+// int64
+////////////////////////////////////////////////////////////
+
+func TestNegativeInt64(t *testing.T) {
+	// -2^40
+	matcher := Equals(int64(-1099511627776))
+	desc := matcher.Description()
+	expectedDesc := "-1099511627776"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of -1099511627776.
+		testCase{-1099511627776.0, MATCH_TRUE, ""},
+		testCase{-1099511627776 + 0i, MATCH_TRUE, ""},
+		testCase{int64(-1099511627776), MATCH_TRUE, ""},
+		testCase{float32(-1099511627776), MATCH_TRUE, ""},
+		testCase{float64(-1099511627776), MATCH_TRUE, ""},
+		testCase{complex64(-1099511627776), MATCH_TRUE, ""},
+		testCase{complex128(-1099511627776), MATCH_TRUE, ""},
+		testCase{interface{}(int64(-1099511627776)), MATCH_TRUE, ""},
+
+		// Values that would be -1099511627776 in two's complement.
+		testCase{uint64((1 << 64) - 1099511627776), MATCH_FALSE, ""},
+
+		// Non-equal values of signed integer type.
+		testCase{int64(-1099511627775), MATCH_FALSE, ""},
+
+		// Non-equal values of other numeric types.
+		testCase{float64(-1099511627776.1), MATCH_FALSE, ""},
+		testCase{float64(-1099511627775.9), MATCH_FALSE, ""},
+		testCase{complex128(-1099511627775), MATCH_FALSE, ""},
+		testCase{complex128(-1099511627776 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestPositiveInt64(t *testing.T) {
+	// 2^30
+	matcher := Equals(int64(1099511627776))
+	desc := matcher.Description()
+	expectedDesc := "1099511627776"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Various types of 1099511627776.
+		testCase{1099511627776.0, MATCH_TRUE, ""},
+		testCase{1099511627776 + 0i, MATCH_TRUE, ""},
+		testCase{int64(1099511627776), MATCH_TRUE, ""},
+		testCase{uint64(1099511627776), MATCH_TRUE, ""},
+		testCase{float32(1099511627776), MATCH_TRUE, ""},
+		testCase{float64(1099511627776), MATCH_TRUE, ""},
+		testCase{complex64(1099511627776), MATCH_TRUE, ""},
+		testCase{complex128(1099511627776), MATCH_TRUE, ""},
+		testCase{interface{}(int64(1099511627776)), MATCH_TRUE, ""},
+		testCase{interface{}(uint64(1099511627776)), MATCH_TRUE, ""},
+
+		// Non-equal values of numeric type.
+		testCase{int64(1099511627775), MATCH_FALSE, ""},
+		testCase{uint64(1099511627775), MATCH_FALSE, ""},
+		testCase{float64(1099511627776.1), MATCH_FALSE, ""},
+		testCase{float64(1099511627775.9), MATCH_FALSE, ""},
+		testCase{complex128(1099511627775), MATCH_FALSE, ""},
+		testCase{complex128(1099511627776 + 2i), MATCH_FALSE, ""},
+
+		// Non-numeric types.
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
