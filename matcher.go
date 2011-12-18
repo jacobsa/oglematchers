@@ -15,19 +15,22 @@
 
 package ogletest
 
+// A MatchResult is an integer equal to one of the MATCH_* constants below.
 // Matchers use a tri-state logic in order to make the semantics of matchers
 // that wrap other matchers make more sense. The constants below represent the
 // three values that a matcher may return.
+type MatchResult int
+
 const (
 	// MATCH_FALSE indicates that the supplied value didn't match. For example,
 	// IsNil would return this when presented with any non-nil value, and
 	// GreaterThan(17) would return this when presented with 16.
-	MATCH_FALSE = 0
+	MATCH_FALSE MatchResult= 0
 
 	// MATCH_TRUE indicates that the supplied value did match. For example, IsNil
 	// would return this when presented with nil, and GreaterThan(17) would
 	// return this when presented with 19.
-	MATCH_TRUE = 1
+	MATCH_TRUE MatchResult = 1
 
 	// MATCH_UNDEFINED indicates that the matcher doesn't process values of the
 	// supplied type, or otherwise doesn't know how to handle the value. This is
@@ -39,11 +42,8 @@ const (
 	// correct, but is surprising and may mask failures where the wrong sort of
 	// matcher is accidentally used. Instead, GreaterThan(17) can return
 	// MATCH_UNDEFINED, which will be propagated by Not().
-	MATCH_UNDEFINED = -1
+	MATCH_UNDEFINED MatchResult = -1
 )
-
-// A MatchResult is an integer equal to one of the MATCH_* constants above.
-type MatchResult int
 
 // A Matcher is some predicate implicitly defining a set of values that it
 // matches. For example, GreaterThan(17) matches all numeric values greater
