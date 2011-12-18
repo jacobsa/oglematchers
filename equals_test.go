@@ -22,7 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): chan
 // TODO(jacobsa): func
 // TODO(jacobsa): interface
 // TODO(jacobsa): map
@@ -3539,4 +3538,110 @@ func TestArray(t *testing.T) {
 
 	var someArray [3]int
 	Equals(someArray)
+}
+
+////////////////////////////////////////////////////////////
+// chan
+////////////////////////////////////////////////////////////
+
+func TestNilChan(t *testing.T) {
+	var nilChan1 chan int
+	var nilChan2 chan int
+	var nilChan3 chan uint
+	var nonNilChan1 chan int = make(chan int)
+	var nonNilChan2 chan uint = make(chan uint)
+
+	matcher := Equals(nilChan1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// int channels
+		testCase{nilChan1, MATCH_TRUE, ""},
+		testCase{nilChan2, MATCH_TRUE, ""},
+		testCase{nonNilChan1, MATCH_FALSE, ""},
+
+		// uint channels
+		testCase{nilChan3, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{nonNilChan2, MATCH_UNDEFINED, "which is not a chan int"},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{true, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a chan int"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestNonNilChan(t *testing.T) {
+	var nilChan1 chan int
+	var nilChan2 chan uint
+	var nonNilChan1 chan int = make(chan int)
+	var nonNilChan2 chan int = make(chan int)
+	var nonNilChan3 chan uint = make(chan uint)
+
+	matcher := Equals(nonNilChan1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// int channels
+		testCase{nonNilChan1, MATCH_TRUE, ""},
+		testCase{nonNilChan2, MATCH_TRUE, ""},
+		testCase{nilChan1, MATCH_FALSE, ""},
+
+		// uint channels
+		testCase{nilChan2, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{nonNilChan3, MATCH_UNDEFINED, "which is not a chan int"},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{true, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a chan int"},
+	}
+
+	checkTestCases(t, matcher, cases)
 }
