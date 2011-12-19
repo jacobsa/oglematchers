@@ -84,6 +84,26 @@ func TestOneTrue(t *testing.T) {
 }
 
 func TestOneEqual(t *testing.T) {
+	matcher := AnyOf(
+		&fakeAnyOfMatcher{"", MATCH_UNDEFINED, "foo"},
+		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		13,
+		"taco",
+		19,
+		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+	)
+
+	res, err := matcher.Matches("taco")
+	expectedRes := MATCH_TRUE
+	expectedErr := ""
+
+	if res != expectedRes {
+		t.Errorf("Expected %v, got %v", expectedRes, res)
+	}
+
+	if err != expectedErr {
+		t.Errorf("Expected %v, got %v", expectedErr, err)
+	}
 }
 
 func TestOneUndefined(t *testing.T) {
