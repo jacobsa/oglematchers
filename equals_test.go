@@ -23,7 +23,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): struct
 // TODO(jacobsa): unsafe pointer
 
 ////////////////////////////////////////////////////////////
@@ -4027,4 +4026,27 @@ func TestString(t *testing.T) {
 	}
 
 	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
+// struct
+////////////////////////////////////////////////////////////
+
+func TestStruct(t *testing.T) {
+	type someStruct struct { foo uint }
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	Equals(someStruct{17})
 }
