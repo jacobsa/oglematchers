@@ -71,25 +71,25 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 		return
 
 	case (isInteger(v1) || isFloat(v1)) && v2.Kind() == reflect.Float64:
-		if getFloat(v1)) < v2.Float() {
+		if getFloat(v1) < v2.Float() {
 			res = MATCH_TRUE
 		}
 		return
 
 	case v1.Kind() == reflect.Float32 && isNumeric(v2):
-		if float32(getFloat(v1))) < float32(getFloat(v2)) {
+		if float32(getFloat(v1)) < float32(getFloat(v2)) {
 			res = MATCH_TRUE
 		}
 		return
 
 	case v1.Kind() == reflect.Float64 && isNumeric(v2):
-		if getFloat(v1)) < getFloat(v2) {
+		if getFloat(v1) < getFloat(v2) {
 			res = MATCH_TRUE
 		}
 		return
 
 	case v1.Kind() == reflect.String && v2.Kind() == reflect.String:
-		if v1.String() < v2.String()
+		if v1.String() < v2.String() {
 			res = MATCH_TRUE
 		}
 		return
