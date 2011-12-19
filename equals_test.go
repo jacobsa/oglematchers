@@ -3109,7 +3109,7 @@ func TestNegativeIntegralComplex128(t *testing.T) {
 	const kExpected = -32769
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "-32769"
+	expectedDesc := "(-32769+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3165,7 +3165,7 @@ func TestNegativeNonIntegralComplex128(t *testing.T) {
 
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "-1048576.25"
+	expectedDesc := "(-1.04857625e+06+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3203,7 +3203,7 @@ func TestLargeNegativeComplex128(t *testing.T) {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "(-3.6893488147419103e+19+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3237,7 +3237,7 @@ func TestLargeNegativeComplex128(t *testing.T) {
 func TestZeroComplex128(t *testing.T) {
 	matcher := Equals(complex128(0))
 	desc := matcher.Description()
-	expectedDesc := "0"
+	expectedDesc := "(0+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3293,7 +3293,7 @@ func TestPositiveIntegralComplex128(t *testing.T) {
 	const kExpected = 1 << 20
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "1048576"
+	expectedDesc := "(1.048576e+06+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3350,7 +3350,7 @@ func TestPositiveNonIntegralComplex128(t *testing.T) {
 	const kExpected = kTwoTo20 + 0.25
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "1048576.25"
+	expectedDesc := "(1.04857625e+06+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3387,7 +3387,7 @@ func TestLargePositiveComplex128(t *testing.T) {
 	const kExpected = 1 << 65
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "(3.6893488147419103e+19+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3426,7 +3426,7 @@ func TestComplex128AboveExactIntegerRange(t *testing.T) {
 	const kTwoTo54 = 1 << 54
 	matcher := Equals(complex128(kTwoTo54 + 1))
 	desc := matcher.Description()
-	expectedDesc := "18014398509481984.0"
+	expectedDesc := "(1.8014398509481984e+16+0i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3473,7 +3473,7 @@ func TestComplex128WithNonZeroImaginaryPart(t *testing.T) {
 	const kExpected = kRealPart + kImagPart
 	matcher := Equals(complex128(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "17 + 0.25i"
+	expectedDesc := "(17+0.25i)"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
