@@ -16,13 +16,13 @@
 package ogletest
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
 
 var someInt int = -17
 
-// TODO(jacobsa): string
 // TODO(jacobsa): struct
 // TODO(jacobsa): unsafe pointer
 
@@ -3977,4 +3977,53 @@ func TestNoNilSlice(t *testing.T) {
 
 	nonNil := make([]int, 0)
 	Equals(nonNil)
+}
+
+////////////////////////////////////////////////////////////
+// string
+////////////////////////////////////////////////////////////
+
+func TestString(t *testing.T) {
+	partial := "taco"
+	expected := fmt.Sprintf("%s%d", partial, 1)
+
+	matcher := Equals(expected)
+	desc := matcher.Description()
+	expectedDesc := "\"taco1\""
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{"taco1", MATCH_TRUE, ""},
+		testCase{expected, MATCH_TRUE, ""},
+
+		testCase{"", MATCH_FALSE, ""},
+		testCase{"taco", MATCH_FALSE, ""},
+		testCase{"taco1\x00", MATCH_FALSE, ""},
+		testCase{"taco2", MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a string"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a string"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a string"},
+		testCase{true, MATCH_UNDEFINED, "which is not a string"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a string"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a string"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a string"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a string"},
+	}
+
+	checkTestCases(t, matcher, cases)
 }
