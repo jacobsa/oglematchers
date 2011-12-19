@@ -126,6 +126,10 @@ func TestLtStringBadTypes(t *testing.T) {
 	checkLtTestCases(t, matcher, cases)
 }
 
+////////////////////////////////////////////////////////////
+// Integer literals
+////////////////////////////////////////////////////////////
+
 func TestLtNegativeIntegerLiteral(t *testing.T) {
 	matcher := LessThan(-150)
 	desc := matcher.Description()
@@ -207,6 +211,95 @@ func TestLtNegativeIntegerLiteral(t *testing.T) {
 		ltTestCase{float64(-150.1), MATCH_TRUE, ""},
 		ltTestCase{float64(-150), MATCH_FALSE, ""},
 		ltTestCase{float64(-149.9), MATCH_FALSE, ""},
+		ltTestCase{float64(0), MATCH_FALSE, ""},
+		ltTestCase{float64(17), MATCH_FALSE, ""},
+		ltTestCase{float64(160), MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
+func TestLtZeroIntegerLiteral(t *testing.T) {
+	matcher := LessThan(0)
+	desc := matcher.Description()
+	expectedDesc := "less than 0"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		// Signed integers.
+		ltTestCase{-(1 << 30), MATCH_TRUE, ""},
+		ltTestCase{-1, MATCH_TRUE, ""},
+		ltTestCase{0, MATCH_FALSE, ""},
+		ltTestCase{1, MATCH_FALSE, ""},
+		ltTestCase{17, MATCH_FALSE, ""},
+		ltTestCase{(1 << 30), MATCH_FALSE, ""},
+
+		ltTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{int(-1), MATCH_TRUE, ""},
+		ltTestCase{int(0), MATCH_FALSE, ""},
+		ltTestCase{int(1), MATCH_FALSE, ""},
+		ltTestCase{int(17), MATCH_FALSE, ""},
+
+		ltTestCase{int8(-1), MATCH_TRUE, ""},
+		ltTestCase{int8(0), MATCH_FALSE, ""},
+		ltTestCase{int8(1), MATCH_FALSE, ""},
+
+		ltTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		ltTestCase{int16(-1), MATCH_TRUE, ""},
+		ltTestCase{int16(0), MATCH_FALSE, ""},
+		ltTestCase{int16(1), MATCH_FALSE, ""},
+		ltTestCase{int16(17), MATCH_FALSE, ""},
+
+		ltTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{int32(-1), MATCH_TRUE, ""},
+		ltTestCase{int32(0), MATCH_FALSE, ""},
+		ltTestCase{int32(1), MATCH_FALSE, ""},
+		ltTestCase{int32(17), MATCH_FALSE, ""},
+
+		ltTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{int64(-1), MATCH_TRUE, ""},
+		ltTestCase{int64(0), MATCH_FALSE, ""},
+		ltTestCase{int64(1), MATCH_FALSE, ""},
+		ltTestCase{int64(17), MATCH_FALSE, ""},
+
+		// Unsigned integers.
+		ltTestCase{uint((1 << 32) - 1), MATCH_FALSE, ""},
+		ltTestCase{uint(0), MATCH_FALSE, ""},
+		ltTestCase{uint(17), MATCH_FALSE, ""},
+
+		ltTestCase{uint8(0), MATCH_FALSE, ""},
+		ltTestCase{uint8(17), MATCH_FALSE, ""},
+		ltTestCase{uint8(253), MATCH_FALSE, ""},
+
+		ltTestCase{uint16((1 << 16) - 1), MATCH_FALSE, ""},
+		ltTestCase{uint16(0), MATCH_FALSE, ""},
+		ltTestCase{uint16(17), MATCH_FALSE, ""},
+
+		ltTestCase{uint32((1 << 32) - 1), MATCH_FALSE, ""},
+		ltTestCase{uint32(0), MATCH_FALSE, ""},
+		ltTestCase{uint32(17), MATCH_FALSE, ""},
+
+		ltTestCase{uint64((1 << 64) - 1), MATCH_FALSE, ""},
+		ltTestCase{uint64(0), MATCH_FALSE, ""},
+		ltTestCase{uint64(17), MATCH_FALSE, ""},
+
+		// Floating point.
+		ltTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{float32(-1), MATCH_TRUE, ""},
+		ltTestCase{float32(-0.1), MATCH_TRUE, ""},
+		ltTestCase{float32(-0.0), MATCH_FALSE, ""},
+		ltTestCase{float32(0), MATCH_FALSE, ""},
+		ltTestCase{float32(0.1), MATCH_FALSE, ""},
+		ltTestCase{float32(17), MATCH_FALSE, ""},
+		ltTestCase{float32(160), MATCH_FALSE, ""},
+
+		ltTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{float64(-1), MATCH_TRUE, ""},
+		ltTestCase{float64(-0.1), MATCH_TRUE, ""},
+		ltTestCase{float64(-0), MATCH_FALSE, ""},
 		ltTestCase{float64(0), MATCH_FALSE, ""},
 		ltTestCase{float64(17), MATCH_FALSE, ""},
 		ltTestCase{float64(160), MATCH_FALSE, ""},
