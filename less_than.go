@@ -48,7 +48,7 @@ type lessThanMatcher struct {
 }
 
 func (m *lessThanMatcher) Description() string {
-	return fmt.Sprintf("less than %v", m.limit)
+	return fmt.Sprintf("less than %v", m.limit.Interface())
 }
 
 func compareIntegers(v1, v2 reflect.Value) (res MatchResult, err string) {
