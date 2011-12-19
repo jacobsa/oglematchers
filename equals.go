@@ -129,6 +129,17 @@ func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err s
 ////////////////////////////////////////////////////////////
 
 func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
+	e := reflect.ValueOf(m.expected)
+	c := reflect.ValueOf(candidate)
+
+	switch e.Kind() {
+	case reflect.Float32:
+		return checkAgainstFloat32(float32(e.Float()), c)
+
+	case reflect.Complex64:
+		return checkAgainstComplex64(complex64(e.Complex()), c)
+	}
+
 	return MATCH_UNDEFINED, "TODO"
 }
 
