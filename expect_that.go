@@ -49,7 +49,7 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 			panic(fmt.Sprintf("ExpectThat: invalid format string type %v", v.Kind()))
 		}
 
-		userError = fmt.Sprintf(v.String(), errorParts[1:])
+		userError = fmt.Sprintf(v.String(), errorParts[1:]...)
 	}
 
 	// Grab the current test state.
