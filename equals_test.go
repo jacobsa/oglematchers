@@ -2410,17 +2410,17 @@ func TestNegativeNonIntegralFloat64(t *testing.T) {
 		// Various types of the expected value.
 		testCase{kExpected, MATCH_TRUE, ""},
 		testCase{kExpected + 0i, MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
 		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
 		testCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
 		testCase{int64(-kTwoTo50), MATCH_FALSE, ""},
 		testCase{int64(-kTwoTo50 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected), MATCH_FALSE, ""},
 		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
 		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
 		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex64(kExpected), MATCH_FALSE, ""},
 		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
@@ -2576,17 +2576,16 @@ func TestPositiveNonIntegralFloat64(t *testing.T) {
 		// Various types of the expected value.
 		testCase{kExpected, MATCH_TRUE, ""},
 		testCase{kExpected + 0i, MATCH_TRUE, ""},
+		testCase{float32(kExpected), MATCH_TRUE, ""},
 		testCase{float64(kExpected), MATCH_TRUE, ""},
+		testCase{complex64(kExpected), MATCH_TRUE, ""},
 		testCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
 		testCase{int64(kTwoTo50), MATCH_FALSE, ""},
 		testCase{int64(kTwoTo50 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
 		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
 		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex64(kExpected), MATCH_FALSE, ""},
 		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
