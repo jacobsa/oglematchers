@@ -19,11 +19,10 @@ import (
 	"fmt"
 	"math"
 	"testing"
+	"unsafe"
 )
 
 var someInt int = -17
-
-// TODO(jacobsa): unsafe pointer
 
 ////////////////////////////////////////////////////////////
 // Helpers
@@ -4049,4 +4048,107 @@ func TestStruct(t *testing.T) {
 	}()
 
 	Equals(someStruct{17})
+}
+
+////////////////////////////////////////////////////////////
+// unsafe.Pointer
+////////////////////////////////////////////////////////////
+
+func TestNilUnsafePointer(t *testing.T) {
+	someInt := int(17)
+
+	var nilPtr1 unsafe.Pointer
+	var nilPtr2 unsafe.Pointer
+	var nonNilPtr unsafe.Pointer = unsafe.Pointer(&someInt)
+
+	matcher := Equals(nilPtr1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{nilPtr1, MATCH_TRUE, ""},
+		testCase{nilPtr2, MATCH_TRUE, ""},
+		testCase{nonNilPtr, MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{true, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestNonNilUnsafePointer(t *testing.T) {
+	someInt := int(17)
+	someOtherInt := int(17)
+
+	var nilPtr unsafe.Pointer
+	var nonNilPtr1 unsafe.Pointer = unsafe.Pointer(&someInt)
+	var nonNilPtr2 unsafe.Pointer = unsafe.Pointer(&someOtherInt)
+
+	matcher := Equals(nonNilPtr1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{nonNilPtr1, MATCH_TRUE, ""},
+		testCase{nonNilPtr2, MATCH_FALSE, ""},
+		testCase{nilPtr, MATCH_FALSE, ""},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{true, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{make(chan int), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+	}
+
+	checkTestCases(t, matcher, cases)
 }
