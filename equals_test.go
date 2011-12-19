@@ -3669,7 +3669,7 @@ func TestFunctions(t *testing.T) {
 
 	matcher := Equals(func1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := fmt.Sprintf("%v", func1)
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
