@@ -279,6 +279,20 @@ func checkAgainstBool(e bool, c reflect.Value) (res MatchResult, err string) {
 	return
 }
 
+func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err string) {
+	if c.Kind() != reflect.Uintptr {
+		res = MATCH_UNDEFINED
+		err = "which is not a uintptr"
+		return
+	}
+
+	res = MATCH_FALSE
+	if uintptr(c.Uint()) == e {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 ////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
@@ -297,6 +311,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case isUnsignedInteger(e):
 		return checkAgainstUint64(e.Uint(), c)
+
+	case ek == reflect.Uintptr:
+		return checkAgainstUintptr(uintptr(e.Uint()), c)
 
 	case ek == reflect.Float32:
 		return checkAgainstFloat32(float32(e.Float()), c)

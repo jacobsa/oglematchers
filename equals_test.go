@@ -1903,7 +1903,7 @@ func TestNilUintptr(t *testing.T) {
 
 	matcher := Equals(ptr1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "0"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -1946,7 +1946,7 @@ func TestNilUintptr(t *testing.T) {
 func TestNonNilUintptr(t *testing.T) {
 	matcher := Equals(uintptr(17))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "17"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
