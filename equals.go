@@ -293,6 +293,20 @@ func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err strin
 	return
 }
 
+func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+	if c.Kind() != reflect.Chan {
+		res = MATCH_UNDEFINED
+		err = "which is not a TODO"
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.Pointer() == e.Pointer() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 ////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
@@ -326,6 +340,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case ek == reflect.Complex128:
 		return checkAgainstComplex128(complex128(e.Complex()), c)
+
+	case ek == reflect.Chan:
+		return checkAgainstChan(e, c)
 	}
 
 	return MATCH_UNDEFINED, "TODO"
