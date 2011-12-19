@@ -609,3 +609,22 @@ func TestLtEmptyString(t *testing.T) {
 
 	checkLtTestCases(t, matcher, cases)
 }
+
+func TestLtSingleNullByte(t *testing.T) {
+	matcher := LessThan("\x00")
+	desc := matcher.Description()
+	expectedDesc := "less than \"\\x00\""
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		ltTestCase{"", MATCH_TRUE, ""},
+		ltTestCase{"\x00", MATCH_FALSE, ""},
+		ltTestCase{"a", MATCH_FALSE, ""},
+		ltTestCase{"foo", MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
