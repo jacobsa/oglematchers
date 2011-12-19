@@ -24,7 +24,7 @@ import (
 ////////////////////////////////////////////////////////////
 
 type fakeMatcher struct {
-	matchFunc func(interface{}) (MatchResult, string)
+	matchFunc   func(interface{}) (MatchResult, string)
 	description string
 }
 
@@ -116,4 +116,3 @@ func TestDescription(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expected, desc)
 	}
 }
-

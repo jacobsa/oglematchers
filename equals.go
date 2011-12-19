@@ -190,7 +190,7 @@ func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err strin
 	case ck == reflect.Float32 || ck == reflect.Complex64:
 		return Equals(c.Interface()).Matches(e)
 
-  // Otherwise, compare with double precision.
+		// Otherwise, compare with double precision.
 	case isFloat(c):
 		if c.Float() == e {
 			res = MATCH_TRUE
@@ -311,8 +311,8 @@ func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err st
 
 	// Make sure c is a chan of the correct type.
 	if c.Kind() != reflect.Chan ||
-	   c.Type().ChanDir() != e.Type().ChanDir() ||
-		 c.Type().Elem() != e.Type().Elem() {
+		c.Type().ChanDir() != e.Type().ChanDir() ||
+		c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
 		err = fmt.Sprintf("which is not a %s", typeStr)
 		return
@@ -361,7 +361,7 @@ func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err str
 
 	// Make sure c is a pointer of the correct type.
 	if c.Kind() != reflect.Ptr ||
-		 c.Type().Elem() != e.Type().Elem() {
+		c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
 		err = fmt.Sprintf("which is not a %s", typeStr)
 		return
@@ -380,7 +380,7 @@ func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err s
 
 	// Make sure c is a slice of the correct type.
 	if c.Kind() != reflect.Slice ||
-		 c.Type().Elem() != e.Type().Elem() {
+		c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
 		err = fmt.Sprintf("which is not a %s", typeStr)
 		return
