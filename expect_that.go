@@ -63,7 +63,7 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 	}
 
 	record.GeneratedError =
-		fmt.Sprintf("Expected: %s, Actual:   %v%s", m.Description(), x, relativeClause)
+		fmt.Sprintf("Expected: %s\nActual:   %v%s", m.Description(), x, relativeClause)
 
 	// Record the failure.
 	state.FailureRecords = append(state.FailureRecords, record)
