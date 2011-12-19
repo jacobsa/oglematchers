@@ -904,6 +904,60 @@ func TestLtUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 	checkLtTestCases(t, matcher, cases)
 }
 
+func TestLtFloat32AboveExactIntegerRange(t *testing.T) {
+	// Single-precision floats don't have enough bits to represent the integers
+	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
+	// and should be treated as equivalent when floats are in the mix.
+	const kTwoTo25 = 1 << 25
+	matcher := LessThan(float32(kTwoTo25 + 1))
+
+	desc := matcher.Description()
+	expectedDesc := "less than 3.3554432e+07"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		// Signed integers.
+		ltTestCase{int64(-1), MATCH_TRUE, ""},
+		ltTestCase{int64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		ltTestCase{int64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
+
+		// Unsigned integers.
+		ltTestCase{uint64(0), MATCH_TRUE, ""},
+		ltTestCase{uint64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		ltTestCase{uint64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
+
+		// Floating point.
+		ltTestCase{float32(-1), MATCH_TRUE, ""},
+		ltTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		ltTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
+		ltTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
+		ltTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		ltTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		ltTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+
+		ltTestCase{float64(-1), MATCH_TRUE, ""},
+		ltTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		ltTestCase{float64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
 ////////////////////////////////////////////////////////////
 // String literals
 ////////////////////////////////////////////////////////////
