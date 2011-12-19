@@ -174,7 +174,7 @@ func TestNegativeIntegralFloatingPointLiteral(t *testing.T) {
 	// -2^30
 	matcher := Equals(-1073741824.0)
 	desc := matcher.Description()
-	expectedDesc := "-1073741824.0"
+	expectedDesc := "-1.073741824e+09"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -231,7 +231,7 @@ func TestPositiveIntegralFloatingPointLiteral(t *testing.T) {
 	// 2^30
 	matcher := Equals(1073741824.0)
 	desc := matcher.Description()
-	expectedDesc := "1073741824.0"
+	expectedDesc := "1.073741824e+09"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
