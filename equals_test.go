@@ -1994,7 +1994,7 @@ func TestNonNilUintptr(t *testing.T) {
 func TestNegativeIntegralFloat32(t *testing.T) {
 	matcher := Equals(float32(-32769))
 	desc := matcher.Description()
-	expectedDesc := "-32769.0"
+	expectedDesc := "-32769"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)

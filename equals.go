@@ -74,7 +74,9 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 		}
 
 	case isFloat(c):
-		if c.Float() == float64(e) {
+		// Compare using float32 to avoid a false sense of precision; otherwise
+		// e.g. Equals(float32(0.1)) won't match float32(0.1).
+		if float32(c.Float()) == e {
 			res = MATCH_TRUE
 		}
 
