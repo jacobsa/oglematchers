@@ -2349,7 +2349,7 @@ func TestNegativeIntegralFloat64(t *testing.T) {
 	const kExpected = -(1 << 50)
 	matcher := Equals(float64(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "-1125899906842620"
+	expectedDesc := "-1.125899906842624e+15"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2400,7 +2400,7 @@ func TestNegativeNonIntegralFloat64(t *testing.T) {
 
 	matcher := Equals(float64(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "-1125899906842620.25"
+	expectedDesc := "-1.1258999068426242e+15"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2431,7 +2431,7 @@ func TestLargeNegativeFloat64(t *testing.T) {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(float64(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "-3.6893488147419103e+19"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2517,7 +2517,7 @@ func TestPositiveIntegralFloat64(t *testing.T) {
 	const kExpected = 1 << 50
 	matcher := Equals(float64(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "1125899906842620"
+	expectedDesc := "1.125899906842624e+15"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2566,7 +2566,7 @@ func TestPositiveNonIntegralFloat64(t *testing.T) {
 	const kExpected = kTwoTo50 + 0.25
 	matcher := Equals(float64(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "1125899906842620.25"
+	expectedDesc := "1.1258999068426242e+15"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2597,7 +2597,7 @@ func TestLargePositiveFloat64(t *testing.T) {
 	const kExpected = 1 << 65
 	matcher := Equals(float64(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "3.6893488147419103e+19"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2636,7 +2636,7 @@ func TestFloat64AboveExactIntegerRange(t *testing.T) {
 	const kTwoTo54 = 1 << 54
 	matcher := Equals(float64(kTwoTo54 + 1))
 	desc := matcher.Description()
-	expectedDesc := "18014398509481984.0"
+	expectedDesc := "1.8014398509481984e+16"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
