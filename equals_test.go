@@ -2077,7 +2077,7 @@ func TestLargeNegativeFloat32(t *testing.T) {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(float32(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "-3.689349e+19"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2162,7 +2162,7 @@ func TestZeroFloat32(t *testing.T) {
 func TestPositiveIntegralFloat32(t *testing.T) {
 	matcher := Equals(float32(32769))
 	desc := matcher.Description()
-	expectedDesc := "32769.0"
+	expectedDesc := "32769"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2246,7 +2246,7 @@ func TestLargePositiveFloat32(t *testing.T) {
 	const kExpected = 1 << 65
 	matcher := Equals(float32(kExpected))
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "3.689349e+19"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -2285,7 +2285,7 @@ func TestFloat32AboveExactIntegerRange(t *testing.T) {
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(float32(kTwoTo25 + 1))
 	desc := matcher.Description()
-	expectedDesc := "33554432.0"
+	expectedDesc := "3.3554432e+07"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
