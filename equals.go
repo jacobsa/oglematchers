@@ -335,6 +335,21 @@ func checkAgainstFunc(e reflect.Value, c reflect.Value) (res MatchResult, err st
 	return
 }
 
+func checkAgainstMap(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+	// Make sure c is a map.
+	if c.Kind() != reflect.Map {
+		res = MATCH_UNDEFINED
+		err = "which is not a map"
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.Pointer() == e.Pointer() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 ////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
@@ -374,6 +389,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case ek == reflect.Func:
 		return checkAgainstFunc(e, c)
+
+	case ek == reflect.Map:
+		return checkAgainstMap(e, c)
 	}
 
 	return MATCH_UNDEFINED, "TODO"
