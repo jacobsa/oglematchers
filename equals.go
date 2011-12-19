@@ -296,7 +296,7 @@ func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err strin
 func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
 	if c.Kind() != reflect.Chan {
 		res = MATCH_UNDEFINED
-		err = "which is not a TODO"
+		err = fmt.Sprintf("which is not a %s %s", e.Type().ChanDir(), e.Type().Elem())
 		return
 	}
 
