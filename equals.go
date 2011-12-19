@@ -17,6 +17,7 @@ package ogletest
 
 import (
 	"fmt"
+	"reflect"
 )
 
 // Equals returns a matcher that matches any value v such that v == x, with the
@@ -33,6 +34,31 @@ type equalsMatcher struct {
 ////////////////////////////////////////////////////////////
 // Numeric types
 ////////////////////////////////////////////////////////////
+
+func isSignedInteger(v reflect.Value) bool {
+	k := v.Kind()
+	return k >= reflect.Int && k <= reflect.Int64
+}
+
+func isUnsignedInteger(v reflect.Value) bool {
+	k := v.Kind()
+	return k >= reflect.Uint && k <= reflect.Uint64
+}
+
+func isFloat(v reflect.Value) bool {
+	k := v.Kind()
+	return k == reflect.Float32 || k == reflect.Float64
+}
+
+func isComplex(v reflect.Value) bool {
+	k := v.Kind()
+	return k == reflect.Complex64 || k == reflect.Complex128
+}
+
+func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err string) {
+	switch {
+	}
+}
 
 ////////////////////////////////////////////////////////////
 // Public implementation
