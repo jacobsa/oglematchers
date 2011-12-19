@@ -3907,3 +3907,57 @@ func TestNonNilPointer(t *testing.T) {
 
 	checkTestCases(t, matcher, cases)
 }
+
+////////////////////////////////////////////////////////////
+// Slices
+////////////////////////////////////////////////////////////
+
+func TestNilSlice(t *testing.T) {
+	var nilInt1 []int
+	var nilInt2 []int
+	var nilUint []uint
+
+	var nonNilInt []int = make([]int, 0)
+	var nonNilUint []uint = make([]uint, 0)
+
+	matcher := Equals(nilInt1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{nilInt1, MATCH_TRUE, ""},
+		testCase{nilInt2, MATCH_TRUE, ""},
+		testCase{nonNilInt, MATCH_FALSE, ""},
+
+		// Incorrect type.
+		testCase{nilUint, MATCH_UNDEFINED, "which is not a []int"},
+		testCase{nonNilUint, MATCH_UNDEFINED, "which is not a []int"},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a []int"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a []int"},
+		testCase{true, MATCH_UNDEFINED, "which is not a []int"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a []int"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a []int"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a []int"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a []int"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a []int"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
