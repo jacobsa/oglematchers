@@ -958,6 +958,52 @@ func TestLtFloat32AboveExactIntegerRange(t *testing.T) {
 	checkLtTestCases(t, matcher, cases)
 }
 
+func TestLtFloat64AboveExactIntegerRange(t *testing.T) {
+	// Double-precision floats don't have enough bits to represent the integers
+	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
+	// and should be treated as equivalent when floats are in the mix.
+	const kTwoTo54 = 1 << 54
+	matcher := LessThan(float64(kTwoTo54 + 1))
+
+	desc := matcher.Description()
+	expectedDesc := "less than 1.8014398509481984e+16"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		// Signed integers.
+		ltTestCase{int64(-1), MATCH_TRUE, ""},
+		ltTestCase{int64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		ltTestCase{int64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		ltTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
+
+		// Unsigned integers.
+		ltTestCase{uint64(0), MATCH_TRUE, ""},
+		ltTestCase{uint64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		ltTestCase{uint64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		ltTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
+
+		// Floating point.
+		ltTestCase{float64(-1), MATCH_TRUE, ""},
+		ltTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		ltTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
 ////////////////////////////////////////////////////////////
 // String literals
 ////////////////////////////////////////////////////////////
