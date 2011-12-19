@@ -234,6 +234,24 @@ func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err
 }
 
 ////////////////////////////////////////////////////////////
+// Other types
+////////////////////////////////////////////////////////////
+
+func checkAgainstBool(e bool, c reflect.Value) (res MatchResult, err string) {
+	if c.Kind() != reflect.Bool {
+		res = MATCH_UNDEFINED
+		err = "which is not a bool"
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.Bool() == e {
+		res = MATCH_TRUE
+	}
+	return
+}
+
+////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
 
@@ -243,6 +261,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 	ek := e.Kind()
 
 	switch {
+	case ek == reflect.Bool:
+		return checkAgainstBool(e.Bool(), c)
+
 	case isSignedInteger(e):
 		return checkAgainstInt64(e.Int(), c)
 
