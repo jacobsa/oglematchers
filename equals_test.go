@@ -4032,7 +4032,7 @@ func TestString(t *testing.T) {
 ////////////////////////////////////////////////////////////
 
 func TestStruct(t *testing.T) {
-	type someStruct struct { foo uint }
+	type someStruct struct{ foo uint }
 	panicked := false
 
 	defer func() {

@@ -64,17 +64,17 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 
 	switch {
 	case isSignedInteger(c):
-		if (float32(c.Int()) == e) {
+		if float32(c.Int()) == e {
 			res = MATCH_TRUE
 		}
 
 	case isUnsignedInteger(c):
-		if (float32(c.Uint()) == e) {
+		if float32(c.Uint()) == e {
 			res = MATCH_TRUE
 		}
 
 	case isFloat(c):
-		if (c.Float() == float64(e)) {
+		if c.Float() == float64(e) {
 			res = MATCH_TRUE
 		}
 
@@ -83,7 +83,7 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 		rl := real(comp)
 		im := imag(comp)
 
-		if (im == 0 && rl == float64(e)) {
+		if im == 0 && rl == float64(e) {
 			res = MATCH_TRUE
 		}
 
@@ -104,7 +104,7 @@ func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err s
 	case isInteger(c) || isFloat(c):
 		// If we have no imaginary part, then we should just compare against the
 		// real part. Otherwise, we can't be equal.
-		if (imaginaryPart != 0) {
+		if imaginaryPart != 0 {
 			res = MATCH_FALSE
 			return
 		}
