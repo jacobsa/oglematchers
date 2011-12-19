@@ -588,6 +588,97 @@ func TestLtPositiveFloatLiteral(t *testing.T) {
 }
 
 ////////////////////////////////////////////////////////////
+// Subtle cases
+////////////////////////////////////////////////////////////
+
+func TestLtInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
+	// Single-precision floats don't have enough bits to represent the integers
+	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
+	// and should be treated as equivalent when floats are in the mix.
+	const kTwoTo25 = 1 << 25
+	const kLimit = kTwoTo25 + 1
+	matcher := LessThan(int64(kLimit))
+
+	desc := matcher.Description()
+	expectedDesc := "less than 33554433"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		// Signed integers.
+		ltTestCase{-1, MATCH_TRUE, ""},
+		ltTestCase{33554432, MATCH_TRUE, ""},
+		ltTestCase{33554433, MATCH_FALSE, ""},
+		ltTestCase{33554434, MATCH_FALSE, ""},
+
+		ltTestCase{int(-1), MATCH_TRUE, ""},
+		ltTestCase{int(33554432), MATCH_TRUE, ""},
+		ltTestCase{int(33554433), MATCH_FALSE, ""},
+		ltTestCase{int(33554434), MATCH_FALSE, ""},
+
+		ltTestCase{int8(-1), MATCH_TRUE, ""},
+		ltTestCase{int8(127), MATCH_TRUE, ""},
+
+		ltTestCase{int16(-1), MATCH_TRUE, ""},
+		ltTestCase{int16(0), MATCH_TRUE, ""},
+		ltTestCase{int16(32767), MATCH_TRUE, ""},
+
+		ltTestCase{int32(-1), MATCH_TRUE, ""},
+		ltTestCase{int32(33554432), MATCH_TRUE, ""},
+		ltTestCase{int32(33554433), MATCH_FALSE, ""},
+		ltTestCase{int32(33554434), MATCH_FALSE, ""},
+
+		ltTestCase{int64(-1), MATCH_TRUE, ""},
+		ltTestCase{int64(33554432), MATCH_TRUE, ""},
+		ltTestCase{int64(33554433), MATCH_FALSE, ""},
+		ltTestCase{int64(33554434), MATCH_FALSE, ""},
+
+		// Unsigned integers.
+		ltTestCase{uint(0), MATCH_TRUE, ""},
+		ltTestCase{uint(33554432), MATCH_TRUE, ""},
+		ltTestCase{uint(33554433), MATCH_FALSE, ""},
+		ltTestCase{uint(33554434), MATCH_FALSE, ""},
+
+		ltTestCase{uint8(0), MATCH_TRUE, ""},
+		ltTestCase{uint8(255), MATCH_TRUE, ""},
+
+		ltTestCase{uint16(0), MATCH_TRUE, ""},
+		ltTestCase{uint16(65535), MATCH_TRUE, ""},
+
+		ltTestCase{uint32(0), MATCH_TRUE, ""},
+		ltTestCase{uint32(33554432), MATCH_TRUE, ""},
+		ltTestCase{uint32(33554433), MATCH_FALSE, ""},
+		ltTestCase{uint32(33554434), MATCH_FALSE, ""},
+
+		ltTestCase{uint64(0), MATCH_TRUE, ""},
+		ltTestCase{uint64(33554432), MATCH_TRUE, ""},
+		ltTestCase{uint64(33554433), MATCH_FALSE, ""},
+		ltTestCase{uint64(33554434), MATCH_FALSE, ""},
+
+		// Floating point.
+		ltTestCase{float32(-1), MATCH_TRUE, ""},
+		ltTestCase{float32(kLimit - 2), MATCH_TRUE, ""},
+		ltTestCase{float32(kLimit - 1), MATCH_FALSE, ""},
+		ltTestCase{float32(kLimit + 0), MATCH_FALSE, ""},
+		ltTestCase{float32(kLimit + 1), MATCH_FALSE, ""},
+		ltTestCase{float32(kLimit + 2), MATCH_FALSE, ""},
+		ltTestCase{float32(kLimit + 3), MATCH_FALSE, ""},
+
+		ltTestCase{float64(-1), MATCH_TRUE, ""},
+		ltTestCase{float64(kLimit - 2), MATCH_TRUE, ""},
+		ltTestCase{float64(kLimit - 1), MATCH_TRUE, ""},
+		ltTestCase{float64(kLimit + 0), MATCH_FALSE, ""},
+		ltTestCase{float64(kLimit + 1), MATCH_FALSE, ""},
+		ltTestCase{float64(kLimit + 2), MATCH_FALSE, ""},
+		ltTestCase{float64(kLimit + 3), MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
 // String literals
 ////////////////////////////////////////////////////////////
 
