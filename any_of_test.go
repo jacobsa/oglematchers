@@ -41,10 +41,6 @@ func (m *fakeAnyOfMatcher) Description() string {
 // Tests
 ////////////////////////////////////////////////////////////
 
-func TestAnyOfCallsWrapped(t *testing.T) {
-	t.Fail()
-}
-
 func TestEmptySet(t *testing.T) {
 	matcher := AnyOf()
 
