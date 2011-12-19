@@ -149,6 +149,13 @@ func TestAllFalseAndNotEqual(t *testing.T) {
 }
 
 func TestDescriptionForEmptySet(t *testing.T) {
+	matcher := AnyOf()
+	desc := matcher.Description()
+	expected := "or()"
+
+	if desc != expected {
+		t.Errorf("Expected %v, got %v", expected, desc)
+	}
 }
 
 func TestDescriptionForNonEmptySet(t *testing.T) {
