@@ -3636,6 +3636,28 @@ func TestNonNilChan(t *testing.T) {
 	checkTestCases(t, matcher, cases)
 }
 
+func TestChanDirection(t *testing.T) {
+	var chan1 chan<- int
+	var chan2 <-chan int
+	var chan3 chan int
+
+	matcher := Equals(chan1)
+	desc := matcher.Description()
+	expectedDesc := fmt.Sprintf("%v", chan1)
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		testCase{chan1, MATCH_TRUE, ""},
+		testCase{chan2, MATCH_UNDEFINED, "which is not a chan<- int"},
+		testCase{chan3, MATCH_UNDEFINED, "which is not a chan<- int"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
 ////////////////////////////////////////////////////////////
 // func
 ////////////////////////////////////////////////////////////
