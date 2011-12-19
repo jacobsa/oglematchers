@@ -374,6 +374,25 @@ func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err str
 	return
 }
 
+func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+	// Create a description of e's type, e.g. "[]int".
+	typeStr := fmt.Sprintf("[]%v", e.Type().Elem())
+
+	// Make sure c is a slice of the correct type.
+	if c.Kind() != reflect.Slice ||
+		 c.Type().Elem() != e.Type().Elem() {
+		res = MATCH_UNDEFINED
+		err = fmt.Sprintf("which is not a %s", typeStr)
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.Pointer() == e.Pointer() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
 	// Make sure c is a pointer.
 	if c.Kind() != reflect.UnsafePointer {
@@ -434,6 +453,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case ek == reflect.Ptr:
 		return checkAgainstPtr(e, c)
+
+	case ek == reflect.Slice:
+		return checkAgainstSlice(e, c)
 
 	case ek == reflect.UnsafePointer:
 		return checkAgainstUnsafePointer(e, c)

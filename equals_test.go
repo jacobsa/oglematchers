@@ -3931,7 +3931,7 @@ func TestNilSlice(t *testing.T) {
 
 	matcher := Equals(nilInt1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "[]"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
