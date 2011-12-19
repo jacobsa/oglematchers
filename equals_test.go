@@ -23,7 +23,6 @@ import (
 var someInt int = -17
 
 // TODO(jacobsa): interface
-// TODO(jacobsa): ptr
 // TODO(jacobsa): slice
 // TODO(jacobsa): string
 // TODO(jacobsa): struct
@@ -3825,6 +3824,60 @@ func TestNilPointer(t *testing.T) {
 		testCase{nilInt1, MATCH_TRUE, ""},
 		testCase{nilInt2, MATCH_TRUE, ""},
 		testCase{nonNilInt, MATCH_FALSE, ""},
+
+		// Incorrect type.
+		testCase{nilUint, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{nonNilUint, MATCH_UNDEFINED, "which is not a *int"},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a *int"},
+		testCase{true, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a *int"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a *int"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestNonNilPointer(t *testing.T) {
+	var someInt int = 17
+	var someOtherInt int = 17
+	var someUint uint = 17
+
+	var nilInt *int
+	var nilUint *uint
+	var nonNilInt1 *int = &someInt
+	var nonNilInt2 *int = &someOtherInt
+	var nonNilUint *uint = &someUint
+
+	matcher := Equals(nonNilInt1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{nonNilInt1, MATCH_TRUE, ""},
+		testCase{nonNilInt2, MATCH_FALSE, ""},
+		testCase{nilInt, MATCH_FALSE, ""},
 
 		// Incorrect type.
 		testCase{nilUint, MATCH_UNDEFINED, "which is not a *int"},
