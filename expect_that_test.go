@@ -53,6 +53,13 @@ func TestNoCurrentTest(t *testing.T) {
 }
 
 func TestNoFailure(t *testing.T) {
+	ExpectThat(17, Equals(17))
+
+	expectedLen := 0
+	actualLen := len(internal.CurrentTest.FailureRecords)
+	if expectedLen != actualLen {
+		t.Errorf("Expected %d failures, got %d", expectedLen, actualLen)
+	}
 }
 
 func TestMatchFalseWithoutMessages(t *testing.T) {
