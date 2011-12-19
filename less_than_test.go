@@ -52,5 +52,72 @@ func checkLtTestCases(t *testing.T, matcher Matcher, cases []ltTestCase) {
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func TestFoo(t *testing.T) {
+func TestLtNegativeIntegerLiteral(t *testing.T) {
+	matcher := LessThan(-150)
+	desc := matcher.Description()
+	expectedDesc := "less than -150"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		// Signed integers.
+		ltTestCase{-(1 << 30), MATCH_TRUE, ""},
+		ltTestCase{-151, MATCH_TRUE, ""},
+		ltTestCase{-150, MATCH_FALSE, ""},
+		ltTestCase{0, MATCH_FALSE, ""},
+		ltTestCase{17, MATCH_FALSE, ""},
+
+		ltTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{int(-151), MATCH_TRUE, ""},
+		ltTestCase{int(-150), MATCH_FALSE, ""},
+		ltTestCase{int(0), MATCH_FALSE, ""},
+		ltTestCase{int(17), MATCH_FALSE, ""},
+
+		ltTestCase{int8(-127), MATCH_FALSE, ""},
+		ltTestCase{int8(0), MATCH_FALSE, ""},
+		ltTestCase{int8(17), MATCH_FALSE, ""},
+
+		ltTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		ltTestCase{int16(-151), MATCH_TRUE, ""},
+		ltTestCase{int16(-150), MATCH_FALSE, ""},
+		ltTestCase{int16(0), MATCH_FALSE, ""},
+		ltTestCase{int16(17), MATCH_FALSE, ""},
+
+		ltTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{int32(-151), MATCH_TRUE, ""},
+		ltTestCase{int32(-150), MATCH_FALSE, ""},
+		ltTestCase{int32(0), MATCH_FALSE, ""},
+		ltTestCase{int32(17), MATCH_FALSE, ""},
+
+		ltTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{int64(-151), MATCH_TRUE, ""},
+		ltTestCase{int64(-150), MATCH_FALSE, ""},
+		ltTestCase{int64(0), MATCH_FALSE, ""},
+		ltTestCase{int64(17), MATCH_FALSE, ""},
+
+		// Unsigned integers.
+		ltTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
+		ltTestCase{uint(0), MATCH_FALSE, ""},
+		ltTestCase{uint(17), MATCH_FALSE, ""},
+
+		ltTestCase{uint8(0), MATCH_FALSE, ""},
+		ltTestCase{uint8(17), MATCH_FALSE, ""},
+		ltTestCase{uint8(253), MATCH_FALSE, ""},
+
+		ltTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
+		ltTestCase{uint16(0), MATCH_FALSE, ""},
+		ltTestCase{uint16(17), MATCH_FALSE, ""},
+
+		ltTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
+		ltTestCase{uint32(0), MATCH_FALSE, ""},
+		ltTestCase{uint32(17), MATCH_FALSE, ""},
+
+		ltTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
+		ltTestCase{uint64(0), MATCH_FALSE, ""},
+		ltTestCase{uint64(17), MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
 }
