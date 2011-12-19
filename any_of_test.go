@@ -159,4 +159,16 @@ func TestDescriptionForEmptySet(t *testing.T) {
 }
 
 func TestDescriptionForNonEmptySet(t *testing.T) {
+	matcher := AnyOf(
+		&fakeAnyOfMatcher{"taco", MATCH_TRUE, ""},
+		"burrito",
+		&fakeAnyOfMatcher{"enchilada", MATCH_TRUE, ""},
+	)
+
+	desc := matcher.Description()
+	expected := "or(taco, burrito, enchilada)"
+
+	if desc != expected {
+		t.Errorf("Expected %v, got %v", expected, desc)
+	}
 }
