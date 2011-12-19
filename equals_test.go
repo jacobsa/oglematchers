@@ -289,9 +289,9 @@ func TestPositiveIntegralFloatingPointLiteral(t *testing.T) {
 }
 
 func TestNonIntegralFloatingPointLiteral(t *testing.T) {
-	matcher := Equals(17.5)
+	matcher := Equals(17.1)
 	desc := matcher.Description()
-	expectedDesc := "17.5"
+	expectedDesc := "17.1"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
