@@ -628,3 +628,25 @@ func TestLtSingleNullByte(t *testing.T) {
 
 	checkLtTestCases(t, matcher, cases)
 }
+
+func TestLtLongerString(t *testing.T) {
+	matcher := LessThan("foo\x00")
+	desc := matcher.Description()
+	expectedDesc := "less than \"foo\\x00\""
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		ltTestCase{"", MATCH_TRUE, ""},
+		ltTestCase{"\x00", MATCH_TRUE, ""},
+		ltTestCase{"bar", MATCH_TRUE, ""},
+		ltTestCase{"foo", MATCH_TRUE, ""},
+		ltTestCase{"foo\x00", MATCH_FALSE, ""},
+		ltTestCase{"fooa", MATCH_FALSE, ""},
+		ltTestCase{"qux", MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
