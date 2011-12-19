@@ -48,6 +48,11 @@ type lessThanMatcher struct {
 }
 
 func (m *lessThanMatcher) Description() string {
+	// Special case: make it clear that strings are strings.
+	if (m.limit.Kind() == reflect.String) {
+		return fmt.Sprintf("less than \"%s\"", m.limit.String())
+	}
+
 	return fmt.Sprintf("less than %v", m.limit.Interface())
 }
 
