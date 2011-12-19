@@ -52,6 +52,27 @@ func checkLtTestCases(t *testing.T, matcher Matcher, cases []ltTestCase) {
 // Integer literals
 ////////////////////////////////////////////////////////////
 
+func TestLtIntegerBadTypes(t *testing.T) {
+	matcher := LessThan(-150)
+
+	cases := []ltTestCase{
+		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
 func TestLtNegativeIntegerLiteral(t *testing.T) {
 	matcher := LessThan(-150)
 	desc := matcher.Description()
@@ -136,20 +157,6 @@ func TestLtNegativeIntegerLiteral(t *testing.T) {
 		ltTestCase{float64(0), MATCH_FALSE, ""},
 		ltTestCase{float64(17), MATCH_FALSE, ""},
 		ltTestCase{float64(160), MATCH_FALSE, ""},
-
-		// Other types.
-		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	checkLtTestCases(t, matcher, cases)
