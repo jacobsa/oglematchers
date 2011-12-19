@@ -18,6 +18,7 @@ package ogletest
 import (
 	"fmt"
 	"github.com/jacobsa/ogletest/internal"
+	"path"
 	"runtime"
 )
 
@@ -73,7 +74,7 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 		fmt.Sprintf("Expected: %s\nActual:   %v%s", m.Description(), x, relativeClause)
 
 	// Record the failure.
-	record.FileName = file
+	record.FileName = path.Base(file)
 	record.LineNumber = lineNumber
 	state.FailureRecords = append(state.FailureRecords, record)
 }
