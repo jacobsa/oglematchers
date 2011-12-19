@@ -126,6 +126,24 @@ func TestLtStringBadTypes(t *testing.T) {
 	checkLtTestCases(t, matcher, cases)
 }
 
+func TestLtBadArg(t *testing.T) {
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	LessThan(complex128(0))
+}
+
 ////////////////////////////////////////////////////////////
 // Integer literals
 ////////////////////////////////////////////////////////////
