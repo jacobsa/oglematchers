@@ -22,8 +22,6 @@ import (
 
 var someInt int = -17
 
-// TODO(jacobsa): interface
-// TODO(jacobsa): slice
 // TODO(jacobsa): string
 // TODO(jacobsa): struct
 // TODO(jacobsa): unsafe pointer
@@ -3960,4 +3958,23 @@ func TestNilSlice(t *testing.T) {
 	}
 
 	checkTestCases(t, matcher, cases)
+}
+
+func TestNoNilSlice(t *testing.T) {
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	nonNil := make([]int, 0)
+	Equals(nonNil)
 }
