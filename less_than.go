@@ -16,6 +16,8 @@
 package ogletest
 
 import (
+	"fmt"
+	"reflect"
 )
 
 // LessThan returns a matcher that matches integer, floating point, or strings
@@ -25,6 +27,22 @@ import (
 // x must itself be an integer, floating point, or string type; otherwise,
 // LessThan will panic.
 func LessThan(x interface{}) Matcher {
+	v := reflect.ValueOf(x)
+	kind := v.Kind()
+
+	switch {
+	case isInteger(v):
+	case isFloat(v):
+	case kind == reflect.String:
+
+	default:
+		panic(fmt.Sprintf("LessThan: unexpected kind %v", kind))
+	}
+
 	// TODO
 	return Equals(x)
+}
+
+type lessThanMatcher struct {
+	limit reflect.Value
 }
