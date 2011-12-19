@@ -17,6 +17,7 @@ package ogletest
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 )
 
@@ -50,8 +51,35 @@ func (m *lessThanMatcher) Description() string {
 	return fmt.Sprintf("less than %v", m.limit)
 }
 
-func compareIntegers(v1, v2 reflect.Value) (MatchResult, string) {
-	return MATCH_UNDEFINED, "TODO"
+func compareIntegers(v1, v2 reflect.Value) (res MatchResult, err string) {
+	res = MATCH_FALSE
+	switch {
+	case isSignedInteger(v1) && isSignedInteger(v2):
+		if v1.Int() < v2.Int() {
+			res = MATCH_TRUE
+		}
+		return
+
+	case isSignedInteger(v1) && isUnsignedInteger(v2):
+		if v1.Int() < 0 || uint64(v1.Int()) < v2.Uint() {
+			res = MATCH_TRUE
+		}
+		return
+
+	case isUnsignedInteger(v1) && isSignedInteger(v2):
+		if v1.Uint() <= math.MaxInt64 && int64(v1.Uint()) < v2.Int() {
+			res = MATCH_TRUE
+		}
+		return
+
+	case isUnsignedInteger(v1) && isUnsignedInteger(v2):
+		if v1.Uint() < v2.Uint() {
+			res = MATCH_TRUE
+		}
+		return
+	}
+
+	panic(fmt.Sprintf("compareIntegers: %v %v", v1, v2))
 }
 
 func getFloat(v reflect.Value) float64 {
