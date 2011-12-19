@@ -3971,7 +3971,7 @@ func TestNilSlice(t *testing.T) {
 	checkTestCases(t, matcher, cases)
 }
 
-func TestNoNilSlice(t *testing.T) {
+func TestNonNilSlice(t *testing.T) {
 	panicked := false
 
 	defer func() {
