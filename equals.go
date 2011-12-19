@@ -25,11 +25,11 @@ import (
 // exception that if x is a numeric type, Equals(x) will match equivalent
 // numeric values of any type.
 func Equals(x interface{}) Matcher {
-	return &equalsMatcher{x}
+	return &equalsMatcher{reflect.ValueOf(x)}
 }
 
 type equalsMatcher struct {
-	expected interface{}
+	expectedValue reflect.Value
 }
 
 ////////////////////////////////////////////////////////////
@@ -318,7 +318,7 @@ func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err st
 ////////////////////////////////////////////////////////////
 
 func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
-	e := reflect.ValueOf(m.expected)
+	e := m.expectedValue
 	c := reflect.ValueOf(candidate)
 	ek := e.Kind()
 
@@ -355,5 +355,5 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 }
 
 func (m *equalsMatcher) Description() string {
-	return fmt.Sprintf("%v", m.expected)
+	return fmt.Sprintf("%v", m.expectedValue.Interface())
 }
