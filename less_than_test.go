@@ -53,7 +53,7 @@ func checkLtTestCases(t *testing.T, matcher Matcher, cases []ltTestCase) {
 ////////////////////////////////////////////////////////////
 
 func TestLtIntegerBadTypes(t *testing.T) {
-	matcher := LessThan(-150)
+	matcher := LessThan(int(-150))
 
 	cases := []ltTestCase{
 		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
@@ -67,6 +67,59 @@ func TestLtIntegerBadTypes(t *testing.T) {
 		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
 		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
+func TestLtFloatBadTypes(t *testing.T) {
+	matcher := LessThan(float32(-150))
+
+	cases := []ltTestCase{
+		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
+
+func TestLtStringBadTypes(t *testing.T) {
+	matcher := LessThan("17")
+
+	cases := []ltTestCase{
+		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{int(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{int8(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{int16(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{int32(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{int64(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uint(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uint8(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uint16(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uint32(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uint64(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{float32(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{float64(0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
 		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
