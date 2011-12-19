@@ -3543,7 +3543,7 @@ func TestNilChan(t *testing.T) {
 
 	matcher := Equals(nilChan1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "0x0"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3594,7 +3594,7 @@ func TestNonNilChan(t *testing.T) {
 
 	matcher := Equals(nonNilChan1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := fmt.Sprintf("%v", nonNilChan1)
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
