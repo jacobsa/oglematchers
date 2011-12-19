@@ -112,6 +112,26 @@ func TestInvalidMatcherResult(t *testing.T) {
 	ExpectThat(17, matcher)
 }
 
+func TestInvalidFormatString(t *testing.T) {
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	setUpCurrentTest()
+	matcher := &fakeExpectThatMatcher{"", MATCH_FALSE, ""}
+	ExpectThat(17, matcher, 19, "blah")
+}
+
 func TestMatchFalseWithoutMessages(t *testing.T) {
 	setUpCurrentTest()
 	matcher := &fakeExpectThatMatcher{"taco", MATCH_FALSE, ""}
@@ -121,7 +141,7 @@ func TestMatchFalseWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqInt(t, 118, record.LineNumber)
+	expectEqInt(t, 138, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }
@@ -135,7 +155,7 @@ func TestMatchUndefinedWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqInt(t, 132, record.LineNumber)
+	expectEqInt(t, 152, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }

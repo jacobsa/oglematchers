@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"github.com/jacobsa/ogletest/internal"
 	"path"
+	"reflect"
 	"runtime"
 )
 
@@ -38,6 +39,17 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 	_, file, lineNumber, ok := runtime.Caller(1)
 	if !ok {
 		panic("ExpectThat: runtime.Caller")
+	}
+
+	// Assemble the user error, if any.
+	userError := ""
+	if len(errorParts) != 0 {
+		v := reflect.ValueOf(errorParts[0])
+		if v.Kind() != reflect.String {
+			panic(fmt.Sprintf("ExpectThat: invalid format string type %v", v.Kind()))
+		}
+
+		userError = fmt.Sprintf(v.String(), errorParts[1:])
 	}
 
 	// Grab the current test state.
@@ -73,8 +85,11 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 	record.GeneratedError =
 		fmt.Sprintf("Expected: %s\nActual:   %v%s", m.Description(), x, relativeClause)
 
-	// Record the failure.
+  // Record additional failure info.
 	record.FileName = path.Base(file)
 	record.LineNumber = lineNumber
+	record.UserError = userError
+
+	// Store the failure.
 	state.FailureRecords = append(state.FailureRecords, record)
 }
