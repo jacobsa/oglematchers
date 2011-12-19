@@ -107,5 +107,13 @@ func TestUndefinedMatchFromWrapped(t *testing.T) {
 }
 
 func TestDescription(t *testing.T) {
+	wrapped := &fakeMatcher{nil, "taco"}
+	matcher := Not(wrapped)
+
+	desc := matcher.Description()
+	expected := "not(taco)"
+	if desc != expected {
+		t.Errorf("Expected %v, got %v", expected, desc)
+	}
 }
 
