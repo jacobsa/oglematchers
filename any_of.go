@@ -70,6 +70,27 @@ func (m *anyOfMatcher) Description() string {
 	return fmt.Sprintf("or(%s)", strings.Join(wrappedDescs, ", "))
 }
 
-func (m *anyOfMatcher) Matches(c interface{}) (MatchResult, string) {
-	return MATCH_UNDEFINED, ""
+func (m *anyOfMatcher) Matches(c interface{}) (res MatchResult, err string) {
+	res = MATCH_FALSE
+
+	// Try each matcher in turn.
+	for _, matcher := range m.wrapped {
+		wrappedRes, wrappedErr := matcher.Matches(c)
+
+		// Return immediately if there's a match.
+		if (wrappedRes == MATCH_TRUE) {
+			res = MATCH_TRUE
+			err = ""
+			return
+		}
+
+		// Note the undefined error, if any.
+		if (wrappedRes == MATCH_UNDEFINED) {
+			res = MATCH_UNDEFINED
+			err = wrappedErr
+			return
+		}
+	}
+
+	return
 }
