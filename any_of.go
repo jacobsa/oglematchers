@@ -78,14 +78,14 @@ func (m *anyOfMatcher) Matches(c interface{}) (res MatchResult, err string) {
 		wrappedRes, wrappedErr := matcher.Matches(c)
 
 		// Return immediately if there's a match.
-		if (wrappedRes == MATCH_TRUE) {
+		if wrappedRes == MATCH_TRUE {
 			res = MATCH_TRUE
 			err = ""
 			return
 		}
 
 		// Note the undefined error, if any.
-		if (wrappedRes == MATCH_UNDEFINED) {
+		if wrappedRes == MATCH_UNDEFINED {
 			res = MATCH_UNDEFINED
 			err = wrappedErr
 		}
