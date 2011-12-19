@@ -33,6 +33,23 @@ func setUpCurrentTest() {
 // Tests
 ////////////////////////////////////////////////////////////
 
-func TestFoo(t *testing.T) {
-	t.Fail()
+func TestNoCurrentTest(t *testing.T) {
+}
+
+func TestNoFailure(t *testing.T) {
+}
+
+func TestMatchFalseWithoutMessages(t *testing.T) {
+}
+
+func TestMatchUndefinedWithoutMessages(t *testing.T) {
+}
+
+func TestFailureWithMatcherMessage(t *testing.T) {
+}
+
+func TestFailureWithUserMessage(t *testing.T) {
+}
+
+func TestAdditionalFailure(t *testing.T) {
 }
