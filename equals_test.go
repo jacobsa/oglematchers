@@ -4076,7 +4076,7 @@ func TestNilUnsafePointer(t *testing.T) {
 
 	matcher := Equals(nilPtr1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "0x0"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -4126,7 +4126,7 @@ func TestNonNilUnsafePointer(t *testing.T) {
 
 	matcher := Equals(nonNilPtr1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := fmt.Sprintf("%v", nonNilPtr1)
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
