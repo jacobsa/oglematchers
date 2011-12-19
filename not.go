@@ -16,12 +16,37 @@
 package ogletest
 
 import (
+	"fmt"
 )
 
 // Not returns a matcher that inverts the set of values matched by the wrapped
 // matcher. It does not transform the result for values for which the wrapped
 // matcher returns MATCH_UNDEFINED.
 func Not(m Matcher) Matcher {
-	// TODO
-	return m
+	return &notMatcher{m}
+}
+
+type notMatcher struct {
+	wrapped Matcher
+}
+
+func (m *notMatcher) Matches(c interface{}) (res MatchResult, err string) {
+	res, err = m.wrapped.Matches(c)
+
+	switch res {
+	case MATCH_FALSE:
+		res = MATCH_TRUE
+		err = ""
+
+	case MATCH_TRUE:
+		res = MATCH_FALSE
+
+	case MATCH_UNDEFINED:
+	}
+
+	return
+}
+
+func (m *notMatcher) Description() string {
+	return fmt.Sprintf("not(%s)", m.wrapped.Description())
 }
