@@ -351,10 +351,14 @@ func checkAgainstMap(e reflect.Value, c reflect.Value) (res MatchResult, err str
 }
 
 func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
-	// Make sure c is a pointer.
-	if c.Kind() != reflect.Ptr {
+	// Create a description of e's type, e.g. "*int".
+	typeStr := fmt.Sprintf("*%v", e.Type().Elem())
+
+	// Make sure c is a pointer of the correct type.
+	if c.Kind() != reflect.Ptr ||
+		 c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
-		err = "which is not a pointer"
+		err = fmt.Sprintf("which is not a %s", typeStr)
 		return
 	}
 
