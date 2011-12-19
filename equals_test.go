@@ -3710,7 +3710,7 @@ func TestFunctions(t *testing.T) {
 // map
 ////////////////////////////////////////////////////////////
 
-func TestNilMop(t *testing.T) {
+func TestNilMap(t *testing.T) {
 	var nilMap1 map[int]int
 	var nilMap2 map[int]int
 	var nilMap3 map[int]uint
@@ -3719,7 +3719,7 @@ func TestNilMop(t *testing.T) {
 
 	matcher := Equals(nilMap1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "map[]"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3770,7 +3770,7 @@ func TestNonNilMap(t *testing.T) {
 
 	matcher := Equals(nonNilMap1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "map[]"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
