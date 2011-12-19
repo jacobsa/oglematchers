@@ -117,6 +117,39 @@ func TestLtNegativeIntegerLiteral(t *testing.T) {
 		ltTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
 		ltTestCase{uint64(0), MATCH_FALSE, ""},
 		ltTestCase{uint64(17), MATCH_FALSE, ""},
+
+		// Floating point.
+		ltTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{float32(-151), MATCH_TRUE, ""},
+		ltTestCase{float32(-150.1), MATCH_TRUE, ""},
+		ltTestCase{float32(-150), MATCH_FALSE, ""},
+		ltTestCase{float32(-149.9), MATCH_FALSE, ""},
+		ltTestCase{float32(0), MATCH_FALSE, ""},
+		ltTestCase{float32(17), MATCH_FALSE, ""},
+		ltTestCase{float32(160), MATCH_FALSE, ""},
+
+		ltTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		ltTestCase{float64(-151), MATCH_TRUE, ""},
+		ltTestCase{float64(-150.1), MATCH_TRUE, ""},
+		ltTestCase{float64(-150), MATCH_FALSE, ""},
+		ltTestCase{float64(-149.9), MATCH_FALSE, ""},
+		ltTestCase{float64(0), MATCH_FALSE, ""},
+		ltTestCase{float64(17), MATCH_FALSE, ""},
+		ltTestCase{float64(160), MATCH_FALSE, ""},
+
+		// Other types.
+		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	checkLtTestCases(t, matcher, cases)
