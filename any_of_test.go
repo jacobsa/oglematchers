@@ -127,7 +127,25 @@ func TestOneUndefined(t *testing.T) {
 	}
 }
 
-func TestAllFalse(t *testing.T) {
+func TestAllFalseAndNotEqual(t *testing.T) {
+	matcher := AnyOf(
+		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		17,
+		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		19,
+	)
+
+	res, err := matcher.Matches(0)
+	expectedRes := MATCH_FALSE
+	expectedErr := ""
+
+	if res != expectedRes {
+		t.Errorf("Expected %v, got %v", expectedRes, res)
+	}
+
+	if err != expectedErr {
+		t.Errorf("Expected %v, got %v", expectedErr, err)
+	}
 }
 
 func TestDescriptionForEmptySet(t *testing.T) {
