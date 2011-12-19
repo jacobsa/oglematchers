@@ -54,6 +54,21 @@ func compareIntegers(v1, v2 reflect.Value) (MatchResult, string) {
 	return MATCH_UNDEFINED, "TODO"
 }
 
+func getFloat(v reflect.Value) float64 {
+	switch {
+	case isSignedInteger(v):
+		return float64(v.Int())
+
+	case isUnsignedInteger(v):
+		return float64(v.Uint())
+
+	case isFloat(v):
+		return v.Float()
+	}
+
+	panic(fmt.Sprintf("getFloat: %v", v))
+}
+
 func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 	v1 := reflect.ValueOf(c)
 	v2 := m.limit
@@ -76,13 +91,13 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 		}
 		return
 
-	case v1.Kind() == reflect.Float32 && isNumeric(v2):
+	case v1.Kind() == reflect.Float32 && (isInteger(v2) || isFloat(v2)):
 		if float32(getFloat(v1)) < float32(getFloat(v2)) {
 			res = MATCH_TRUE
 		}
 		return
 
-	case v1.Kind() == reflect.Float64 && isNumeric(v2):
+	case v1.Kind() == reflect.Float64 && (isInteger(v2) || isFloat(v2)):
 		if getFloat(v1) < getFloat(v2) {
 			res = MATCH_TRUE
 		}
@@ -97,4 +112,5 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 
 	res = MATCH_UNDEFINED
 	err = "which is not comparable"
+	return
 }
