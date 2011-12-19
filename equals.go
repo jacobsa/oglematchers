@@ -231,18 +231,22 @@ func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err
 func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 	e := reflect.ValueOf(m.expected)
 	c := reflect.ValueOf(candidate)
+	ek := e.Kind()
 
-	switch e.Kind() {
-	case reflect.Float32:
+	switch {
+	case isSignedInteger(e):
+		return checkAgainstInt64(e.Int(), c)
+
+	case ek == reflect.Float32:
 		return checkAgainstFloat32(float32(e.Float()), c)
 
-	case reflect.Float64:
+	case ek == reflect.Float64:
 		return checkAgainstFloat64(e.Float(), c)
 
-	case reflect.Complex64:
+	case ek == reflect.Complex64:
 		return checkAgainstComplex64(complex64(e.Complex()), c)
 
-	case reflect.Complex128:
+	case ek == reflect.Complex128:
 		return checkAgainstComplex128(complex128(e.Complex()), c)
 	}
 
