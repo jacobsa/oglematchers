@@ -3822,7 +3822,7 @@ func TestNilPointer(t *testing.T) {
 
 	matcher := Equals(nilInt1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := "<nil>"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -3876,7 +3876,7 @@ func TestNonNilPointer(t *testing.T) {
 
 	matcher := Equals(nonNilInt1)
 	desc := matcher.Description()
-	expectedDesc := "TODO"
+	expectedDesc := fmt.Sprintf("%v", nonNilInt1)
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
