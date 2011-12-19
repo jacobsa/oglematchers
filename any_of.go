@@ -88,7 +88,6 @@ func (m *anyOfMatcher) Matches(c interface{}) (res MatchResult, err string) {
 		if (wrappedRes == MATCH_UNDEFINED) {
 			res = MATCH_UNDEFINED
 			err = wrappedErr
-			return
 		}
 	}
 
