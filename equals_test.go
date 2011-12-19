@@ -4000,7 +4000,7 @@ func TestString(t *testing.T) {
 
 	matcher := Equals(expected)
 	desc := matcher.Description()
-	expectedDesc := "\"taco1\""
+	expectedDesc := "taco1"
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)

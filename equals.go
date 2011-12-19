@@ -393,6 +393,21 @@ func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err s
 	return
 }
 
+func checkAgainstString(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+	// Make sure c is a string.
+	if c.Kind() != reflect.String {
+		res = MATCH_UNDEFINED
+		err = "which is not a string"
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.String() == e.String() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
 	// Make sure c is a pointer.
 	if c.Kind() != reflect.UnsafePointer {
@@ -456,6 +471,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case ek == reflect.Slice:
 		return checkAgainstSlice(e, c)
+
+	case ek == reflect.String:
+		return checkAgainstString(e, c)
 
 	case ek == reflect.UnsafePointer:
 		return checkAgainstUnsafePointer(e, c)
