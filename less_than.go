@@ -103,42 +103,44 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 
 	res = MATCH_FALSE
 
-	switch {
-	case isInteger(v1) && isInteger(v2):
-		return compareIntegers(v1, v2)
-
-	case (isInteger(v1) || isFloat(v1)) && v2.Kind() == reflect.Float32:
-		if float32(getFloat(v1)) < float32(v2.Float()) {
-			res = MATCH_TRUE
-		}
-		return
-
-	case (isInteger(v1) || isFloat(v1)) && v2.Kind() == reflect.Float64:
-		if getFloat(v1) < v2.Float() {
-			res = MATCH_TRUE
-		}
-		return
-
-	case v1.Kind() == reflect.Float32 && (isInteger(v2) || isFloat(v2)):
-		if float32(getFloat(v1)) < float32(getFloat(v2)) {
-			res = MATCH_TRUE
-		}
-		return
-
-	case v1.Kind() == reflect.Float64 && (isInteger(v2) || isFloat(v2)):
-		if getFloat(v1) < getFloat(v2) {
-			res = MATCH_TRUE
-		}
-		return
-
-	case v1.Kind() == reflect.String && v2.Kind() == reflect.String:
+	// Handle strings as a special case.
+	if v1.Kind() == reflect.String && v2.Kind() == reflect.String {
 		if v1.String() < v2.String() {
 			res = MATCH_TRUE
 		}
 		return
 	}
 
-	res = MATCH_UNDEFINED
-	err = "which is not comparable"
-	return
+	// If we get here, we require that we are dealing with integers or floats.
+  v1Legal := isInteger(v1) || isFloat(v1)
+  v2Legal := isInteger(v2) || isFloat(v2)
+	if (!v1Legal || !v2Legal) {
+		res = MATCH_UNDEFINED
+		err = "which is not comparable"
+		return
+	}
+
+	// Handle the various comparison cases.
+	switch {
+	// Both integers
+	case isInteger(v1) && isInteger(v2):
+		return compareIntegers(v1, v2)
+
+	// At least one float32
+	case v1.Kind() == reflect.Float32 || v2.Kind() == reflect.Float32:
+		if float32(getFloat(v1)) < float32(v2.Float()) {
+			res = MATCH_TRUE
+		}
+		return
+
+	// At least one float64
+	case v1.Kind() == reflect.Float64 || v2.Kind() == reflect.Float64:
+		if getFloat(v1) < v2.Float() {
+			res = MATCH_TRUE
+		}
+		return
+	}
+
+	// We shouldn't get here.
+	panic(fmt.Sprintf("lessThanMatcher.Matches: Shouldn't get here: %v %v", v1, v2))
 }
