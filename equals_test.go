@@ -23,7 +23,6 @@ import (
 var someInt int = -17
 
 // TODO(jacobsa): interface
-// TODO(jacobsa): map
 // TODO(jacobsa): ptr
 // TODO(jacobsa): slice
 // TODO(jacobsa): string
@@ -3612,7 +3611,7 @@ func TestNonNilChan(t *testing.T) {
 	cases := []testCase{
 		// int channels
 		testCase{nonNilChan1, MATCH_TRUE, ""},
-		testCase{nonNilChan2, MATCH_TRUE, ""},
+		testCase{nonNilChan2, MATCH_FALSE, ""},
 		testCase{nilChan1, MATCH_FALSE, ""},
 
 		// uint channels
@@ -3688,6 +3687,112 @@ func TestFunctions(t *testing.T) {
 		testCase{[]int{}, MATCH_UNDEFINED, "which is not a function"},
 		testCase{"taco", MATCH_UNDEFINED, "which is not a function"},
 		testCase{testCase{}, MATCH_UNDEFINED, "which is not a function"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
+// map
+////////////////////////////////////////////////////////////
+
+func TestNilMop(t *testing.T) {
+	var nilMap1 map[int]int
+	var nilMap2 map[int]int
+	var nilMap3 map[int]uint
+	var nonNilMap1 map[int]int = make(map[int]int)
+	var nonNilMap2 map[int]uint = make(map[int]uint)
+
+	matcher := Equals(nilMap1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{nilMap1, MATCH_TRUE, ""},
+		testCase{nilMap2, MATCH_TRUE, ""},
+		testCase{nonNilMap1, MATCH_FALSE, ""},
+
+		// Incorrect type.
+		testCase{nilMap3, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{nonNilMap2, MATCH_UNDEFINED, "which is not a map[int]int"},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{true, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+func TestNonNilMap(t *testing.T) {
+	var nilMap1 map[int]int
+	var nilMap2 map[int]uint
+	var nonNilMap1 map[int]int = make(map[int]int)
+	var nonNilMap2 map[int]int = make(map[int]int)
+	var nonNilMap3 map[int]uint = make(map[int]uint)
+
+	matcher := Equals(nonNilMap1)
+	desc := matcher.Description()
+	expectedDesc := "TODO"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []testCase{
+		// Correct type.
+		testCase{nonNilMap1, MATCH_TRUE, ""},
+		testCase{nonNilMap2, MATCH_FALSE, ""},
+		testCase{nilMap1, MATCH_FALSE, ""},
+
+		// Incorrect types.
+		testCase{nilMap2, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{nonNilMap3, MATCH_UNDEFINED, "which is not a map[int]int"},
+
+		// Other types.
+		testCase{0, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{bool(false), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int8(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int16(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int32(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{int64(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint8(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint16(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint32(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{uint64(0), MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{true, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{func() {}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{&someInt, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{[]int{}, MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{"taco", MATCH_UNDEFINED, "which is not a map[int]int"},
+		testCase{testCase{}, MATCH_UNDEFINED, "which is not a map[int]int"},
 	}
 
 	checkTestCases(t, matcher, cases)
