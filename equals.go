@@ -60,8 +60,37 @@ func isComplex(v reflect.Value) bool {
 }
 
 func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err string) {
-	res = MATCH_UNDEFINED
-	err = "TODO"
+	res = MATCH_FALSE
+
+	switch {
+	case isSignedInteger(c):
+		if (float32(c.Int()) == e) {
+			res = MATCH_TRUE
+		}
+
+	case isUnsignedInteger(c):
+		if (float32(c.Uint()) == e) {
+			res = MATCH_TRUE
+		}
+
+	case isFloat(c):
+		if (c.Float() == float64(e)) {
+			res = MATCH_TRUE
+		}
+
+	case isComplex(c):
+		rl := real(c.Complex())
+		im := imag(c.Complex())
+
+		if (im == 0 && rl == float64(e)) {
+			res = MATCH_TRUE
+		}
+
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
+	}
+
 	return
 }
 
@@ -82,7 +111,7 @@ func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err s
 		return checkAgainstFloat32(realPart, c)
 
 	case isComplex(c):
-		if complex128(e) == c.Complex() {
+		if c.Complex() == complex128(e) {
 			res = MATCH_TRUE
 		}
 
