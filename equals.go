@@ -131,6 +131,8 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err string) {
 	res = MATCH_FALSE
 
+	ck := c.Kind()
+
 	switch {
 	case isSignedInteger(c):
 		if float64(c.Int()) == e {
@@ -142,6 +144,13 @@ func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err strin
 			res = MATCH_TRUE
 		}
 
+	// If the actual value is lower precision, turn the comparison around so we
+	// apply the low-precision rules. Otherwise, e.g. Equals(0.1) may not match
+	// float32(0.1).
+	case ck == reflect.Float32 || ck == reflect.Complex64:
+		return Equals(c.Interface()).Matches(e)
+
+  // Otherwise, compare with double precision.
 	case isFloat(c):
 		if c.Float() == e {
 			res = MATCH_TRUE
