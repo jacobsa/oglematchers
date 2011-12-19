@@ -116,7 +116,9 @@ func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err s
 		return checkAgainstFloat32(realPart, c)
 
 	case isComplex(c):
-		if c.Complex() == complex128(e) {
+		// Compare using complex64 to avoid a false sense of precision; otherwise
+		// e.g. Equals(0.1 + 0i) won't match float32(0.1).
+		if complex64(c.Complex()) == e {
 			res = MATCH_TRUE
 		}
 
