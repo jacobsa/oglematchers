@@ -99,6 +99,42 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 	return
 }
 
+func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err string) {
+	res = MATCH_FALSE
+
+	switch {
+	case isSignedInteger(c):
+		if float64(c.Int()) == e {
+			res = MATCH_TRUE
+		}
+
+	case isUnsignedInteger(c):
+		if float64(c.Uint()) == e {
+			res = MATCH_TRUE
+		}
+
+	case isFloat(c):
+		if c.Float() == e {
+			res = MATCH_TRUE
+		}
+
+	case isComplex(c):
+		comp := c.Complex()
+		rl := real(comp)
+		im := imag(comp)
+
+		if im == 0 && rl == e {
+			res = MATCH_TRUE
+		}
+
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
+	}
+
+	return
+}
+
 func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err string) {
 	res = MATCH_FALSE
 	realPart := real(e)
@@ -141,6 +177,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 	switch e.Kind() {
 	case reflect.Float32:
 		return checkAgainstFloat32(float32(e.Float()), c)
+
+	case reflect.Float64:
+		return checkAgainstFloat64(e.Float(), c)
 
 	case reflect.Complex64:
 		return checkAgainstComplex64(complex64(e.Complex()), c)
