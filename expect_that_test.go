@@ -29,6 +29,38 @@ func setUpCurrentTest() {
 	internal.CurrentTest = internal.NewTestState()
 }
 
+type fakeExpectThatMatcher struct {
+	desc string
+	res  MatchResult
+	err  string
+}
+
+func (m *fakeExpectThatMatcher) Matches(c interface{}) (MatchResult, string) {
+	return m.res, m.err
+}
+
+func (m *fakeExpectThatMatcher) Description() string {
+	return m.desc
+}
+
+func assertEqInt(t *testing.T, e, c int) {
+	if e != c {
+		t.Fatalf("Expected %d, got %d", e, c)
+	}
+}
+
+func expectEqUint(t *testing.T, e, c uint) {
+	if e != c {
+		t.Errorf("Expected %u, got %u", e, c)
+	}
+}
+
+func expectEqStr(t *testing.T, e, c string) {
+	if e != c {
+		t.Errorf("Expected %s, got %s", e, c)
+	}
+}
+
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
@@ -54,16 +86,24 @@ func TestNoCurrentTest(t *testing.T) {
 
 func TestNoFailure(t *testing.T) {
 	setUpCurrentTest()
-	ExpectThat(17, Equals(17))
+	matcher := &fakeExpectThatMatcher{"", MATCH_TRUE, ""}
+	ExpectThat(17, matcher)
 
-	expectedLen := 0
-	actualLen := len(internal.CurrentTest.FailureRecords)
-	if expectedLen != actualLen {
-		t.Errorf("Expected %d failures, got %d", expectedLen, actualLen)
-	}
+	assertEqInt(t, 0, len(internal.CurrentTest.FailureRecords))
 }
 
 func TestMatchFalseWithoutMessages(t *testing.T) {
+	setUpCurrentTest()
+	matcher := &fakeExpectThatMatcher{"taco", MATCH_FALSE, ""}
+	ExpectThat(17, matcher)
+
+	assertEqInt(t, 1, len(internal.CurrentTest.FailureRecords))
+
+	record := internal.CurrentTest.FailureRecords[0]
+	expectEqStr(t, "expect_that_test.go", record.FileName)
+	expectEqUint(t, 98, record.LineNumber)
+	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
+	expectEqStr(t, "", record.UserError)
 }
 
 func TestMatchUndefinedWithoutMessages(t *testing.T) {
