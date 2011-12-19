@@ -121,9 +121,25 @@ func TestMatchUndefinedWithoutMessages(t *testing.T) {
 }
 
 func TestFailureWithMatcherMessage(t *testing.T) {
+	setUpCurrentTest()
+	matcher := &fakeExpectThatMatcher{"taco", MATCH_UNDEFINED, "which is foo"}
+	ExpectThat(17, matcher)
+
+	assertEqInt(t, 1, len(internal.CurrentTest.FailureRecords))
+
+	record := internal.CurrentTest.FailureRecords[0]
+	expectEqStr(t, "Expected: taco\nActual:   17, which is foo", record.GeneratedError)
 }
 
 func TestFailureWithUserMessage(t *testing.T) {
+	setUpCurrentTest()
+	matcher := &fakeExpectThatMatcher{"taco", MATCH_UNDEFINED, ""}
+	ExpectThat(17, matcher, "Asd: %d %s", 19, "taco")
+
+	assertEqInt(t, 1, len(internal.CurrentTest.FailureRecords))
+	record := internal.CurrentTest.FailureRecords[0]
+
+	expectEqStr(t, "Asd: 19 taco", record.UserError)
 }
 
 func TestAdditionalFailure(t *testing.T) {
