@@ -71,9 +71,39 @@ func TestTrueMatchFromWrapped(t *testing.T) {
 }
 
 func TestFalseMatchFromWrapped(t *testing.T) {
+	matchFunc := func(c interface{}) (MatchResult, string) {
+		return MATCH_FALSE, "taco"
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Not(wrapped)
+
+	res, err := matcher.Matches(0)
+	if res != MATCH_TRUE {
+		t.Errorf("Expected MATCH_TRUE, got %v", res)
+	}
+
+	if err != "" {
+		t.Errorf("Expected empty string, got %v", err)
+	}
 }
 
 func TestUndefinedMatchFromWrapped(t *testing.T) {
+	matchFunc := func(c interface{}) (MatchResult, string) {
+		return MATCH_UNDEFINED, "taco"
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Not(wrapped)
+
+	res, err := matcher.Matches(0)
+	if res != MATCH_UNDEFINED {
+		t.Errorf("Expected MATCH_UNDEFINED, got %v", res)
+	}
+
+	if err != "taco" {
+		t.Errorf("Expected taco, got %v", err)
+	}
 }
 
 func TestDescription(t *testing.T) {
