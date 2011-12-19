@@ -39,10 +39,13 @@ func LessThan(x interface{}) Matcher {
 		panic(fmt.Sprintf("LessThan: unexpected kind %v", kind))
 	}
 
-	// TODO
-	return Equals(x)
+	return &lessThanMatcher{v}
 }
 
 type lessThanMatcher struct {
 	limit reflect.Value
+}
+
+func (m *lessThanMatcher) Description() string {
+	return fmt.Sprintf("less than %v", m.limit)
 }
