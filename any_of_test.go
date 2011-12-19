@@ -41,3 +41,9 @@ func TestOneUndefined(t *testing.T) {
 
 func TestAllFalse(t *testing.T) {
 }
+
+func TestDescriptionForEmptySet(t *testing.T) {
+}
+
+func TestDescriptionForNonEmptySet(t *testing.T) {
+}
