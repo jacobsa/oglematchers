@@ -49,7 +49,7 @@ type lessThanMatcher struct {
 
 func (m *lessThanMatcher) Description() string {
 	// Special case: make it clear that strings are strings.
-	if (m.limit.Kind() == reflect.String) {
+	if m.limit.Kind() == reflect.String {
 		return fmt.Sprintf("less than \"%s\"", m.limit.String())
 	}
 
@@ -117,9 +117,9 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 	}
 
 	// If we get here, we require that we are dealing with integers or floats.
-  v1Legal := isInteger(v1) || isFloat(v1)
-  v2Legal := isInteger(v2) || isFloat(v2)
-	if (!v1Legal || !v2Legal) {
+	v1Legal := isInteger(v1) || isFloat(v1)
+	v2Legal := isInteger(v2) || isFloat(v2)
+	if !v1Legal || !v2Legal {
 		res = MATCH_UNDEFINED
 		err = "which is not comparable"
 		return
