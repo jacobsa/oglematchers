@@ -17,6 +17,7 @@ package ogletest
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 )
 
@@ -57,6 +58,34 @@ func isFloat(v reflect.Value) bool {
 func isComplex(v reflect.Value) bool {
 	k := v.Kind()
 	return k == reflect.Complex64 || k == reflect.Complex128
+}
+
+func checkAgainstInt64(e int64, c reflect.Value) (res MatchResult, err string) {
+	res = MATCH_FALSE
+
+	switch {
+	case isSignedInteger(c):
+		if c.Int() == e {
+			res = MATCH_TRUE
+		}
+
+	case isUnsignedInteger(c):
+		u := c.Uint()
+		if u <= math.MaxInt64 && int64(u) == e {
+			res = MATCH_TRUE
+		}
+
+	// Turn around the various floating point types so that the checkAgainst*
+	// functions for them can deal with precision issues.
+	case isFloat(c), isComplex(c):
+		return Equals(c.Interface()).Matches(e)
+
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
+	}
+
+	return
 }
 
 func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err string) {
