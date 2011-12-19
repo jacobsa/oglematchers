@@ -51,7 +51,7 @@ func assertEqInt(t *testing.T, e, c int) {
 
 func expectEqUint(t *testing.T, e, c uint) {
 	if e != c {
-		t.Errorf("Expected %u, got %u", e, c)
+		t.Errorf("Expected %v, got %v", e, c)
 	}
 }
 
