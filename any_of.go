@@ -16,6 +16,9 @@
 package ogletest
 
 import (
+	"fmt"
+	"reflect"
+	"strings"
 )
 
 // AnyOf accepts a set of values S and returns a matcher that follows the
@@ -36,5 +39,37 @@ import (
 //
 // This is akin to a logical OR operation for matchers.
 func AnyOf(vals ...interface{}) Matcher {
-	return Equals(0)
+	// Get ahold of a type variable for the Matcher interface.
+	var dummy *Matcher
+	matcherType := reflect.TypeOf(dummy).Elem()
+
+	// Create a matcher for each value, or use the value itself if it's already a
+	// matcher.
+	wrapped := make([]Matcher, len(vals))
+	for i, v := range vals {
+		if reflect.TypeOf(v).Implements(matcherType) {
+			wrapped[i] = v.(Matcher)
+		} else {
+			wrapped[i] = Equals(v)
+		}
+	}
+
+	return &anyOfMatcher{wrapped}
+}
+
+type anyOfMatcher struct {
+	wrapped []Matcher
+}
+
+func (m *anyOfMatcher) Description() string {
+	wrappedDescs := make([]string, len(m.wrapped))
+	for i, matcher := range m.wrapped {
+		wrappedDescs[i] = matcher.Description()
+	}
+
+	return fmt.Sprintf("or(%s)", strings.Join(wrappedDescs, ", "))
+}
+
+func (m *anyOfMatcher) Matches(c interface{}) (MatchResult, string) {
+	return MATCH_UNDEFINED, ""
 }
