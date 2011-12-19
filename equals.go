@@ -166,6 +166,35 @@ func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err s
 	return
 }
 
+func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err string) {
+	res = MATCH_FALSE
+	realPart := real(e)
+	imaginaryPart := imag(e)
+
+	switch {
+	case isInteger(c) || isFloat(c):
+		// If we have no imaginary part, then we should just compare against the
+		// real part. Otherwise, we can't be equal.
+		if imaginaryPart != 0 {
+			res = MATCH_FALSE
+			return
+		}
+
+		return checkAgainstFloat64(realPart, c)
+
+	case isComplex(c):
+		if c.Complex() == e {
+			res = MATCH_TRUE
+		}
+
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
+	}
+
+	return
+}
+
 ////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
@@ -183,6 +212,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case reflect.Complex64:
 		return checkAgainstComplex64(complex64(e.Complex()), c)
+
+	case reflect.Complex128:
+		return checkAgainstComplex128(complex128(e.Complex()), c)
 	}
 
 	return MATCH_UNDEFINED, "TODO"
