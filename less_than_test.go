@@ -586,3 +586,26 @@ func TestLtPositiveFloatLiteral(t *testing.T) {
 
 	checkLtTestCases(t, matcher, cases)
 }
+
+////////////////////////////////////////////////////////////
+// String literals
+////////////////////////////////////////////////////////////
+
+func TestLtEmptyString(t *testing.T) {
+	matcher := LessThan("")
+	desc := matcher.Description()
+	expectedDesc := "less than \"\""
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []ltTestCase{
+		ltTestCase{"", MATCH_FALSE, ""},
+		ltTestCase{"\x00", MATCH_FALSE, ""},
+		ltTestCase{"a", MATCH_FALSE, ""},
+		ltTestCase{"foo", MATCH_FALSE, ""},
+	}
+
+	checkLtTestCases(t, matcher, cases)
+}
