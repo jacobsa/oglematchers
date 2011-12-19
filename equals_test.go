@@ -28,13 +28,13 @@ var someInt int = -17
 // Helpers
 ////////////////////////////////////////////////////////////
 
-type testCase struct {
+type equalsTestCase struct {
 	candidate      interface{}
 	expectedResult MatchResult
 	expectedError  string
 }
 
-func checkTestCases(t *testing.T, matcher Matcher, cases []testCase) {
+func checkTestCases(t *testing.T, matcher Matcher, cases []equalsTestCase) {
 	for i, c := range cases {
 		result, err := matcher.Matches(c.candidate)
 
@@ -67,47 +67,47 @@ func TestNegativeIntegerLiteral(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -1073741824.
-		testCase{-1073741824, MATCH_TRUE, ""},
-		testCase{-1073741824.0, MATCH_TRUE, ""},
-		testCase{-1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(-1073741824), MATCH_TRUE, ""},
-		testCase{int32(-1073741824), MATCH_TRUE, ""},
-		testCase{int64(-1073741824), MATCH_TRUE, ""},
-		testCase{float32(-1073741824), MATCH_TRUE, ""},
-		testCase{float64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex128(-1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{-1073741824, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
 
 		// Values that would be -1073741824 in two's complement.
-		testCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int(-1073741823), MATCH_FALSE, ""},
-		testCase{int32(-1073741823), MATCH_FALSE, ""},
-		testCase{int64(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1073741823), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float64(-1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(-1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(-1073741823), MATCH_FALSE, ""},
-		testCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -123,44 +123,44 @@ func TestPositiveIntegerLiteral(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 1073741824.
-		testCase{1073741824, MATCH_TRUE, ""},
-		testCase{1073741824.0, MATCH_TRUE, ""},
-		testCase{1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(1073741824), MATCH_TRUE, ""},
-		testCase{uint(1073741824), MATCH_TRUE, ""},
-		testCase{int32(1073741824), MATCH_TRUE, ""},
-		testCase{int64(1073741824), MATCH_TRUE, ""},
-		testCase{uint32(1073741824), MATCH_TRUE, ""},
-		testCase{uint64(1073741824), MATCH_TRUE, ""},
-		testCase{float32(1073741824), MATCH_TRUE, ""},
-		testCase{float64(1073741824), MATCH_TRUE, ""},
-		testCase{complex64(1073741824), MATCH_TRUE, ""},
-		testCase{complex128(1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
-		testCase{interface{}(uint(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{1073741824, MATCH_TRUE, ""},
+		equalsTestCase{1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(uint(1073741824)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(1073741823), MATCH_FALSE, ""},
-		testCase{int32(1073741823), MATCH_FALSE, ""},
-		testCase{int64(1073741823), MATCH_FALSE, ""},
-		testCase{float64(1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(1073741823), MATCH_FALSE, ""},
-		testCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -180,48 +180,48 @@ func TestNegativeIntegralFloatingPointLiteral(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -1073741824.
-		testCase{-1073741824, MATCH_TRUE, ""},
-		testCase{-1073741824.0, MATCH_TRUE, ""},
-		testCase{-1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(-1073741824), MATCH_TRUE, ""},
-		testCase{int32(-1073741824), MATCH_TRUE, ""},
-		testCase{int64(-1073741824), MATCH_TRUE, ""},
-		testCase{float32(-1073741824), MATCH_TRUE, ""},
-		testCase{float64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex128(-1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
-		testCase{interface{}(float64(-1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{-1073741824, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(-1073741824)), MATCH_TRUE, ""},
 
 		// Values that would be -1073741824 in two's complement.
-		testCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int(-1073741823), MATCH_FALSE, ""},
-		testCase{int32(-1073741823), MATCH_FALSE, ""},
-		testCase{int64(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1073741823), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float64(-1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(-1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(-1073741823), MATCH_FALSE, ""},
-		testCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -237,52 +237,52 @@ func TestPositiveIntegralFloatingPointLiteral(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 1073741824.
-		testCase{1073741824, MATCH_TRUE, ""},
-		testCase{1073741824.0, MATCH_TRUE, ""},
-		testCase{1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(1073741824), MATCH_TRUE, ""},
-		testCase{int32(1073741824), MATCH_TRUE, ""},
-		testCase{int64(1073741824), MATCH_TRUE, ""},
-		testCase{uint(1073741824), MATCH_TRUE, ""},
-		testCase{uint32(1073741824), MATCH_TRUE, ""},
-		testCase{uint64(1073741824), MATCH_TRUE, ""},
-		testCase{float32(1073741824), MATCH_TRUE, ""},
-		testCase{float64(1073741824), MATCH_TRUE, ""},
-		testCase{complex64(1073741824), MATCH_TRUE, ""},
-		testCase{complex128(1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
-		testCase{interface{}(float64(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{1073741824, MATCH_TRUE, ""},
+		equalsTestCase{1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(1073741824)), MATCH_TRUE, ""},
 
 		// Values that would be 1073741824 in two's complement.
-		testCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(1073741823), MATCH_FALSE, ""},
-		testCase{int32(1073741823), MATCH_FALSE, ""},
-		testCase{int64(1073741823), MATCH_FALSE, ""},
-		testCase{uint(1073741823), MATCH_FALSE, ""},
-		testCase{uint32(1073741823), MATCH_FALSE, ""},
-		testCase{uint64(1073741823), MATCH_FALSE, ""},
-		testCase{float64(1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(1073741823), MATCH_FALSE, ""},
-		testCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{uint(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{uint32(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{uint64(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -297,40 +297,40 @@ func TestNonIntegralFloatingPointLiteral(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 17.1.
-		testCase{17.1, MATCH_TRUE, ""},
-		testCase{17.1, MATCH_TRUE, ""},
-		testCase{17.1 + 0i, MATCH_TRUE, ""},
-		testCase{float32(17.1), MATCH_TRUE, ""},
-		testCase{float64(17.1), MATCH_TRUE, ""},
-		testCase{complex64(17.1), MATCH_TRUE, ""},
-		testCase{complex128(17.1), MATCH_TRUE, ""},
+		equalsTestCase{17.1, MATCH_TRUE, ""},
+		equalsTestCase{17.1, MATCH_TRUE, ""},
+		equalsTestCase{17.1 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(17.1), MATCH_TRUE, ""},
+		equalsTestCase{float64(17.1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(17.1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(17.1), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{17, MATCH_FALSE, ""},
-		testCase{17.2, MATCH_FALSE, ""},
-		testCase{18, MATCH_FALSE, ""},
-		testCase{int(17), MATCH_FALSE, ""},
-		testCase{int(18), MATCH_FALSE, ""},
-		testCase{int32(17), MATCH_FALSE, ""},
-		testCase{int64(17), MATCH_FALSE, ""},
-		testCase{uint(17), MATCH_FALSE, ""},
-		testCase{uint32(17), MATCH_FALSE, ""},
-		testCase{uint64(17), MATCH_FALSE, ""},
-		testCase{complex128(17.1 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{17, MATCH_FALSE, ""},
+		equalsTestCase{17.2, MATCH_FALSE, ""},
+		equalsTestCase{18, MATCH_FALSE, ""},
+		equalsTestCase{int(17), MATCH_FALSE, ""},
+		equalsTestCase{int(18), MATCH_FALSE, ""},
+		equalsTestCase{int32(17), MATCH_FALSE, ""},
+		equalsTestCase{int64(17), MATCH_FALSE, ""},
+		equalsTestCase{uint(17), MATCH_FALSE, ""},
+		equalsTestCase{uint32(17), MATCH_FALSE, ""},
+		equalsTestCase{uint64(17), MATCH_FALSE, ""},
+		equalsTestCase{complex128(17.1 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -349,34 +349,34 @@ func TestFalse(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// bools
-		testCase{false, MATCH_TRUE, ""},
-		testCase{bool(false), MATCH_TRUE, ""},
+		equalsTestCase{false, MATCH_TRUE, ""},
+		equalsTestCase{bool(false), MATCH_TRUE, ""},
 
-		testCase{true, MATCH_FALSE, ""},
-		testCase{bool(true), MATCH_FALSE, ""},
+		equalsTestCase{true, MATCH_FALSE, ""},
+		equalsTestCase{bool(true), MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{int(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a bool"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a bool"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -391,34 +391,34 @@ func TestTrue(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// bools
-		testCase{true, MATCH_TRUE, ""},
-		testCase{bool(true), MATCH_TRUE, ""},
+		equalsTestCase{true, MATCH_TRUE, ""},
+		equalsTestCase{bool(true), MATCH_TRUE, ""},
 
-		testCase{false, MATCH_FALSE, ""},
-		testCase{bool(false), MATCH_FALSE, ""},
+		equalsTestCase{false, MATCH_FALSE, ""},
+		equalsTestCase{bool(false), MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{int(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int8(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int16(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int32(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{int64(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint8(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint16(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint32(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uint64(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{uintptr(1), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a bool"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a bool"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int8(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int16(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int32(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{int64(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint8(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint16(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint32(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uint64(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{uintptr(1), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a bool"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a bool"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -438,47 +438,47 @@ func TestNegativeInt(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -1073741824.
-		testCase{-1073741824, MATCH_TRUE, ""},
-		testCase{-1073741824.0, MATCH_TRUE, ""},
-		testCase{-1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(-1073741824), MATCH_TRUE, ""},
-		testCase{int32(-1073741824), MATCH_TRUE, ""},
-		testCase{int64(-1073741824), MATCH_TRUE, ""},
-		testCase{float32(-1073741824), MATCH_TRUE, ""},
-		testCase{float64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex128(-1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{-1073741824, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
 
 		// Values that would be -1073741824 in two's complement.
-		testCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int(-1073741823), MATCH_FALSE, ""},
-		testCase{int32(-1073741823), MATCH_FALSE, ""},
-		testCase{int64(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1073741823), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float64(-1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(-1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(-1073741823), MATCH_FALSE, ""},
-		testCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -494,44 +494,44 @@ func TestPositiveInt(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 1073741824.
-		testCase{1073741824, MATCH_TRUE, ""},
-		testCase{1073741824.0, MATCH_TRUE, ""},
-		testCase{1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(1073741824), MATCH_TRUE, ""},
-		testCase{uint(1073741824), MATCH_TRUE, ""},
-		testCase{int32(1073741824), MATCH_TRUE, ""},
-		testCase{int64(1073741824), MATCH_TRUE, ""},
-		testCase{uint32(1073741824), MATCH_TRUE, ""},
-		testCase{uint64(1073741824), MATCH_TRUE, ""},
-		testCase{float32(1073741824), MATCH_TRUE, ""},
-		testCase{float64(1073741824), MATCH_TRUE, ""},
-		testCase{complex64(1073741824), MATCH_TRUE, ""},
-		testCase{complex128(1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
-		testCase{interface{}(uint(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{1073741824, MATCH_TRUE, ""},
+		equalsTestCase{1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(uint(1073741824)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(1073741823), MATCH_FALSE, ""},
-		testCase{int32(1073741823), MATCH_FALSE, ""},
-		testCase{int64(1073741823), MATCH_FALSE, ""},
-		testCase{float64(1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(1073741823), MATCH_FALSE, ""},
-		testCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -550,53 +550,53 @@ func TestNegativeInt8(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -17.
-		testCase{-17, MATCH_TRUE, ""},
-		testCase{-17.0, MATCH_TRUE, ""},
-		testCase{-17 + 0i, MATCH_TRUE, ""},
-		testCase{int(-17), MATCH_TRUE, ""},
-		testCase{int8(-17), MATCH_TRUE, ""},
-		testCase{int16(-17), MATCH_TRUE, ""},
-		testCase{int32(-17), MATCH_TRUE, ""},
-		testCase{int64(-17), MATCH_TRUE, ""},
-		testCase{float32(-17), MATCH_TRUE, ""},
-		testCase{float64(-17), MATCH_TRUE, ""},
-		testCase{complex64(-17), MATCH_TRUE, ""},
-		testCase{complex128(-17), MATCH_TRUE, ""},
-		testCase{interface{}(int(-17)), MATCH_TRUE, ""},
+		equalsTestCase{-17, MATCH_TRUE, ""},
+		equalsTestCase{-17.0, MATCH_TRUE, ""},
+		equalsTestCase{-17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(-17), MATCH_TRUE, ""},
+		equalsTestCase{int8(-17), MATCH_TRUE, ""},
+		equalsTestCase{int16(-17), MATCH_TRUE, ""},
+		equalsTestCase{int32(-17), MATCH_TRUE, ""},
+		equalsTestCase{int64(-17), MATCH_TRUE, ""},
+		equalsTestCase{float32(-17), MATCH_TRUE, ""},
+		equalsTestCase{float64(-17), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-17), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-17), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(-17)), MATCH_TRUE, ""},
 
 		// Values that would be -17 in two's complement.
-		testCase{uint((1 << 32) - 17), MATCH_FALSE, ""},
-		testCase{uint8((1 << 8) - 17), MATCH_FALSE, ""},
-		testCase{uint16((1 << 16) - 17), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 17), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 17), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 17), MATCH_FALSE, ""},
+		equalsTestCase{uint8((1 << 8) - 17), MATCH_FALSE, ""},
+		equalsTestCase{uint16((1 << 16) - 17), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 17), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 17), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int(-16), MATCH_FALSE, ""},
-		testCase{int8(-16), MATCH_FALSE, ""},
-		testCase{int16(-16), MATCH_FALSE, ""},
-		testCase{int32(-16), MATCH_FALSE, ""},
-		testCase{int64(-16), MATCH_FALSE, ""},
+		equalsTestCase{int(-16), MATCH_FALSE, ""},
+		equalsTestCase{int8(-16), MATCH_FALSE, ""},
+		equalsTestCase{int16(-16), MATCH_FALSE, ""},
+		equalsTestCase{int32(-16), MATCH_FALSE, ""},
+		equalsTestCase{int64(-16), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float32(-17.1), MATCH_FALSE, ""},
-		testCase{float32(-16.9), MATCH_FALSE, ""},
-		testCase{complex64(-16), MATCH_FALSE, ""},
-		testCase{complex64(-17 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float32(-17.1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-16.9), MATCH_FALSE, ""},
+		equalsTestCase{complex64(-16), MATCH_FALSE, ""},
+		equalsTestCase{complex64(-17 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr((1 << 32) - 17), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{-17}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{-17}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"-17", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr((1 << 32) - 17), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{-17}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{-17}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"-17", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -611,49 +611,49 @@ func TestZeroInt8(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 0.
-		testCase{0, MATCH_TRUE, ""},
-		testCase{0.0, MATCH_TRUE, ""},
-		testCase{0 + 0i, MATCH_TRUE, ""},
-		testCase{int(0), MATCH_TRUE, ""},
-		testCase{int8(0), MATCH_TRUE, ""},
-		testCase{int16(0), MATCH_TRUE, ""},
-		testCase{int32(0), MATCH_TRUE, ""},
-		testCase{int64(0), MATCH_TRUE, ""},
-		testCase{float32(0), MATCH_TRUE, ""},
-		testCase{float64(0), MATCH_TRUE, ""},
-		testCase{complex64(0), MATCH_TRUE, ""},
-		testCase{complex128(0), MATCH_TRUE, ""},
-		testCase{interface{}(int(0)), MATCH_TRUE, ""},
-		testCase{uint(0), MATCH_TRUE, ""},
-		testCase{uint8(0), MATCH_TRUE, ""},
-		testCase{uint16(0), MATCH_TRUE, ""},
-		testCase{uint32(0), MATCH_TRUE, ""},
-		testCase{uint64(0), MATCH_TRUE, ""},
+		equalsTestCase{0, MATCH_TRUE, ""},
+		equalsTestCase{0.0, MATCH_TRUE, ""},
+		equalsTestCase{0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(0), MATCH_TRUE, ""},
+		equalsTestCase{int8(0), MATCH_TRUE, ""},
+		equalsTestCase{int16(0), MATCH_TRUE, ""},
+		equalsTestCase{int32(0), MATCH_TRUE, ""},
+		equalsTestCase{int64(0), MATCH_TRUE, ""},
+		equalsTestCase{float32(0), MATCH_TRUE, ""},
+		equalsTestCase{float64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(0), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(0)), MATCH_TRUE, ""},
+		equalsTestCase{uint(0), MATCH_TRUE, ""},
+		equalsTestCase{uint8(0), MATCH_TRUE, ""},
+		equalsTestCase{uint16(0), MATCH_TRUE, ""},
+		equalsTestCase{uint32(0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(0), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(1), MATCH_FALSE, ""},
-		testCase{int8(1), MATCH_FALSE, ""},
-		testCase{int16(1), MATCH_FALSE, ""},
-		testCase{int32(1), MATCH_FALSE, ""},
-		testCase{int64(1), MATCH_FALSE, ""},
-		testCase{float32(-0.1), MATCH_FALSE, ""},
-		testCase{float32(0.1), MATCH_FALSE, ""},
-		testCase{complex64(1), MATCH_FALSE, ""},
-		testCase{complex64(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(1), MATCH_FALSE, ""},
+		equalsTestCase{int8(1), MATCH_FALSE, ""},
+		equalsTestCase{int16(1), MATCH_FALSE, ""},
+		equalsTestCase{int32(1), MATCH_FALSE, ""},
+		equalsTestCase{int64(1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-0.1), MATCH_FALSE, ""},
+		equalsTestCase{float32(0.1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(0 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{0}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{0}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"0", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{0}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{0}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"0", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -668,49 +668,49 @@ func TestPositiveInt8(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 17.
-		testCase{17, MATCH_TRUE, ""},
-		testCase{17.0, MATCH_TRUE, ""},
-		testCase{17 + 0i, MATCH_TRUE, ""},
-		testCase{int(17), MATCH_TRUE, ""},
-		testCase{int8(17), MATCH_TRUE, ""},
-		testCase{int16(17), MATCH_TRUE, ""},
-		testCase{int32(17), MATCH_TRUE, ""},
-		testCase{int64(17), MATCH_TRUE, ""},
-		testCase{float32(17), MATCH_TRUE, ""},
-		testCase{float64(17), MATCH_TRUE, ""},
-		testCase{complex64(17), MATCH_TRUE, ""},
-		testCase{complex128(17), MATCH_TRUE, ""},
-		testCase{interface{}(int(17)), MATCH_TRUE, ""},
-		testCase{uint(17), MATCH_TRUE, ""},
-		testCase{uint8(17), MATCH_TRUE, ""},
-		testCase{uint16(17), MATCH_TRUE, ""},
-		testCase{uint32(17), MATCH_TRUE, ""},
-		testCase{uint64(17), MATCH_TRUE, ""},
+		equalsTestCase{17, MATCH_TRUE, ""},
+		equalsTestCase{17.0, MATCH_TRUE, ""},
+		equalsTestCase{17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(17), MATCH_TRUE, ""},
+		equalsTestCase{int8(17), MATCH_TRUE, ""},
+		equalsTestCase{int16(17), MATCH_TRUE, ""},
+		equalsTestCase{int32(17), MATCH_TRUE, ""},
+		equalsTestCase{int64(17), MATCH_TRUE, ""},
+		equalsTestCase{float32(17), MATCH_TRUE, ""},
+		equalsTestCase{float64(17), MATCH_TRUE, ""},
+		equalsTestCase{complex64(17), MATCH_TRUE, ""},
+		equalsTestCase{complex128(17), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(17)), MATCH_TRUE, ""},
+		equalsTestCase{uint(17), MATCH_TRUE, ""},
+		equalsTestCase{uint8(17), MATCH_TRUE, ""},
+		equalsTestCase{uint16(17), MATCH_TRUE, ""},
+		equalsTestCase{uint32(17), MATCH_TRUE, ""},
+		equalsTestCase{uint64(17), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(16), MATCH_FALSE, ""},
-		testCase{int8(16), MATCH_FALSE, ""},
-		testCase{int16(16), MATCH_FALSE, ""},
-		testCase{int32(16), MATCH_FALSE, ""},
-		testCase{int64(16), MATCH_FALSE, ""},
-		testCase{float32(16.9), MATCH_FALSE, ""},
-		testCase{float32(17.1), MATCH_FALSE, ""},
-		testCase{complex64(16), MATCH_FALSE, ""},
-		testCase{complex64(17 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(16), MATCH_FALSE, ""},
+		equalsTestCase{int8(16), MATCH_FALSE, ""},
+		equalsTestCase{int16(16), MATCH_FALSE, ""},
+		equalsTestCase{int32(16), MATCH_FALSE, ""},
+		equalsTestCase{int64(16), MATCH_FALSE, ""},
+		equalsTestCase{float32(16.9), MATCH_FALSE, ""},
+		equalsTestCase{float32(17.1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(16), MATCH_FALSE, ""},
+		equalsTestCase{complex64(17 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(17), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{17}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{17}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"17", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(17), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{17}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{17}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"17", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -729,51 +729,51 @@ func TestNegativeInt16(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -32766.
-		testCase{-32766, MATCH_TRUE, ""},
-		testCase{-32766.0, MATCH_TRUE, ""},
-		testCase{-32766 + 0i, MATCH_TRUE, ""},
-		testCase{int(-32766), MATCH_TRUE, ""},
-		testCase{int16(-32766), MATCH_TRUE, ""},
-		testCase{int32(-32766), MATCH_TRUE, ""},
-		testCase{int64(-32766), MATCH_TRUE, ""},
-		testCase{float32(-32766), MATCH_TRUE, ""},
-		testCase{float64(-32766), MATCH_TRUE, ""},
-		testCase{complex64(-32766), MATCH_TRUE, ""},
-		testCase{complex128(-32766), MATCH_TRUE, ""},
-		testCase{interface{}(int(-32766)), MATCH_TRUE, ""},
+		equalsTestCase{-32766, MATCH_TRUE, ""},
+		equalsTestCase{-32766.0, MATCH_TRUE, ""},
+		equalsTestCase{-32766 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(-32766), MATCH_TRUE, ""},
+		equalsTestCase{int16(-32766), MATCH_TRUE, ""},
+		equalsTestCase{int32(-32766), MATCH_TRUE, ""},
+		equalsTestCase{int64(-32766), MATCH_TRUE, ""},
+		equalsTestCase{float32(-32766), MATCH_TRUE, ""},
+		equalsTestCase{float64(-32766), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-32766), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-32766), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(-32766)), MATCH_TRUE, ""},
 
 		// Values that would be -32766 in two's complement.
-		testCase{uint((1 << 32) - 32766), MATCH_FALSE, ""},
-		testCase{uint16((1 << 16) - 32766), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 32766), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 32766), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 32766), MATCH_FALSE, ""},
+		equalsTestCase{uint16((1 << 16) - 32766), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 32766), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 32766), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int(-16), MATCH_FALSE, ""},
-		testCase{int8(-16), MATCH_FALSE, ""},
-		testCase{int16(-16), MATCH_FALSE, ""},
-		testCase{int32(-16), MATCH_FALSE, ""},
-		testCase{int64(-16), MATCH_FALSE, ""},
+		equalsTestCase{int(-16), MATCH_FALSE, ""},
+		equalsTestCase{int8(-16), MATCH_FALSE, ""},
+		equalsTestCase{int16(-16), MATCH_FALSE, ""},
+		equalsTestCase{int32(-16), MATCH_FALSE, ""},
+		equalsTestCase{int64(-16), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float32(-32766.1), MATCH_FALSE, ""},
-		testCase{float32(-32765.9), MATCH_FALSE, ""},
-		testCase{complex64(-32766.1), MATCH_FALSE, ""},
-		testCase{complex64(-32766 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float32(-32766.1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-32765.9), MATCH_FALSE, ""},
+		equalsTestCase{complex64(-32766.1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(-32766 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr((1 << 32) - 32766), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{-32766}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{-32766}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"-32766", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr((1 << 32) - 32766), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{-32766}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{-32766}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"-32766", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -788,49 +788,49 @@ func TestZeroInt16(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 0.
-		testCase{0, MATCH_TRUE, ""},
-		testCase{0.0, MATCH_TRUE, ""},
-		testCase{0 + 0i, MATCH_TRUE, ""},
-		testCase{int(0), MATCH_TRUE, ""},
-		testCase{int8(0), MATCH_TRUE, ""},
-		testCase{int16(0), MATCH_TRUE, ""},
-		testCase{int32(0), MATCH_TRUE, ""},
-		testCase{int64(0), MATCH_TRUE, ""},
-		testCase{float32(0), MATCH_TRUE, ""},
-		testCase{float64(0), MATCH_TRUE, ""},
-		testCase{complex64(0), MATCH_TRUE, ""},
-		testCase{complex128(0), MATCH_TRUE, ""},
-		testCase{interface{}(int(0)), MATCH_TRUE, ""},
-		testCase{uint(0), MATCH_TRUE, ""},
-		testCase{uint8(0), MATCH_TRUE, ""},
-		testCase{uint16(0), MATCH_TRUE, ""},
-		testCase{uint32(0), MATCH_TRUE, ""},
-		testCase{uint64(0), MATCH_TRUE, ""},
+		equalsTestCase{0, MATCH_TRUE, ""},
+		equalsTestCase{0.0, MATCH_TRUE, ""},
+		equalsTestCase{0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(0), MATCH_TRUE, ""},
+		equalsTestCase{int8(0), MATCH_TRUE, ""},
+		equalsTestCase{int16(0), MATCH_TRUE, ""},
+		equalsTestCase{int32(0), MATCH_TRUE, ""},
+		equalsTestCase{int64(0), MATCH_TRUE, ""},
+		equalsTestCase{float32(0), MATCH_TRUE, ""},
+		equalsTestCase{float64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(0), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(0)), MATCH_TRUE, ""},
+		equalsTestCase{uint(0), MATCH_TRUE, ""},
+		equalsTestCase{uint8(0), MATCH_TRUE, ""},
+		equalsTestCase{uint16(0), MATCH_TRUE, ""},
+		equalsTestCase{uint32(0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(0), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(1), MATCH_FALSE, ""},
-		testCase{int8(1), MATCH_FALSE, ""},
-		testCase{int16(1), MATCH_FALSE, ""},
-		testCase{int32(1), MATCH_FALSE, ""},
-		testCase{int64(1), MATCH_FALSE, ""},
-		testCase{float32(-0.1), MATCH_FALSE, ""},
-		testCase{float32(0.1), MATCH_FALSE, ""},
-		testCase{complex64(1), MATCH_FALSE, ""},
-		testCase{complex64(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(1), MATCH_FALSE, ""},
+		equalsTestCase{int8(1), MATCH_FALSE, ""},
+		equalsTestCase{int16(1), MATCH_FALSE, ""},
+		equalsTestCase{int32(1), MATCH_FALSE, ""},
+		equalsTestCase{int64(1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-0.1), MATCH_FALSE, ""},
+		equalsTestCase{float32(0.1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(0 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{0}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{0}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"0", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{0}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{0}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"0", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -845,46 +845,46 @@ func TestPositiveInt16(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 32765.
-		testCase{32765, MATCH_TRUE, ""},
-		testCase{32765.0, MATCH_TRUE, ""},
-		testCase{32765 + 0i, MATCH_TRUE, ""},
-		testCase{int(32765), MATCH_TRUE, ""},
-		testCase{int16(32765), MATCH_TRUE, ""},
-		testCase{int32(32765), MATCH_TRUE, ""},
-		testCase{int64(32765), MATCH_TRUE, ""},
-		testCase{float32(32765), MATCH_TRUE, ""},
-		testCase{float64(32765), MATCH_TRUE, ""},
-		testCase{complex64(32765), MATCH_TRUE, ""},
-		testCase{complex128(32765), MATCH_TRUE, ""},
-		testCase{interface{}(int(32765)), MATCH_TRUE, ""},
-		testCase{uint(32765), MATCH_TRUE, ""},
-		testCase{uint16(32765), MATCH_TRUE, ""},
-		testCase{uint32(32765), MATCH_TRUE, ""},
-		testCase{uint64(32765), MATCH_TRUE, ""},
+		equalsTestCase{32765, MATCH_TRUE, ""},
+		equalsTestCase{32765.0, MATCH_TRUE, ""},
+		equalsTestCase{32765 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(32765), MATCH_TRUE, ""},
+		equalsTestCase{int16(32765), MATCH_TRUE, ""},
+		equalsTestCase{int32(32765), MATCH_TRUE, ""},
+		equalsTestCase{int64(32765), MATCH_TRUE, ""},
+		equalsTestCase{float32(32765), MATCH_TRUE, ""},
+		equalsTestCase{float64(32765), MATCH_TRUE, ""},
+		equalsTestCase{complex64(32765), MATCH_TRUE, ""},
+		equalsTestCase{complex128(32765), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(32765)), MATCH_TRUE, ""},
+		equalsTestCase{uint(32765), MATCH_TRUE, ""},
+		equalsTestCase{uint16(32765), MATCH_TRUE, ""},
+		equalsTestCase{uint32(32765), MATCH_TRUE, ""},
+		equalsTestCase{uint64(32765), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(32764), MATCH_FALSE, ""},
-		testCase{int16(32764), MATCH_FALSE, ""},
-		testCase{int32(32764), MATCH_FALSE, ""},
-		testCase{int64(32764), MATCH_FALSE, ""},
-		testCase{float32(32764.9), MATCH_FALSE, ""},
-		testCase{float32(32765.1), MATCH_FALSE, ""},
-		testCase{complex64(32765.9), MATCH_FALSE, ""},
-		testCase{complex64(32765 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(32764), MATCH_FALSE, ""},
+		equalsTestCase{int16(32764), MATCH_FALSE, ""},
+		equalsTestCase{int32(32764), MATCH_FALSE, ""},
+		equalsTestCase{int64(32764), MATCH_FALSE, ""},
+		equalsTestCase{float32(32764.9), MATCH_FALSE, ""},
+		equalsTestCase{float32(32765.1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(32765.9), MATCH_FALSE, ""},
+		equalsTestCase{complex64(32765 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(32765), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{32765}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{32765}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"32765", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(32765), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{32765}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{32765}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"32765", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -904,47 +904,47 @@ func TestNegativeInt32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -1073741824.
-		testCase{-1073741824, MATCH_TRUE, ""},
-		testCase{-1073741824.0, MATCH_TRUE, ""},
-		testCase{-1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(-1073741824), MATCH_TRUE, ""},
-		testCase{int32(-1073741824), MATCH_TRUE, ""},
-		testCase{int64(-1073741824), MATCH_TRUE, ""},
-		testCase{float32(-1073741824), MATCH_TRUE, ""},
-		testCase{float64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex64(-1073741824), MATCH_TRUE, ""},
-		testCase{complex128(-1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{-1073741824, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{-1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(-1073741824)), MATCH_TRUE, ""},
 
 		// Values that would be -1073741824 in two's complement.
-		testCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) - 1073741824), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 1073741824), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int(-1073741823), MATCH_FALSE, ""},
-		testCase{int32(-1073741823), MATCH_FALSE, ""},
-		testCase{int64(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1073741823), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float64(-1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(-1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(-1073741823), MATCH_FALSE, ""},
-		testCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -960,44 +960,44 @@ func TestPositiveInt32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 1073741824.
-		testCase{1073741824, MATCH_TRUE, ""},
-		testCase{1073741824.0, MATCH_TRUE, ""},
-		testCase{1073741824 + 0i, MATCH_TRUE, ""},
-		testCase{int(1073741824), MATCH_TRUE, ""},
-		testCase{uint(1073741824), MATCH_TRUE, ""},
-		testCase{int32(1073741824), MATCH_TRUE, ""},
-		testCase{int64(1073741824), MATCH_TRUE, ""},
-		testCase{uint32(1073741824), MATCH_TRUE, ""},
-		testCase{uint64(1073741824), MATCH_TRUE, ""},
-		testCase{float32(1073741824), MATCH_TRUE, ""},
-		testCase{float64(1073741824), MATCH_TRUE, ""},
-		testCase{complex64(1073741824), MATCH_TRUE, ""},
-		testCase{complex128(1073741824), MATCH_TRUE, ""},
-		testCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
-		testCase{interface{}(uint(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{1073741824, MATCH_TRUE, ""},
+		equalsTestCase{1073741824.0, MATCH_TRUE, ""},
+		equalsTestCase{1073741824 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{int64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{uint64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float32(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{float64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex64(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{complex128(1073741824), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int(1073741824)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(uint(1073741824)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(1073741823), MATCH_FALSE, ""},
-		testCase{int32(1073741823), MATCH_FALSE, ""},
-		testCase{int64(1073741823), MATCH_FALSE, ""},
-		testCase{float64(1073741824.1), MATCH_FALSE, ""},
-		testCase{float64(1073741823.9), MATCH_FALSE, ""},
-		testCase{complex128(1073741823), MATCH_FALSE, ""},
-		testCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int32(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{int64(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741824.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1073741823.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741823), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1073741824 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1017,40 +1017,40 @@ func TestNegativeInt64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -1099511627776.
-		testCase{-1099511627776.0, MATCH_TRUE, ""},
-		testCase{-1099511627776 + 0i, MATCH_TRUE, ""},
-		testCase{int64(-1099511627776), MATCH_TRUE, ""},
-		testCase{float32(-1099511627776), MATCH_TRUE, ""},
-		testCase{float64(-1099511627776), MATCH_TRUE, ""},
-		testCase{complex64(-1099511627776), MATCH_TRUE, ""},
-		testCase{complex128(-1099511627776), MATCH_TRUE, ""},
-		testCase{interface{}(int64(-1099511627776)), MATCH_TRUE, ""},
+		equalsTestCase{-1099511627776.0, MATCH_TRUE, ""},
+		equalsTestCase{-1099511627776 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int64(-1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{float32(-1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{float64(-1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int64(-1099511627776)), MATCH_TRUE, ""},
 
 		// Values that would be -1099511627776 in two's complement.
-		testCase{uint64((1 << 64) - 1099511627776), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 1099511627776), MATCH_FALSE, ""},
 
 		// Non-equal values of signed integer type.
-		testCase{int64(-1099511627775), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1099511627775), MATCH_FALSE, ""},
 
 		// Non-equal values of other numeric types.
-		testCase{float64(-1099511627776.1), MATCH_FALSE, ""},
-		testCase{float64(-1099511627775.9), MATCH_FALSE, ""},
-		testCase{complex128(-1099511627775), MATCH_FALSE, ""},
-		testCase{complex128(-1099511627776 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1099511627776.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1099511627775.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1099511627775), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-1099511627776 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1066,38 +1066,38 @@ func TestPositiveInt64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 1099511627776.
-		testCase{1099511627776.0, MATCH_TRUE, ""},
-		testCase{1099511627776 + 0i, MATCH_TRUE, ""},
-		testCase{int64(1099511627776), MATCH_TRUE, ""},
-		testCase{uint64(1099511627776), MATCH_TRUE, ""},
-		testCase{float32(1099511627776), MATCH_TRUE, ""},
-		testCase{float64(1099511627776), MATCH_TRUE, ""},
-		testCase{complex64(1099511627776), MATCH_TRUE, ""},
-		testCase{complex128(1099511627776), MATCH_TRUE, ""},
-		testCase{interface{}(int64(1099511627776)), MATCH_TRUE, ""},
-		testCase{interface{}(uint64(1099511627776)), MATCH_TRUE, ""},
+		equalsTestCase{1099511627776.0, MATCH_TRUE, ""},
+		equalsTestCase{1099511627776 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int64(1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{uint64(1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{float32(1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{float64(1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{complex64(1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{complex128(1099511627776), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int64(1099511627776)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(uint64(1099511627776)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(1099511627775), MATCH_FALSE, ""},
-		testCase{uint64(1099511627775), MATCH_FALSE, ""},
-		testCase{float64(1099511627776.1), MATCH_FALSE, ""},
-		testCase{float64(1099511627775.9), MATCH_FALSE, ""},
-		testCase{complex128(1099511627775), MATCH_FALSE, ""},
-		testCase{complex128(1099511627776 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(1099511627775), MATCH_FALSE, ""},
+		equalsTestCase{uint64(1099511627775), MATCH_FALSE, ""},
+		equalsTestCase{float64(1099511627776.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1099511627775.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1099511627775), MATCH_FALSE, ""},
+		equalsTestCase{complex128(1099511627776 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1116,39 +1116,39 @@ func TestInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1167,30 +1167,30 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1210,56 +1210,56 @@ func TestSmallUint(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{17, MATCH_TRUE, ""},
-		testCase{17.0, MATCH_TRUE, ""},
-		testCase{17 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int8(kExpected), MATCH_TRUE, ""},
-		testCase{int16(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint8(kExpected), MATCH_TRUE, ""},
-		testCase{uint16(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{17, MATCH_TRUE, ""},
+		equalsTestCase{17.0, MATCH_TRUE, ""},
+		equalsTestCase{17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{kExpected + 1, MATCH_FALSE, ""},
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{kExpected + 1, MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1275,30 +1275,30 @@ func TestLargeUint(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{65553, MATCH_TRUE, ""},
-		testCase{65553.0, MATCH_TRUE, ""},
-		testCase{65553 + 0i, MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{65553, MATCH_TRUE, ""},
+		equalsTestCase{65553.0, MATCH_TRUE, ""},
+		equalsTestCase{65553 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{int16(17), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(17), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(17), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(17), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1317,39 +1317,39 @@ func TestUintNotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1369,56 +1369,56 @@ func TestSmallUint8(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{17, MATCH_TRUE, ""},
-		testCase{17.0, MATCH_TRUE, ""},
-		testCase{17 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int8(kExpected), MATCH_TRUE, ""},
-		testCase{int16(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint8(kExpected), MATCH_TRUE, ""},
-		testCase{uint16(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{17, MATCH_TRUE, ""},
+		equalsTestCase{17.0, MATCH_TRUE, ""},
+		equalsTestCase{17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{kExpected + 1, MATCH_FALSE, ""},
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{kExpected + 1, MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1438,56 +1438,56 @@ func TestSmallUint16(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{17, MATCH_TRUE, ""},
-		testCase{17.0, MATCH_TRUE, ""},
-		testCase{17 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int8(kExpected), MATCH_TRUE, ""},
-		testCase{int16(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint8(kExpected), MATCH_TRUE, ""},
-		testCase{uint16(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{17, MATCH_TRUE, ""},
+		equalsTestCase{17.0, MATCH_TRUE, ""},
+		equalsTestCase{17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{kExpected + 1, MATCH_FALSE, ""},
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{kExpected + 1, MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1503,34 +1503,34 @@ func TestLargeUint16(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{273, MATCH_TRUE, ""},
-		testCase{273.0, MATCH_TRUE, ""},
-		testCase{273 + 0i, MATCH_TRUE, ""},
-		testCase{int16(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint16(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{273, MATCH_TRUE, ""},
+		equalsTestCase{273.0, MATCH_TRUE, ""},
+		equalsTestCase{273 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{int8(17), MATCH_FALSE, ""},
-		testCase{int16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint8(17), MATCH_FALSE, ""},
-		testCase{uint16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int8(17), MATCH_FALSE, ""},
+		equalsTestCase{int16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint8(17), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1550,56 +1550,56 @@ func TestSmallUint32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{17, MATCH_TRUE, ""},
-		testCase{17.0, MATCH_TRUE, ""},
-		testCase{17 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int8(kExpected), MATCH_TRUE, ""},
-		testCase{int16(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint8(kExpected), MATCH_TRUE, ""},
-		testCase{uint16(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{17, MATCH_TRUE, ""},
+		equalsTestCase{17.0, MATCH_TRUE, ""},
+		equalsTestCase{17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{kExpected + 1, MATCH_FALSE, ""},
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{kExpected + 1, MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1615,30 +1615,30 @@ func TestLargeUint32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{65553, MATCH_TRUE, ""},
-		testCase{65553.0, MATCH_TRUE, ""},
-		testCase{65553 + 0i, MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{65553, MATCH_TRUE, ""},
+		equalsTestCase{65553.0, MATCH_TRUE, ""},
+		equalsTestCase{65553 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{int16(17), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(17), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(17), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(17), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1657,39 +1657,39 @@ func TestUint32NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1709,56 +1709,56 @@ func TestSmallUint64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{17, MATCH_TRUE, ""},
-		testCase{17.0, MATCH_TRUE, ""},
-		testCase{17 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int8(kExpected), MATCH_TRUE, ""},
-		testCase{int16(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint8(kExpected), MATCH_TRUE, ""},
-		testCase{uint16(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{17, MATCH_TRUE, ""},
+		equalsTestCase{17.0, MATCH_TRUE, ""},
+		equalsTestCase{17 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint8(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint16(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{kExpected + 1, MATCH_FALSE, ""},
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint8(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint16(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{kExpected + 1, MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1774,27 +1774,27 @@ func TestLargeUint64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{4294967313.0, MATCH_TRUE, ""},
-		testCase{4294967313 + 0i, MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{4294967313.0, MATCH_TRUE, ""},
+		equalsTestCase{4294967313 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric types.
-		testCase{int(17), MATCH_FALSE, ""},
-		testCase{int32(17), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(17), MATCH_FALSE, ""},
-		testCase{uint32(17), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int(17), MATCH_FALSE, ""},
+		equalsTestCase{int32(17), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(17), MATCH_FALSE, ""},
+		equalsTestCase{uint32(17), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 1), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1813,39 +1813,39 @@ func TestUint64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 0), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 2), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1864,30 +1864,30 @@ func TestUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1909,35 +1909,35 @@ func TestNilUintptr(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// uintptrs
-		testCase{ptr1, MATCH_TRUE, ""},
-		testCase{ptr2, MATCH_TRUE, ""},
-		testCase{uintptr(0), MATCH_TRUE, ""},
-		testCase{uintptr(17), MATCH_FALSE, ""},
+		equalsTestCase{ptr1, MATCH_TRUE, ""},
+		equalsTestCase{ptr2, MATCH_TRUE, ""},
+		equalsTestCase{uintptr(0), MATCH_TRUE, ""},
+		equalsTestCase{uintptr(17), MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{true, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a uintptr"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1952,34 +1952,34 @@ func TestNonNilUintptr(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// uintptrs
-		testCase{uintptr(17), MATCH_TRUE, ""},
-		testCase{uintptr(16), MATCH_FALSE, ""},
-		testCase{uintptr(0), MATCH_FALSE, ""},
+		equalsTestCase{uintptr(17), MATCH_TRUE, ""},
+		equalsTestCase{uintptr(16), MATCH_FALSE, ""},
+		equalsTestCase{uintptr(0), MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{true, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a uintptr"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a uintptr"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a uintptr"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -1998,42 +1998,42 @@ func TestNegativeIntegralFloat32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -32769.
-		testCase{-32769.0, MATCH_TRUE, ""},
-		testCase{-32769 + 0i, MATCH_TRUE, ""},
-		testCase{int32(-32769), MATCH_TRUE, ""},
-		testCase{int64(-32769), MATCH_TRUE, ""},
-		testCase{float32(-32769), MATCH_TRUE, ""},
-		testCase{float64(-32769), MATCH_TRUE, ""},
-		testCase{complex64(-32769), MATCH_TRUE, ""},
-		testCase{complex128(-32769), MATCH_TRUE, ""},
-		testCase{interface{}(float32(-32769)), MATCH_TRUE, ""},
-		testCase{interface{}(int64(-32769)), MATCH_TRUE, ""},
+		equalsTestCase{-32769.0, MATCH_TRUE, ""},
+		equalsTestCase{-32769 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int32(-32769), MATCH_TRUE, ""},
+		equalsTestCase{int64(-32769), MATCH_TRUE, ""},
+		equalsTestCase{float32(-32769), MATCH_TRUE, ""},
+		equalsTestCase{float64(-32769), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-32769), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-32769), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float32(-32769)), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(int64(-32769)), MATCH_TRUE, ""},
 
 		// Values that would be -32769 in two's complement.
-		testCase{uint64((1 << 64) - 32769), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) - 32769), MATCH_FALSE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(-32770), MATCH_FALSE, ""},
-		testCase{float32(-32769.1), MATCH_FALSE, ""},
-		testCase{float32(-32768.9), MATCH_FALSE, ""},
-		testCase{float64(-32769.1), MATCH_FALSE, ""},
-		testCase{float64(-32768.9), MATCH_FALSE, ""},
-		testCase{complex128(-32768), MATCH_FALSE, ""},
-		testCase{complex128(-32769 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(-32770), MATCH_FALSE, ""},
+		equalsTestCase{float32(-32769.1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-32768.9), MATCH_FALSE, ""},
+		equalsTestCase{float64(-32769.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-32768.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-32768), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-32769 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2048,24 +2048,24 @@ func TestNegativeNonIntegralFloat32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of -32769.1.
-		testCase{-32769.1, MATCH_TRUE, ""},
-		testCase{-32769.1 + 0i, MATCH_TRUE, ""},
-		testCase{float32(-32769.1), MATCH_TRUE, ""},
-		testCase{float64(-32769.1), MATCH_TRUE, ""},
-		testCase{complex64(-32769.1), MATCH_TRUE, ""},
-		testCase{complex128(-32769.1), MATCH_TRUE, ""},
+		equalsTestCase{-32769.1, MATCH_TRUE, ""},
+		equalsTestCase{-32769.1 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(-32769.1), MATCH_TRUE, ""},
+		equalsTestCase{float64(-32769.1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(-32769.1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(-32769.1), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int32(-32769), MATCH_FALSE, ""},
-		testCase{int32(-32770), MATCH_FALSE, ""},
-		testCase{int64(-32769), MATCH_FALSE, ""},
-		testCase{int64(-32770), MATCH_FALSE, ""},
-		testCase{float32(-32769.2), MATCH_FALSE, ""},
-		testCase{float32(-32769.0), MATCH_FALSE, ""},
-		testCase{float64(-32769.2), MATCH_FALSE, ""},
-		testCase{complex128(-32769.1 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int32(-32769), MATCH_FALSE, ""},
+		equalsTestCase{int32(-32770), MATCH_FALSE, ""},
+		equalsTestCase{int64(-32769), MATCH_FALSE, ""},
+		equalsTestCase{int64(-32770), MATCH_FALSE, ""},
+		equalsTestCase{float32(-32769.2), MATCH_FALSE, ""},
+		equalsTestCase{float32(-32769.0), MATCH_FALSE, ""},
+		equalsTestCase{float64(-32769.2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(-32769.1 + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2084,22 +2084,22 @@ func TestLargeNegativeFloat32(t *testing.T) {
 	floatExpected := float32(kExpected)
 	castedInt := int64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2114,44 +2114,44 @@ func TestZeroFloat32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of zero.
-		testCase{0.0, MATCH_TRUE, ""},
-		testCase{0 + 0i, MATCH_TRUE, ""},
-		testCase{int(0), MATCH_TRUE, ""},
-		testCase{int8(0), MATCH_TRUE, ""},
-		testCase{int16(0), MATCH_TRUE, ""},
-		testCase{int32(0), MATCH_TRUE, ""},
-		testCase{int64(0), MATCH_TRUE, ""},
-		testCase{uint(0), MATCH_TRUE, ""},
-		testCase{uint8(0), MATCH_TRUE, ""},
-		testCase{uint16(0), MATCH_TRUE, ""},
-		testCase{uint32(0), MATCH_TRUE, ""},
-		testCase{uint64(0), MATCH_TRUE, ""},
-		testCase{float32(0), MATCH_TRUE, ""},
-		testCase{float64(0), MATCH_TRUE, ""},
-		testCase{complex64(0), MATCH_TRUE, ""},
-		testCase{complex128(0), MATCH_TRUE, ""},
-		testCase{interface{}(float32(0)), MATCH_TRUE, ""},
+		equalsTestCase{0.0, MATCH_TRUE, ""},
+		equalsTestCase{0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(0), MATCH_TRUE, ""},
+		equalsTestCase{int8(0), MATCH_TRUE, ""},
+		equalsTestCase{int16(0), MATCH_TRUE, ""},
+		equalsTestCase{int32(0), MATCH_TRUE, ""},
+		equalsTestCase{int64(0), MATCH_TRUE, ""},
+		equalsTestCase{uint(0), MATCH_TRUE, ""},
+		equalsTestCase{uint8(0), MATCH_TRUE, ""},
+		equalsTestCase{uint16(0), MATCH_TRUE, ""},
+		equalsTestCase{uint32(0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(0), MATCH_TRUE, ""},
+		equalsTestCase{float32(0), MATCH_TRUE, ""},
+		equalsTestCase{float64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(0), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float32(0)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(1), MATCH_FALSE, ""},
-		testCase{int64(-1), MATCH_FALSE, ""},
-		testCase{float32(1), MATCH_FALSE, ""},
-		testCase{float32(-1), MATCH_FALSE, ""},
-		testCase{complex128(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(1), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1), MATCH_FALSE, ""},
+		equalsTestCase{float32(1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(0 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2166,43 +2166,43 @@ func TestPositiveIntegralFloat32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 32769.
-		testCase{32769.0, MATCH_TRUE, ""},
-		testCase{32769 + 0i, MATCH_TRUE, ""},
-		testCase{int(32769), MATCH_TRUE, ""},
-		testCase{int32(32769), MATCH_TRUE, ""},
-		testCase{int64(32769), MATCH_TRUE, ""},
-		testCase{uint(32769), MATCH_TRUE, ""},
-		testCase{uint32(32769), MATCH_TRUE, ""},
-		testCase{uint64(32769), MATCH_TRUE, ""},
-		testCase{float32(32769), MATCH_TRUE, ""},
-		testCase{float64(32769), MATCH_TRUE, ""},
-		testCase{complex64(32769), MATCH_TRUE, ""},
-		testCase{complex128(32769), MATCH_TRUE, ""},
-		testCase{interface{}(float32(32769)), MATCH_TRUE, ""},
+		equalsTestCase{32769.0, MATCH_TRUE, ""},
+		equalsTestCase{32769 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(32769), MATCH_TRUE, ""},
+		equalsTestCase{int32(32769), MATCH_TRUE, ""},
+		equalsTestCase{int64(32769), MATCH_TRUE, ""},
+		equalsTestCase{uint(32769), MATCH_TRUE, ""},
+		equalsTestCase{uint32(32769), MATCH_TRUE, ""},
+		equalsTestCase{uint64(32769), MATCH_TRUE, ""},
+		equalsTestCase{float32(32769), MATCH_TRUE, ""},
+		equalsTestCase{float64(32769), MATCH_TRUE, ""},
+		equalsTestCase{complex64(32769), MATCH_TRUE, ""},
+		equalsTestCase{complex128(32769), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float32(32769)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(32770), MATCH_FALSE, ""},
-		testCase{uint64(32770), MATCH_FALSE, ""},
-		testCase{float32(32769.1), MATCH_FALSE, ""},
-		testCase{float32(32768.9), MATCH_FALSE, ""},
-		testCase{float64(32769.1), MATCH_FALSE, ""},
-		testCase{float64(32768.9), MATCH_FALSE, ""},
-		testCase{complex128(32768), MATCH_FALSE, ""},
-		testCase{complex128(32769 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(32770), MATCH_FALSE, ""},
+		equalsTestCase{uint64(32770), MATCH_FALSE, ""},
+		equalsTestCase{float32(32769.1), MATCH_FALSE, ""},
+		equalsTestCase{float32(32768.9), MATCH_FALSE, ""},
+		equalsTestCase{float64(32769.1), MATCH_FALSE, ""},
+		equalsTestCase{float64(32768.9), MATCH_FALSE, ""},
+		equalsTestCase{complex128(32768), MATCH_FALSE, ""},
+		equalsTestCase{complex128(32769 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2217,24 +2217,24 @@ func TestPositiveNonIntegralFloat32(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 32769.1.
-		testCase{32769.1, MATCH_TRUE, ""},
-		testCase{32769.1 + 0i, MATCH_TRUE, ""},
-		testCase{float32(32769.1), MATCH_TRUE, ""},
-		testCase{float64(32769.1), MATCH_TRUE, ""},
-		testCase{complex64(32769.1), MATCH_TRUE, ""},
-		testCase{complex128(32769.1), MATCH_TRUE, ""},
+		equalsTestCase{32769.1, MATCH_TRUE, ""},
+		equalsTestCase{32769.1 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(32769.1), MATCH_TRUE, ""},
+		equalsTestCase{float64(32769.1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(32769.1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(32769.1), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int32(32769), MATCH_FALSE, ""},
-		testCase{int32(32770), MATCH_FALSE, ""},
-		testCase{uint64(32769), MATCH_FALSE, ""},
-		testCase{uint64(32770), MATCH_FALSE, ""},
-		testCase{float32(32769.2), MATCH_FALSE, ""},
-		testCase{float32(32769.0), MATCH_FALSE, ""},
-		testCase{float64(32769.2), MATCH_FALSE, ""},
-		testCase{complex128(32769.1 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int32(32769), MATCH_FALSE, ""},
+		equalsTestCase{int32(32770), MATCH_FALSE, ""},
+		equalsTestCase{uint64(32769), MATCH_FALSE, ""},
+		equalsTestCase{uint64(32770), MATCH_FALSE, ""},
+		equalsTestCase{float32(32769.2), MATCH_FALSE, ""},
+		equalsTestCase{float32(32769.0), MATCH_FALSE, ""},
+		equalsTestCase{float64(32769.2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(32769.1 + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2253,24 +2253,24 @@ func TestLargePositiveFloat32(t *testing.T) {
 	floatExpected := float32(kExpected)
 	castedInt := uint64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{uint64(0), MATCH_FALSE, ""},
-		testCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{uint64(0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2289,51 +2289,51 @@ func TestFloat32AboveExactIntegerRange(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2353,40 +2353,40 @@ func TestNegativeIntegralFloat64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{-1125899906842624.0, MATCH_TRUE, ""},
-		testCase{-1125899906842624.0 + 0i, MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
-		testCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
+		equalsTestCase{-1125899906842624.0, MATCH_TRUE, ""},
+		equalsTestCase{-1125899906842624.0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
 
 		// Values that would be kExpected in two's complement.
-		testCase{uint64((1 << 64) + kExpected), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) + kExpected), MATCH_FALSE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2404,22 +2404,22 @@ func TestNegativeNonIntegralFloat64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(-kTwoTo50), MATCH_FALSE, ""},
-		testCase{int64(-kTwoTo50 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(-kTwoTo50), MATCH_FALSE, ""},
+		equalsTestCase{int64(-kTwoTo50 - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2438,22 +2438,22 @@ func TestLargeNegativeFloat64(t *testing.T) {
 	floatExpected := float64(kExpected)
 	castedInt := int64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2468,44 +2468,44 @@ func TestZeroFloat64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of zero.
-		testCase{0.0, MATCH_TRUE, ""},
-		testCase{0 + 0i, MATCH_TRUE, ""},
-		testCase{int(0), MATCH_TRUE, ""},
-		testCase{int8(0), MATCH_TRUE, ""},
-		testCase{int16(0), MATCH_TRUE, ""},
-		testCase{int32(0), MATCH_TRUE, ""},
-		testCase{int64(0), MATCH_TRUE, ""},
-		testCase{uint(0), MATCH_TRUE, ""},
-		testCase{uint8(0), MATCH_TRUE, ""},
-		testCase{uint16(0), MATCH_TRUE, ""},
-		testCase{uint32(0), MATCH_TRUE, ""},
-		testCase{uint64(0), MATCH_TRUE, ""},
-		testCase{float32(0), MATCH_TRUE, ""},
-		testCase{float64(0), MATCH_TRUE, ""},
-		testCase{complex64(0), MATCH_TRUE, ""},
-		testCase{complex128(0), MATCH_TRUE, ""},
-		testCase{interface{}(float32(0)), MATCH_TRUE, ""},
+		equalsTestCase{0.0, MATCH_TRUE, ""},
+		equalsTestCase{0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(0), MATCH_TRUE, ""},
+		equalsTestCase{int8(0), MATCH_TRUE, ""},
+		equalsTestCase{int16(0), MATCH_TRUE, ""},
+		equalsTestCase{int32(0), MATCH_TRUE, ""},
+		equalsTestCase{int64(0), MATCH_TRUE, ""},
+		equalsTestCase{uint(0), MATCH_TRUE, ""},
+		equalsTestCase{uint8(0), MATCH_TRUE, ""},
+		equalsTestCase{uint16(0), MATCH_TRUE, ""},
+		equalsTestCase{uint32(0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(0), MATCH_TRUE, ""},
+		equalsTestCase{float32(0), MATCH_TRUE, ""},
+		equalsTestCase{float64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(0), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float32(0)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(1), MATCH_FALSE, ""},
-		testCase{int64(-1), MATCH_FALSE, ""},
-		testCase{float32(1), MATCH_FALSE, ""},
-		testCase{float32(-1), MATCH_FALSE, ""},
-		testCase{complex128(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(1), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1), MATCH_FALSE, ""},
+		equalsTestCase{float32(1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(0 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2521,39 +2521,39 @@ func TestPositiveIntegralFloat64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 32769.
-		testCase{1125899906842624.0, MATCH_TRUE, ""},
-		testCase{1125899906842624.0 + 0i, MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
-		testCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
+		equalsTestCase{1125899906842624.0, MATCH_TRUE, ""},
+		equalsTestCase{1125899906842624.0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2570,21 +2570,21 @@ func TestPositiveNonIntegralFloat64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kTwoTo50), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo50 - 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo50), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo50 - 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2603,24 +2603,24 @@ func TestLargePositiveFloat64(t *testing.T) {
 	floatExpected := float64(kExpected)
 	castedInt := uint64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{uint64(0), MATCH_FALSE, ""},
-		testCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{uint64(0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2639,36 +2639,36 @@ func TestFloat64AboveExactIntegerRange(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2688,45 +2688,45 @@ func TestNegativeIntegralComplex64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{-32769.0, MATCH_TRUE, ""},
-		testCase{-32769.0 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
-		testCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
+		equalsTestCase{-32769.0, MATCH_TRUE, ""},
+		equalsTestCase{-32769.0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
 
 		// Values that would be kExpected in two's complement.
-		testCase{uint32((1 << 32) + kExpected), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) + kExpected), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) + kExpected), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) + kExpected), MATCH_FALSE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2744,29 +2744,29 @@ func TestNegativeNonIntegralComplex64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(-kTwoTo20), MATCH_FALSE, ""},
-		testCase{int(-kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{int32(-kTwoTo20), MATCH_FALSE, ""},
-		testCase{int32(-kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{int64(-kTwoTo20), MATCH_FALSE, ""},
-		testCase{int64(-kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 0.75), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 0.75), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(-kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int(-kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(-kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int32(-kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(-kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int64(-kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 0.75), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 0.75), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2785,23 +2785,23 @@ func TestLargeNegativeComplex64(t *testing.T) {
 	floatExpected := float64(kExpected)
 	castedInt := int64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2816,47 +2816,47 @@ func TestZeroComplex64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of zero.
-		testCase{0.0, MATCH_TRUE, ""},
-		testCase{0 + 0i, MATCH_TRUE, ""},
-		testCase{int(0), MATCH_TRUE, ""},
-		testCase{int8(0), MATCH_TRUE, ""},
-		testCase{int16(0), MATCH_TRUE, ""},
-		testCase{int32(0), MATCH_TRUE, ""},
-		testCase{int64(0), MATCH_TRUE, ""},
-		testCase{uint(0), MATCH_TRUE, ""},
-		testCase{uint8(0), MATCH_TRUE, ""},
-		testCase{uint16(0), MATCH_TRUE, ""},
-		testCase{uint32(0), MATCH_TRUE, ""},
-		testCase{uint64(0), MATCH_TRUE, ""},
-		testCase{float32(0), MATCH_TRUE, ""},
-		testCase{float64(0), MATCH_TRUE, ""},
-		testCase{complex64(0), MATCH_TRUE, ""},
-		testCase{complex128(0), MATCH_TRUE, ""},
-		testCase{interface{}(float32(0)), MATCH_TRUE, ""},
+		equalsTestCase{0.0, MATCH_TRUE, ""},
+		equalsTestCase{0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(0), MATCH_TRUE, ""},
+		equalsTestCase{int8(0), MATCH_TRUE, ""},
+		equalsTestCase{int16(0), MATCH_TRUE, ""},
+		equalsTestCase{int32(0), MATCH_TRUE, ""},
+		equalsTestCase{int64(0), MATCH_TRUE, ""},
+		equalsTestCase{uint(0), MATCH_TRUE, ""},
+		equalsTestCase{uint8(0), MATCH_TRUE, ""},
+		equalsTestCase{uint16(0), MATCH_TRUE, ""},
+		equalsTestCase{uint32(0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(0), MATCH_TRUE, ""},
+		equalsTestCase{float32(0), MATCH_TRUE, ""},
+		equalsTestCase{float64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(0), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float32(0)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(1), MATCH_FALSE, ""},
-		testCase{int64(-1), MATCH_FALSE, ""},
-		testCase{float32(1), MATCH_FALSE, ""},
-		testCase{float32(-1), MATCH_FALSE, ""},
-		testCase{float64(1), MATCH_FALSE, ""},
-		testCase{float64(-1), MATCH_FALSE, ""},
-		testCase{complex64(0 + 2i), MATCH_FALSE, ""},
-		testCase{complex128(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(1), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1), MATCH_FALSE, ""},
+		equalsTestCase{float32(1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(0 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2872,47 +2872,47 @@ func TestPositiveIntegralComplex64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 32769.
-		testCase{1048576.0, MATCH_TRUE, ""},
-		testCase{1048576.0 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
-		testCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
+		equalsTestCase{1048576.0, MATCH_TRUE, ""},
+		equalsTestCase{1048576.0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2929,28 +2929,28 @@ func TestPositiveNonIntegralComplex64(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kTwoTo20), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo20), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 1i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 1i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -2969,24 +2969,24 @@ func TestLargePositiveComplex64(t *testing.T) {
 	floatExpected := float64(kExpected)
 	castedInt := uint64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{uint64(0), MATCH_FALSE, ""},
-		testCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{uint64(0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3005,51 +3005,51 @@ func TestComplex64AboveExactIntegerRange(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Single-precision floating point.
-		testCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo25 - 2), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo25 - 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 2), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo25 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo25 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3067,32 +3067,32 @@ func TestComplex64WithNonZeroImaginaryPart(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kRealPart + kImagPart, MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kRealPart + kImagPart, MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(kRealPart), MATCH_FALSE, ""},
-		testCase{int8(kRealPart), MATCH_FALSE, ""},
-		testCase{int16(kRealPart), MATCH_FALSE, ""},
-		testCase{int32(kRealPart), MATCH_FALSE, ""},
-		testCase{int64(kRealPart), MATCH_FALSE, ""},
-		testCase{uint(kRealPart), MATCH_FALSE, ""},
-		testCase{uint8(kRealPart), MATCH_FALSE, ""},
-		testCase{uint16(kRealPart), MATCH_FALSE, ""},
-		testCase{uint32(kRealPart), MATCH_FALSE, ""},
-		testCase{uint64(kRealPart), MATCH_FALSE, ""},
-		testCase{float32(kRealPart), MATCH_FALSE, ""},
-		testCase{float64(kRealPart), MATCH_FALSE, ""},
-		testCase{complex64(kRealPart), MATCH_FALSE, ""},
-		testCase{complex64(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
-		testCase{complex64(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
-		testCase{complex128(kRealPart), MATCH_FALSE, ""},
-		testCase{complex128(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
-		testCase{complex128(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
+		equalsTestCase{int(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int8(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int16(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int32(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{float32(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{float64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3112,45 +3112,45 @@ func TestNegativeIntegralComplex128(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{-32769.0, MATCH_TRUE, ""},
-		testCase{-32769.0 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
-		testCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
+		equalsTestCase{-32769.0, MATCH_TRUE, ""},
+		equalsTestCase{-32769.0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
 
 		// Values that would be kExpected in two's complement.
-		testCase{uint32((1 << 32) + kExpected), MATCH_FALSE, ""},
-		testCase{uint64((1 << 64) + kExpected), MATCH_FALSE, ""},
+		equalsTestCase{uint32((1 << 32) + kExpected), MATCH_FALSE, ""},
+		equalsTestCase{uint64((1 << 64) + kExpected), MATCH_FALSE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3168,29 +3168,29 @@ func TestNegativeNonIntegralComplex128(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(-kTwoTo20), MATCH_FALSE, ""},
-		testCase{int(-kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{int32(-kTwoTo20), MATCH_FALSE, ""},
-		testCase{int32(-kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{int64(-kTwoTo20), MATCH_FALSE, ""},
-		testCase{int64(-kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 0.75), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 0.75), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(-kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int(-kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(-kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int32(-kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(-kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int64(-kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 0.75), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 0.75), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3209,23 +3209,23 @@ func TestLargeNegativeComplex128(t *testing.T) {
 	floatExpected := float64(kExpected)
 	castedInt := int64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3240,47 +3240,47 @@ func TestZeroComplex128(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of zero.
-		testCase{0.0, MATCH_TRUE, ""},
-		testCase{0 + 0i, MATCH_TRUE, ""},
-		testCase{int(0), MATCH_TRUE, ""},
-		testCase{int8(0), MATCH_TRUE, ""},
-		testCase{int16(0), MATCH_TRUE, ""},
-		testCase{int32(0), MATCH_TRUE, ""},
-		testCase{int64(0), MATCH_TRUE, ""},
-		testCase{uint(0), MATCH_TRUE, ""},
-		testCase{uint8(0), MATCH_TRUE, ""},
-		testCase{uint16(0), MATCH_TRUE, ""},
-		testCase{uint32(0), MATCH_TRUE, ""},
-		testCase{uint64(0), MATCH_TRUE, ""},
-		testCase{float32(0), MATCH_TRUE, ""},
-		testCase{float64(0), MATCH_TRUE, ""},
-		testCase{complex64(0), MATCH_TRUE, ""},
-		testCase{complex128(0), MATCH_TRUE, ""},
-		testCase{interface{}(float32(0)), MATCH_TRUE, ""},
+		equalsTestCase{0.0, MATCH_TRUE, ""},
+		equalsTestCase{0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(0), MATCH_TRUE, ""},
+		equalsTestCase{int8(0), MATCH_TRUE, ""},
+		equalsTestCase{int16(0), MATCH_TRUE, ""},
+		equalsTestCase{int32(0), MATCH_TRUE, ""},
+		equalsTestCase{int64(0), MATCH_TRUE, ""},
+		equalsTestCase{uint(0), MATCH_TRUE, ""},
+		equalsTestCase{uint8(0), MATCH_TRUE, ""},
+		equalsTestCase{uint16(0), MATCH_TRUE, ""},
+		equalsTestCase{uint32(0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(0), MATCH_TRUE, ""},
+		equalsTestCase{float32(0), MATCH_TRUE, ""},
+		equalsTestCase{float64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex64(0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(0), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float32(0)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(1), MATCH_FALSE, ""},
-		testCase{int64(-1), MATCH_FALSE, ""},
-		testCase{float32(1), MATCH_FALSE, ""},
-		testCase{float32(-1), MATCH_FALSE, ""},
-		testCase{float64(1), MATCH_FALSE, ""},
-		testCase{float64(-1), MATCH_FALSE, ""},
-		testCase{complex64(0 + 2i), MATCH_FALSE, ""},
-		testCase{complex128(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int64(1), MATCH_FALSE, ""},
+		equalsTestCase{int64(-1), MATCH_FALSE, ""},
+		equalsTestCase{float32(1), MATCH_FALSE, ""},
+		equalsTestCase{float32(-1), MATCH_FALSE, ""},
+		equalsTestCase{float64(1), MATCH_FALSE, ""},
+		equalsTestCase{float64(-1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(0 + 2i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(0 + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3296,47 +3296,47 @@ func TestPositiveIntegralComplex128(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of 32769.
-		testCase{1048576.0, MATCH_TRUE, ""},
-		testCase{1048576.0 + 0i, MATCH_TRUE, ""},
-		testCase{int(kExpected), MATCH_TRUE, ""},
-		testCase{int32(kExpected), MATCH_TRUE, ""},
-		testCase{int64(kExpected), MATCH_TRUE, ""},
-		testCase{uint(kExpected), MATCH_TRUE, ""},
-		testCase{uint32(kExpected), MATCH_TRUE, ""},
-		testCase{uint64(kExpected), MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
-		testCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
+		equalsTestCase{1048576.0, MATCH_TRUE, ""},
+		equalsTestCase{1048576.0 + 0i, MATCH_TRUE, ""},
+		equalsTestCase{int(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{int64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(float64(kExpected)), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{int64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{uint64(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
-		testCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{int(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{int64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + (1 << 30)), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.5), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 
 		// Non-numeric types.
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{true, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not numeric"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3353,28 +3353,28 @@ func TestPositiveNonIntegralComplex128(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int64(kTwoTo20), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo20), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo20 - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected - 1), MATCH_FALSE, ""},
-		testCase{float32(kExpected + 1), MATCH_FALSE, ""},
-		testCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
-		testCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex64(kExpected - 1i), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1), MATCH_FALSE, ""},
-		testCase{complex128(kExpected - 1i), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo20), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo20 - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected + 1), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected - 0.25), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected + 0.25), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kExpected - 1i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected - 1i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3393,24 +3393,24 @@ func TestLargePositiveComplex128(t *testing.T) {
 	floatExpected := float64(kExpected)
 	castedInt := uint64(floatExpected)
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Equal values of numeric type.
-		testCase{kExpected + 0i, MATCH_TRUE, ""},
-		testCase{float32(kExpected), MATCH_TRUE, ""},
-		testCase{float64(kExpected), MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected + 0i, MATCH_TRUE, ""},
+		equalsTestCase{float32(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{float64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{castedInt, MATCH_FALSE, ""},
-		testCase{int64(0), MATCH_FALSE, ""},
-		testCase{int64(math.MinInt64), MATCH_FALSE, ""},
-		testCase{int64(math.MaxInt64), MATCH_FALSE, ""},
-		testCase{uint64(0), MATCH_FALSE, ""},
-		testCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
-		testCase{float32(kExpected / 2), MATCH_FALSE, ""},
-		testCase{float64(kExpected / 2), MATCH_FALSE, ""},
-		testCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
+		equalsTestCase{castedInt, MATCH_FALSE, ""},
+		equalsTestCase{int64(0), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MinInt64), MATCH_FALSE, ""},
+		equalsTestCase{int64(math.MaxInt64), MATCH_FALSE, ""},
+		equalsTestCase{uint64(0), MATCH_FALSE, ""},
+		equalsTestCase{uint64(math.MaxUint64), MATCH_FALSE, ""},
+		equalsTestCase{float32(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kExpected / 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kExpected + 2i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3429,36 +3429,36 @@ func TestComplex128AboveExactIntegerRange(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Integers.
-		testCase{int64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
-		testCase{uint64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Double-precision floating point.
-		testCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
-		testCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
-		testCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
-		testCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 2), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kTwoTo54 - 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 0), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 1), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 2), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3476,32 +3476,32 @@ func TestComplex128WithNonZeroImaginaryPart(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Various types of the expected value.
-		testCase{kExpected, MATCH_TRUE, ""},
-		testCase{kRealPart + kImagPart, MATCH_TRUE, ""},
-		testCase{complex64(kExpected), MATCH_TRUE, ""},
-		testCase{complex128(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{kExpected, MATCH_TRUE, ""},
+		equalsTestCase{kRealPart + kImagPart, MATCH_TRUE, ""},
+		equalsTestCase{complex64(kExpected), MATCH_TRUE, ""},
+		equalsTestCase{complex128(kExpected), MATCH_TRUE, ""},
 
 		// Non-equal values of numeric type.
-		testCase{int(kRealPart), MATCH_FALSE, ""},
-		testCase{int8(kRealPart), MATCH_FALSE, ""},
-		testCase{int16(kRealPart), MATCH_FALSE, ""},
-		testCase{int32(kRealPart), MATCH_FALSE, ""},
-		testCase{int64(kRealPart), MATCH_FALSE, ""},
-		testCase{uint(kRealPart), MATCH_FALSE, ""},
-		testCase{uint8(kRealPart), MATCH_FALSE, ""},
-		testCase{uint16(kRealPart), MATCH_FALSE, ""},
-		testCase{uint32(kRealPart), MATCH_FALSE, ""},
-		testCase{uint64(kRealPart), MATCH_FALSE, ""},
-		testCase{float32(kRealPart), MATCH_FALSE, ""},
-		testCase{float64(kRealPart), MATCH_FALSE, ""},
-		testCase{complex64(kRealPart), MATCH_FALSE, ""},
-		testCase{complex64(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
-		testCase{complex64(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
-		testCase{complex128(kRealPart), MATCH_FALSE, ""},
-		testCase{complex128(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
-		testCase{complex128(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
+		equalsTestCase{int(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int8(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int16(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int32(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{int64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint8(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint16(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint32(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{uint64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{float32(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{float64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex64(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kRealPart), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kRealPart + kImagPart + 0.5), MATCH_FALSE, ""},
+		equalsTestCase{complex128(kRealPart + kImagPart + 0.5i), MATCH_FALSE, ""},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3549,37 +3549,37 @@ func TestNilChan(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// int channels
-		testCase{nilChan1, MATCH_TRUE, ""},
-		testCase{nilChan2, MATCH_TRUE, ""},
-		testCase{nonNilChan1, MATCH_FALSE, ""},
+		equalsTestCase{nilChan1, MATCH_TRUE, ""},
+		equalsTestCase{nilChan2, MATCH_TRUE, ""},
+		equalsTestCase{nonNilChan1, MATCH_FALSE, ""},
 
 		// uint channels
-		testCase{nilChan3, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{nonNilChan2, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{nilChan3, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{nonNilChan2, MATCH_UNDEFINED, "which is not a chan int"},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{true, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a chan int"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3600,37 +3600,37 @@ func TestNonNilChan(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// int channels
-		testCase{nonNilChan1, MATCH_TRUE, ""},
-		testCase{nonNilChan2, MATCH_FALSE, ""},
-		testCase{nilChan1, MATCH_FALSE, ""},
+		equalsTestCase{nonNilChan1, MATCH_TRUE, ""},
+		equalsTestCase{nonNilChan2, MATCH_FALSE, ""},
+		equalsTestCase{nilChan1, MATCH_FALSE, ""},
 
 		// uint channels
-		testCase{nilChan2, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{nonNilChan3, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{nilChan2, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{nonNilChan3, MATCH_UNDEFINED, "which is not a chan int"},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{true, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a chan int"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a chan int"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3649,10 +3649,10 @@ func TestChanDirection(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
-		testCase{chan1, MATCH_TRUE, ""},
-		testCase{chan2, MATCH_UNDEFINED, "which is not a chan<- int"},
-		testCase{chan3, MATCH_UNDEFINED, "which is not a chan<- int"},
+	cases := []equalsTestCase{
+		equalsTestCase{chan1, MATCH_TRUE, ""},
+		equalsTestCase{chan2, MATCH_UNDEFINED, "which is not a chan<- int"},
+		equalsTestCase{chan3, MATCH_UNDEFINED, "which is not a chan<- int"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3675,32 +3675,32 @@ func TestFunctions(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Functions.
-		testCase{func1, MATCH_TRUE, ""},
-		testCase{func2, MATCH_FALSE, ""},
-		testCase{func3, MATCH_FALSE, ""},
+		equalsTestCase{func1, MATCH_TRUE, ""},
+		equalsTestCase{func2, MATCH_FALSE, ""},
+		equalsTestCase{func3, MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a function"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a function"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a function"},
-		testCase{true, MATCH_UNDEFINED, "which is not a function"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a function"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a function"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a function"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a function"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a function"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a function"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a function"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3725,34 +3725,34 @@ func TestNilMap(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nilMap1, MATCH_TRUE, ""},
-		testCase{nilMap2, MATCH_TRUE, ""},
-		testCase{nilMap3, MATCH_TRUE, ""},
-		testCase{nonNilMap1, MATCH_FALSE, ""},
-		testCase{nonNilMap2, MATCH_FALSE, ""},
+		equalsTestCase{nilMap1, MATCH_TRUE, ""},
+		equalsTestCase{nilMap2, MATCH_TRUE, ""},
+		equalsTestCase{nilMap3, MATCH_TRUE, ""},
+		equalsTestCase{nonNilMap1, MATCH_FALSE, ""},
+		equalsTestCase{nonNilMap2, MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a map"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{true, MATCH_UNDEFINED, "which is not a map"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a map"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a map"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a map"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a map"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a map"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a map"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3773,34 +3773,34 @@ func TestNonNilMap(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nonNilMap1, MATCH_TRUE, ""},
-		testCase{nonNilMap2, MATCH_FALSE, ""},
-		testCase{nonNilMap3, MATCH_FALSE, ""},
-		testCase{nilMap1, MATCH_FALSE, ""},
-		testCase{nilMap2, MATCH_FALSE, ""},
+		equalsTestCase{nonNilMap1, MATCH_TRUE, ""},
+		equalsTestCase{nonNilMap2, MATCH_FALSE, ""},
+		equalsTestCase{nonNilMap3, MATCH_FALSE, ""},
+		equalsTestCase{nilMap1, MATCH_FALSE, ""},
+		equalsTestCase{nilMap2, MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a map"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a map"},
-		testCase{true, MATCH_UNDEFINED, "which is not a map"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a map"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a map"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a map"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a map"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a map"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a map"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a map"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3828,36 +3828,36 @@ func TestNilPointer(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nilInt1, MATCH_TRUE, ""},
-		testCase{nilInt2, MATCH_TRUE, ""},
-		testCase{nonNilInt, MATCH_FALSE, ""},
+		equalsTestCase{nilInt1, MATCH_TRUE, ""},
+		equalsTestCase{nilInt2, MATCH_TRUE, ""},
+		equalsTestCase{nonNilInt, MATCH_FALSE, ""},
 
 		// Incorrect type.
-		testCase{nilUint, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{nonNilUint, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{nilUint, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{nonNilUint, MATCH_UNDEFINED, "which is not a *int"},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{true, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a *int"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a *int"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3882,36 +3882,36 @@ func TestNonNilPointer(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nonNilInt1, MATCH_TRUE, ""},
-		testCase{nonNilInt2, MATCH_FALSE, ""},
-		testCase{nilInt, MATCH_FALSE, ""},
+		equalsTestCase{nonNilInt1, MATCH_TRUE, ""},
+		equalsTestCase{nonNilInt2, MATCH_FALSE, ""},
+		equalsTestCase{nilInt, MATCH_FALSE, ""},
 
 		// Incorrect type.
-		testCase{nilUint, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{nonNilUint, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{nilUint, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{nonNilUint, MATCH_UNDEFINED, "which is not a *int"},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a *int"},
-		testCase{true, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a *int"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a *int"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a *int"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a *int"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -3937,35 +3937,35 @@ func TestNilSlice(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nilInt1, MATCH_TRUE, ""},
-		testCase{nilInt2, MATCH_TRUE, ""},
-		testCase{nonNilInt, MATCH_FALSE, ""},
+		equalsTestCase{nilInt1, MATCH_TRUE, ""},
+		equalsTestCase{nilInt2, MATCH_TRUE, ""},
+		equalsTestCase{nonNilInt, MATCH_FALSE, ""},
 
 		// Incorrect type.
-		testCase{nilUint, MATCH_UNDEFINED, "which is not a []int"},
-		testCase{nonNilUint, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{nilUint, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{nonNilUint, MATCH_UNDEFINED, "which is not a []int"},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a []int"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a []int"},
-		testCase{true, MATCH_UNDEFINED, "which is not a []int"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a []int"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a []int"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a []int"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a []int"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a []int"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a []int"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -4006,35 +4006,35 @@ func TestString(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{"taco1", MATCH_TRUE, ""},
-		testCase{"taco" + "1", MATCH_TRUE, ""},
-		testCase{expected, MATCH_TRUE, ""},
+		equalsTestCase{"taco1", MATCH_TRUE, ""},
+		equalsTestCase{"taco" + "1", MATCH_TRUE, ""},
+		equalsTestCase{expected, MATCH_TRUE, ""},
 
-		testCase{"", MATCH_FALSE, ""},
-		testCase{"taco", MATCH_FALSE, ""},
-		testCase{"taco1\x00", MATCH_FALSE, ""},
-		testCase{"taco2", MATCH_FALSE, ""},
+		equalsTestCase{"", MATCH_FALSE, ""},
+		equalsTestCase{"taco", MATCH_FALSE, ""},
+		equalsTestCase{"taco1\x00", MATCH_FALSE, ""},
+		equalsTestCase{"taco2", MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a string"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a string"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a string"},
-		testCase{true, MATCH_UNDEFINED, "which is not a string"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a string"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a string"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a string"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a string"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a string"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -4082,35 +4082,35 @@ func TestNilUnsafePointer(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nilPtr1, MATCH_TRUE, ""},
-		testCase{nilPtr2, MATCH_TRUE, ""},
-		testCase{nonNilPtr, MATCH_FALSE, ""},
+		equalsTestCase{nilPtr1, MATCH_TRUE, ""},
+		equalsTestCase{nilPtr2, MATCH_TRUE, ""},
+		equalsTestCase{nonNilPtr, MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{true, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
 	}
 
 	checkTestCases(t, matcher, cases)
@@ -4132,35 +4132,35 @@ func TestNonNilUnsafePointer(t *testing.T) {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
 	}
 
-	cases := []testCase{
+	cases := []equalsTestCase{
 		// Correct type.
-		testCase{nonNilPtr1, MATCH_TRUE, ""},
-		testCase{nonNilPtr2, MATCH_FALSE, ""},
-		testCase{nilPtr, MATCH_FALSE, ""},
+		equalsTestCase{nonNilPtr1, MATCH_TRUE, ""},
+		equalsTestCase{nonNilPtr2, MATCH_FALSE, ""},
+		equalsTestCase{nilPtr, MATCH_FALSE, ""},
 
 		// Other types.
-		testCase{0, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{bool(false), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{int64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uint64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{uintptr(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{true, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{[...]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{make(chan int), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{func() {}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{map[int]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{&someInt, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{[]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{"taco", MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
-		testCase{testCase{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{0, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{bool(false), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{int64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint8(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint16(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint32(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uint64(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{uintptr(0), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{true, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{make(chan int), MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{func() {}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{&someInt, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{[]int{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which is not a unsafe.Pointer"},
 	}
 
 	checkTestCases(t, matcher, cases)
