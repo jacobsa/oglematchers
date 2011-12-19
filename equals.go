@@ -45,6 +45,10 @@ func isUnsignedInteger(v reflect.Value) bool {
 	return k >= reflect.Uint && k <= reflect.Uint64
 }
 
+func isInteger(v reflect.Value) bool {
+	return isSignedInteger(v) || isUnsignedInteger(v)
+}
+
 func isFloat(v reflect.Value) bool {
 	k := v.Kind()
 	return k == reflect.Float32 || k == reflect.Float64
@@ -55,9 +59,39 @@ func isComplex(v reflect.Value) bool {
 	return k == reflect.Complex64 || k == reflect.Complex128
 }
 
+func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err string) {
+	res = MATCH_UNDEFINED
+	err = "TODO"
+	return
+}
+
 func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err string) {
+	res = MATCH_FALSE
+	realPart := real(e)
+	imaginaryPart := imag(e)
+
 	switch {
+	case isInteger(c) || isFloat(c):
+		// If we have no imaginary part, then we should just compare against the
+		// real part. Otherwise, we can't be equal.
+		if (imaginaryPart != 0) {
+			res = MATCH_FALSE
+			return
+		}
+
+		return checkAgainstFloat32(realPart, c)
+
+	case isComplex(c):
+		if complex128(e) == c.Complex() {
+			res = MATCH_TRUE
+		}
+
+	default:
+		res = MATCH_UNDEFINED
+		err = "which is not numeric"
 	}
+
+	return
 }
 
 ////////////////////////////////////////////////////////////
