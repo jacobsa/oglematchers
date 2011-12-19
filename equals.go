@@ -320,6 +320,21 @@ func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err st
 	return
 }
 
+func checkAgainstFunc(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+	// Make sure c is a function.
+	if c.Kind() != reflect.Func {
+		res = MATCH_UNDEFINED
+		err = "which is not a function"
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.Pointer() == e.Pointer() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 ////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
@@ -356,6 +371,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case ek == reflect.Chan:
 		return checkAgainstChan(e, c)
+
+	case ek == reflect.Func:
+		return checkAgainstFunc(e, c)
 	}
 
 	return MATCH_UNDEFINED, "TODO"
