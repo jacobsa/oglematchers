@@ -294,9 +294,15 @@ func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err strin
 }
 
 func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
-	if c.Kind() != reflect.Chan {
+	// Create a description of e's type, e.g. "chan int".
+	typeStr := fmt.Sprintf("%s %s", e.Type().ChanDir(), e.Type().Elem())
+
+	// Make sure c is a chan of the correct type.
+	if c.Kind() != reflect.Chan ||
+	   c.Type().ChanDir() != e.Type().ChanDir() ||
+		 c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
-		err = fmt.Sprintf("which is not a %s %s", e.Type().ChanDir(), e.Type().Elem())
+		err = fmt.Sprintf("which is not a %s", typeStr)
 		return
 	}
 
