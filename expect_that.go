@@ -16,6 +16,8 @@
 package ogletest
 
 import (
+	"fmt"
+	"github.com/jacobsa/ogletest/internal"
 )
 
 // ExpectThat confirms that the supplied matcher matches the value x, adding a
@@ -30,4 +32,39 @@ import (
 //     ExpectThat(users[i], Equals("jacobsa"), "while processing user %d", i)
 //
 func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
+	// Grab the current test state.
+	state := internal.CurrentTest
+	if state == nil {
+		panic("ExpectThat: no test state.");
+	}
+
+	// Check whether the value matches.
+	res, matcherErr := m.Matches(x)
+	switch res {
+	// Return immediately on success.
+	case MATCH_TRUE:
+		return
+
+	// Handle errors below.
+	case MATCH_FALSE:
+	case MATCH_UNDEFINED:
+
+	// Panic for invalid results.
+	default:
+		panic(fmt.Sprintf("ExpectThat: invalid matcher result %v.", res))
+	}
+
+	// Form an appropriate failure message. Make sure that the expected and
+	// actual values align properly.
+	var record internal.FailureRecord
+	relativeClause := ""
+	if matcherErr != "" {
+		relativeClause = fmt.Sprintf(", %s", matcherErr)
+	}
+
+	record.GeneratedError =
+		fmt.Sprintf("Expected: %s, Actual:   %v%s", m.Description(), x, relativeClause)
+
+	// Record the failure.
+	state.FailureRecords = append(state.FailureRecords, record)
 }

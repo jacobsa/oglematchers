@@ -92,6 +92,26 @@ func TestNoFailure(t *testing.T) {
 	assertEqInt(t, 0, len(internal.CurrentTest.FailureRecords))
 }
 
+func TestInvalidMatcherResult(t *testing.T) {
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	setUpCurrentTest()
+	matcher := &fakeExpectThatMatcher{"", MatchResult(17), ""}
+	ExpectThat(17, matcher)
+}
+
 func TestMatchFalseWithoutMessages(t *testing.T) {
 	setUpCurrentTest()
 	matcher := &fakeExpectThatMatcher{"taco", MATCH_FALSE, ""}
