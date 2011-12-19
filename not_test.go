@@ -52,11 +52,22 @@ func TestCallsWrapped(t *testing.T) {
 
 	matcher.Matches(17)
 	if suppliedCandidate != 17 {
-		t.Error("Expected 17, got %v", suppliedCandidate)
+		t.Errorf("Expected 17, got %v", suppliedCandidate)
 	}
 }
 
 func TestTrueMatchFromWrapped(t *testing.T) {
+	matchFunc := func(c interface{}) (MatchResult, string) {
+		return MATCH_TRUE, ""
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Not(wrapped)
+
+	res, _ := matcher.Matches(0)
+	if res != MATCH_FALSE {
+		t.Errorf("Expected MATCH_FALSE, got %v", res)
+	}
 }
 
 func TestFalseMatchFromWrapped(t *testing.T) {
