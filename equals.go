@@ -32,6 +32,11 @@ func Equals(x interface{}) Matcher {
 		panic(fmt.Sprintf("ogletest.Equals: unsupported type", v.Kind()))
 	}
 
+	// The == operator is not defined for non-nil slices.
+	if v.Kind() == reflect.Slice && v.Pointer() != uintptr(0) {
+		panic(fmt.Sprintf("ogletest.Equals: non-nil slice"))
+	}
+
 	return &equalsMatcher{v}
 }
 
