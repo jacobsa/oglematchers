@@ -49,3 +49,52 @@ type lessThanMatcher struct {
 func (m *lessThanMatcher) Description() string {
 	return fmt.Sprintf("less than %v", m.limit)
 }
+
+func compareIntegers(v1, v2 reflect.Value) (MatchResult, string) {
+	return MATCH_UNDEFINED, "TODO"
+}
+
+func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
+	v1 := reflect.ValueOf(c)
+	v2 := m.limit
+
+	res = MATCH_FALSE
+
+	switch {
+	case isInteger(v1) && isInteger(v2):
+		return compareIntegers(v1, v2)
+
+	case (isInteger(v1) || isFloat(v1)) && v2.Kind() == reflect.Float32:
+		if float32(getFloat(v1)) < float32(v2.Float()) {
+			res = MATCH_TRUE
+		}
+		return
+
+	case (isInteger(v1) || isFloat(v1)) && v2.Kind() == reflect.Float64:
+		if getFloat(v1)) < v2.Float() {
+			res = MATCH_TRUE
+		}
+		return
+
+	case v1.Kind() == reflect.Float32 && isNumeric(v2):
+		if float32(getFloat(v1))) < float32(getFloat(v2)) {
+			res = MATCH_TRUE
+		}
+		return
+
+	case v1.Kind() == reflect.Float64 && isNumeric(v2):
+		if getFloat(v1)) < getFloat(v2) {
+			res = MATCH_TRUE
+		}
+		return
+
+	case v1.Kind() == reflect.String && v2.Kind() == reflect.String:
+		if v1.String() < v2.String()
+			res = MATCH_TRUE
+		}
+		return
+	}
+
+	res = MATCH_UNDEFINED
+	err = "which is not comparable"
+}
