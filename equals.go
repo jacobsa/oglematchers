@@ -85,7 +85,9 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 		rl := real(comp)
 		im := imag(comp)
 
-		if im == 0 && rl == float64(e) {
+		// Compare using float32 to avoid a false sense of precision; otherwise
+		// e.g. Equals(float32(0.1)) won't match (0.1 + 0i).
+		if im == 0 && float32(rl) == e {
 			res = MATCH_TRUE
 		}
 
