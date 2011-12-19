@@ -121,7 +121,7 @@ func TestMatchFalseWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqInt(t, 98, record.LineNumber)
+	expectEqInt(t, 118, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }
@@ -135,7 +135,7 @@ func TestMatchUndefinedWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqInt(t, 112, record.LineNumber)
+	expectEqInt(t, 132, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }
