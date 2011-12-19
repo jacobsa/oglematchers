@@ -34,6 +34,22 @@ func setUpCurrentTest() {
 ////////////////////////////////////////////////////////////
 
 func TestNoCurrentTest(t *testing.T) {
+	panicked := false
+
+	defer func() {
+		if !panicked {
+			t.Errorf("Expected panic; got none.")
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			panicked = true
+		}
+	}()
+
+	internal.CurrentTest = nil
+	ExpectThat(17, Equals(17))
 }
 
 func TestNoFailure(t *testing.T) {
