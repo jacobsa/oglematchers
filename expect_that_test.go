@@ -49,7 +49,7 @@ func assertEqInt(t *testing.T, e, c int) {
 	}
 }
 
-func expectEqUint(t *testing.T, e, c uint) {
+func expectEqInt(t *testing.T, e, c int) {
 	if e != c {
 		t.Errorf("Expected %v, got %v", e, c)
 	}
@@ -121,7 +121,7 @@ func TestMatchFalseWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqUint(t, 98, record.LineNumber)
+	expectEqInt(t, 98, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }
@@ -135,7 +135,7 @@ func TestMatchUndefinedWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqUint(t, 112, record.LineNumber)
+	expectEqInt(t, 112, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }

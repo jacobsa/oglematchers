@@ -18,6 +18,7 @@ package ogletest
 import (
 	"fmt"
 	"github.com/jacobsa/ogletest/internal"
+	"runtime"
 )
 
 // ExpectThat confirms that the supplied matcher matches the value x, adding a
@@ -32,6 +33,12 @@ import (
 //     ExpectThat(users[i], Equals("jacobsa"), "while processing user %d", i)
 //
 func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
+	// Get information about the call site.
+	_, file, lineNumber, ok := runtime.Caller(1)
+	if !ok {
+		panic("ExpectThat: runtime.Caller")
+	}
+
 	// Grab the current test state.
 	state := internal.CurrentTest
 	if state == nil {
@@ -66,5 +73,7 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 		fmt.Sprintf("Expected: %s\nActual:   %v%s", m.Description(), x, relativeClause)
 
 	// Record the failure.
+	record.FileName = file
+	record.LineNumber = lineNumber
 	state.FailureRecords = append(state.FailureRecords, record)
 }
