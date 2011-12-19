@@ -36,5 +36,5 @@ import (
 //
 // This is akin to a logical OR operation for matchers.
 func AnyOf(vals ...interface{}) Matcher {
-	return nil
+	return Equals(0)
 }
