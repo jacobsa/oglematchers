@@ -25,7 +25,14 @@ import (
 // exception that if x is a numeric type, Equals(x) will match equivalent
 // numeric values of any type.
 func Equals(x interface{}) Matcher {
-	return &equalsMatcher{reflect.ValueOf(x)}
+	v := reflect.ValueOf(x)
+
+	// The == operator is not defined for array or struct types.
+	if v.Kind() == reflect.Array || v.Kind() == reflect.Struct {
+		panic(fmt.Sprintf("ogletest.Equals: unsupported type", v.Kind()))
+	}
+
+	return &equalsMatcher{v}
 }
 
 type equalsMatcher struct {
