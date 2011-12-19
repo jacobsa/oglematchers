@@ -128,14 +128,14 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 
 	// At least one float32
 	case v1.Kind() == reflect.Float32 || v2.Kind() == reflect.Float32:
-		if float32(getFloat(v1)) < float32(v2.Float()) {
+		if float32(getFloat(v1)) < float32(getFloat(v2)) {
 			res = MATCH_TRUE
 		}
 		return
 
 	// At least one float64
 	case v1.Kind() == reflect.Float64 || v2.Kind() == reflect.Float64:
-		if getFloat(v1) < v2.Float() {
+		if getFloat(v1) < getFloat(v2) {
 			res = MATCH_TRUE
 		}
 		return
