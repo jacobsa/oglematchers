@@ -1030,7 +1030,7 @@ func TestLtEmptyString(t *testing.T) {
 func TestLtSingleNullByte(t *testing.T) {
 	matcher := LessThan("\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than \"\\x00\""
+	expectedDesc := "less than \"\x00\""
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
@@ -1049,7 +1049,7 @@ func TestLtSingleNullByte(t *testing.T) {
 func TestLtLongerString(t *testing.T) {
 	matcher := LessThan("foo\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than \"foo\\x00\""
+	expectedDesc := "less than \"foo\x00\""
 
 	if desc != expectedDesc {
 		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
