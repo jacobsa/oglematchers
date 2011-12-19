@@ -51,5 +51,10 @@ type TestState struct {
 	FailureRecords []FailureRecord
 }
 
+// NewTestState creates a valid but empty TestState struct.
+func NewTestState() *TestState {
+	return &TestState{FailureRecords: make([]FailureRecord, 0)}
+}
+
 // CurrentTest is the state for the currently running test, if any.
 var CurrentTest *TestState

@@ -26,7 +26,7 @@ import (
 
 // Set up a new test state with empty fields.
 func setUpCurrentTest() {
-	internal.CurrentTest = &internal.TestState{}
+	internal.CurrentTest = internal.NewTestState()
 }
 
 ////////////////////////////////////////////////////////////
@@ -53,6 +53,7 @@ func TestNoCurrentTest(t *testing.T) {
 }
 
 func TestNoFailure(t *testing.T) {
+	setUpCurrentTest()
 	ExpectThat(17, Equals(17))
 
 	expectedLen := 0
