@@ -3998,6 +3998,7 @@ func TestString(t *testing.T) {
 	cases := []testCase{
 		// Correct type.
 		testCase{"taco1", MATCH_TRUE, ""},
+		testCase{"taco" + "1", MATCH_TRUE, ""},
 		testCase{expected, MATCH_TRUE, ""},
 
 		testCase{"", MATCH_FALSE, ""},
