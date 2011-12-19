@@ -41,6 +41,19 @@ func (m *fakeMatcher) Description() string {
 ////////////////////////////////////////////////////////////
 
 func TestCallsWrapped(t *testing.T) {
+	var suppliedCandidate interface{}
+	matchFunc := func(c interface{}) (MatchResult, string) {
+		suppliedCandidate = c
+		return MATCH_TRUE, ""
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Not(wrapped)
+
+	matcher.Matches(17)
+	if suppliedCandidate != 17 {
+		t.Error("Expected 17, got %v", suppliedCandidate)
+	}
 }
 
 func TestTrueMatchFromWrapped(t *testing.T) {
