@@ -350,6 +350,21 @@ func checkAgainstMap(e reflect.Value, c reflect.Value) (res MatchResult, err str
 	return
 }
 
+func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+	// Make sure c is a pointer.
+	if c.Kind() != reflect.Ptr {
+		res = MATCH_UNDEFINED
+		err = "which is not a pointer"
+		return
+	}
+
+	res = MATCH_FALSE
+	if c.Pointer() == e.Pointer() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
 	// Make sure c is a pointer.
 	if c.Kind() != reflect.UnsafePointer {
@@ -407,6 +422,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 
 	case ek == reflect.Map:
 		return checkAgainstMap(e, c)
+
+	case ek == reflect.Ptr:
+		return checkAgainstPtr(e, c)
 
 	case ek == reflect.UnsafePointer:
 		return checkAgainstUnsafePointer(e, c)
