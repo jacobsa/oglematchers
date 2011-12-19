@@ -126,8 +126,8 @@ func TestFailureWithMatcherMessage(t *testing.T) {
 	ExpectThat(17, matcher)
 
 	assertEqInt(t, 1, len(internal.CurrentTest.FailureRecords))
-
 	record := internal.CurrentTest.FailureRecords[0]
+
 	expectEqStr(t, "Expected: taco\nActual:   17, which is foo", record.GeneratedError)
 }
 
@@ -143,4 +143,17 @@ func TestFailureWithUserMessage(t *testing.T) {
 }
 
 func TestAdditionalFailure(t *testing.T) {
+	setUpCurrentTest()
+	matcher := &fakeExpectThatMatcher{"", MATCH_UNDEFINED, ""}
+
+	// Fail twice.
+	ExpectThat(17, matcher, "taco")
+	ExpectThat(19, matcher, "burrito")
+
+	assertEqInt(t, 2, len(internal.CurrentTest.FailureRecords))
+	record1 := internal.CurrentTest.FailureRecords[0]
+	record2 := internal.CurrentTest.FailureRecords[1]
+
+	expectEqStr(t, "taco", record1.UserError)
+	expectEqStr(t, "burrito", record2.UserError)
 }
