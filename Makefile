@@ -8,5 +8,6 @@ GOFILES=\
 	less_than.go \
 	matcher.go \
 	not.go \
+	register_test_suite.go \
 
 include $(GOROOT)/src/Make.pkg
