@@ -484,5 +484,10 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, error) {
 }
 
 func (m *equalsMatcher) Description() string {
+	// Special case: handle nil.
+	if !m.expectedValue.IsValid() {
+		return "is nil"
+	}
+
 	return fmt.Sprintf("%v", m.expectedValue.Interface())
 }
