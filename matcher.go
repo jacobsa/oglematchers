@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ogletest
+package oglematchers
 
 // A MatchResult is an integer equal to one of the MATCH_* constants below.
 // Matchers use a tri-state logic in order to make the semantics of matchers

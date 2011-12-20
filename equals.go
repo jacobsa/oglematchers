@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ogletest
+package oglematchers
 
 import (
 	"errors"
@@ -32,12 +32,12 @@ func Equals(x interface{}) Matcher {
 
 	// The == operator is not defined for array or struct types.
 	if v.Kind() == reflect.Array || v.Kind() == reflect.Struct {
-		panic(fmt.Sprintf("ogletest.Equals: unsupported type", v.Kind()))
+		panic(fmt.Sprintf("oglematchers.Equals: unsupported type", v.Kind()))
 	}
 
 	// The == operator is not defined for non-nil slices.
 	if v.Kind() == reflect.Slice && v.Pointer() != uintptr(0) {
-		panic(fmt.Sprintf("ogletest.Equals: non-nil slice"))
+		panic(fmt.Sprintf("oglematchers.Equals: non-nil slice"))
 	}
 
 	return &equalsMatcher{v}
