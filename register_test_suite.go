@@ -56,7 +56,7 @@ import (
 //       // different temporary file.
 //       tempFile string
 //     }
-//     ogletest.RegisterTestSuite(&FooTest{})
+//     func init() { ogletest.RegisterTestSuite(&FooTest{}) }
 //
 //     func (t *FooTest) SetUpTestSuite() {
 //       someExpensiveThing = ComputeSomeExpensiveThing()

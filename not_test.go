@@ -36,11 +36,16 @@ func (m *fakeMatcher) Description() string {
 	return m.description
 }
 
+type NotTest struct {
+}
+func init() { RegisterTestSuite(&NotTest{}) }
+func TestOgletest(t *testing.T) { RunTests(t) }
+
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
 
-func TestCallsWrapped(t *testing.T) {
+func (t *NotTest) CallsWrapped() {
 	var suppliedCandidate interface{}
 	matchFunc := func(c interface{}) (MatchResult, string) {
 		suppliedCandidate = c
@@ -51,12 +56,10 @@ func TestCallsWrapped(t *testing.T) {
 	matcher := Not(wrapped)
 
 	matcher.Matches(17)
-	if suppliedCandidate != 17 {
-		t.Errorf("Expected 17, got %v", suppliedCandidate)
-	}
+	ExpectThat(suppliedCandidate, Equals(17))
 }
 
-func TestTrueMatchFromWrapped(t *testing.T) {
+func (t *NotTest) WrappedReturnsMatchTrue() {
 	matchFunc := func(c interface{}) (MatchResult, string) {
 		return MATCH_TRUE, ""
 	}
@@ -65,12 +68,10 @@ func TestTrueMatchFromWrapped(t *testing.T) {
 	matcher := Not(wrapped)
 
 	res, _ := matcher.Matches(0)
-	if res != MATCH_FALSE {
-		t.Errorf("Expected MATCH_FALSE, got %v", res)
-	}
+	ExpectThat(res, Equals(MATCH_FALSE))
 }
 
-func TestFalseMatchFromWrapped(t *testing.T) {
+func (t *NotTest) WrappedReturnsMatchFalse() {
 	matchFunc := func(c interface{}) (MatchResult, string) {
 		return MATCH_FALSE, "taco"
 	}
@@ -79,16 +80,11 @@ func TestFalseMatchFromWrapped(t *testing.T) {
 	matcher := Not(wrapped)
 
 	res, err := matcher.Matches(0)
-	if res != MATCH_TRUE {
-		t.Errorf("Expected MATCH_TRUE, got %v", res)
-	}
-
-	if err != "" {
-		t.Errorf("Expected empty string, got %v", err)
-	}
+	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(err, Equals(""))
 }
 
-func TestUndefinedMatchFromWrapped(t *testing.T) {
+func (t *NotTest) WrappedReturnsMatchUndefined() {
 	matchFunc := func(c interface{}) (MatchResult, string) {
 		return MATCH_UNDEFINED, "taco"
 	}
@@ -97,22 +93,13 @@ func TestUndefinedMatchFromWrapped(t *testing.T) {
 	matcher := Not(wrapped)
 
 	res, err := matcher.Matches(0)
-	if res != MATCH_UNDEFINED {
-		t.Errorf("Expected MATCH_UNDEFINED, got %v", res)
-	}
-
-	if err != "taco" {
-		t.Errorf("Expected taco, got %v", err)
-	}
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Equals("taco"))
 }
 
-func TestDescription(t *testing.T) {
+func (t *NotTest) Description() {
 	wrapped := &fakeMatcher{nil, "taco"}
 	matcher := Not(wrapped)
 
-	desc := matcher.Description()
-	expected := "not(taco)"
-	if desc != expected {
-		t.Errorf("Expected %v, got %v", expected, desc)
-	}
+	ExpectThat(matcher.Description(), Equals("not(taco)"))
 }
