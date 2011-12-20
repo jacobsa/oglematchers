@@ -80,6 +80,7 @@ func (m *anyOfMatcher) Matches(c interface{}) (res MatchResult, err error) {
 		// Return immediately if there's a match.
 		if wrappedRes == MATCH_TRUE {
 			res = MATCH_TRUE
+			err = nil
 			return
 		}
 
