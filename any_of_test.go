@@ -38,6 +38,17 @@ func (m *fakeAnyOfMatcher) Description() string {
 	return m.desc
 }
 
+func expectEqErr(t *testing.T, expectedErr string, err error) {
+	actualError := ""
+	if err != nil {
+		actualError = err.Error()
+	}
+
+	if actualError != expectedErr {
+		t.Errorf("Expected %v, got %v", expectedErr, err)
+	}
+}
+
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
@@ -53,9 +64,7 @@ func TestEmptySet(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err.Error() != expectedErr {
-		t.Errorf("Expected %v, got %v", expectedErr, err)
-	}
+	expectEqErr(t, expectedErr, err)
 }
 
 func TestOneTrue(t *testing.T) {
@@ -75,9 +84,7 @@ func TestOneTrue(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err.Error() != expectedErr {
-		t.Errorf("Expected %v, got %v", expectedErr, err)
-	}
+	expectEqErr(t, expectedErr, err)
 }
 
 func TestOneEqual(t *testing.T) {
@@ -98,9 +105,7 @@ func TestOneEqual(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err.Error() != expectedErr {
-		t.Errorf("Expected %v, got %v", expectedErr, err)
-	}
+	expectEqErr(t, expectedErr, err)
 }
 
 func TestOneUndefined(t *testing.T) {
@@ -119,9 +124,7 @@ func TestOneUndefined(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err.Error() != expectedErr {
-		t.Errorf("Expected %v, got %v", expectedErr, err)
-	}
+	expectEqErr(t, expectedErr, err)
 }
 
 func TestAllFalseAndNotEqual(t *testing.T) {
@@ -140,9 +143,7 @@ func TestAllFalseAndNotEqual(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err.Error() != expectedErr {
-		t.Errorf("Expected %v, got %v", expectedErr, err)
-	}
+	expectEqErr(t, expectedErr, err)
 }
 
 func TestDescriptionForEmptySet(t *testing.T) {
