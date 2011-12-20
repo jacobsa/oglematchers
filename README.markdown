@@ -1,12 +1,31 @@
-This project is an attempt to create a unit testing framework for Go with the
-following features:
+oglematchers is a package for the Go programming language containing a set of
+matchers, useful in a testing or mocking framework, inspired by and mostly
+compatible with [Google Test][googletest] for C++ and
+[Google JS Test][google-js-test].
 
- *  An extensive and extensible set of matchers for expressing expectations.
- *  Clean, readable output that tells you exaclty what you need to know.
- *  Style and semantics similar to [Google Test][googletest] and
-    [Google JS Test][google-js-test].
+A "matcher" is simply an object with a `Matches` method defining a set of golang
+values matched by the matcher, and a `Description` method describing that set.
+For example, here are some matchers:
 
-It is not yet ready for general use.
+    // Numbers
+    Equals(17.13)
+    LessThan(19)
+
+    // Strings
+    Equals("taco")
+    HasSubstr("burrito")
+    MatchesRegex("t.*o")
+
+    // Combining matchers
+    AnyOf(LessThan(17), GreaterThan(19))
+
+There are lots more; see (TODO(jacobsa): link) for a reference.
+
+This project is used by the [ogletest][ogletest] testing framework and
+[oglemock][oglemock] mocking framework, which may be more directly useful to
+you.
 
 [googletest]: http://code.google.com/p/googletest/
 [google-js-test]: http://code.google.com/p/google-js-test/
+[ogletest]: http://github.com/jacobsa/ogletest
+[oglemock]: http://github.com/jacobsa/oglemock
