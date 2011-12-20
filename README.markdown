@@ -10,17 +10,19 @@ A "matcher" is simply an object with a `Matches` method defining a set of golang
 values matched by the matcher, and a `Description` method describing that set.
 For example, here are some matchers:
 
-    // Numbers
-    Equals(17.13)
-    LessThan(19)
+```go
+// Numbers
+Equals(17.13)
+LessThan(19)
 
-    // Strings
-    Equals("taco")
-    HasSubstr("burrito")
-    MatchesRegex("t.*o")
+// Strings
+Equals("taco")
+HasSubstr("burrito")
+MatchesRegex("t.*o")
+```
 
-    // Combining matchers
-    AnyOf(LessThan(17), GreaterThan(19))
+// Combining matchers
+AnyOf(LessThan(17), GreaterThan(19))
 
 There are lots more; see (TODO(jacobsa): link) for a reference. You can also add
 your own simply by implementing the `oglematchers.Matcher` interface.
