@@ -83,7 +83,6 @@ func TestEqualsNil(t *testing.T) {
 
 		equalsTestCase{make(chan int), MATCH_FALSE, ""},
 		equalsTestCase{func() {}, MATCH_FALSE, ""},
-		equalsTestCase{interface{}(17), MATCH_FALSE, ""},
 		equalsTestCase{map[int]int{}, MATCH_FALSE, ""},
 		equalsTestCase{&someInt, MATCH_FALSE, ""},
 		equalsTestCase{[]int{}, MATCH_FALSE, ""},
@@ -94,7 +93,7 @@ func TestEqualsNil(t *testing.T) {
 		equalsTestCase{uintptr(17), MATCH_UNDEFINED, "which cannot be compared to nil"},
 		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which cannot be compared to nil"},
 		equalsTestCase{"taco", MATCH_UNDEFINED, "which cannot be compared to nil"},
-		equalsTestCase{&equalsTestCase{}, MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{equalsTestCase{}, MATCH_UNDEFINED, "which cannot be compared to nil"},
 		equalsTestCase{unsafe.Pointer(&someInt), MATCH_UNDEFINED, "which cannot be compared to nil"},
 	}
 
