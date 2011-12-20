@@ -37,8 +37,10 @@ func (m *fakeMatcher) Description() string {
 }
 
 type NotTest struct {
+
 }
-func init() { RegisterTestSuite(&NotTest{}) }
+
+func init()                     { RegisterTestSuite(&NotTest{}) }
 func TestOgletest(t *testing.T) { RunTests(t) }
 
 ////////////////////////////////////////////////////////////

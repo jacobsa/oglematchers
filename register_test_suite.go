@@ -15,9 +15,6 @@
 
 package ogletest
 
-import (
-)
-
 // RegisterTestSuite tells ogletest about a test suite containing tests that it
 // should run. Any exported method on the type pointed to by the supplied
 // prototype value will be treated as test methods, with the exception of the

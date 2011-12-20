@@ -55,7 +55,7 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 	// Grab the current test state.
 	state := internal.CurrentTest
 	if state == nil {
-		panic("ExpectThat: no test state.");
+		panic("ExpectThat: no test state.")
 	}
 
 	// Check whether the value matches.
@@ -82,10 +82,13 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 		relativeClause = fmt.Sprintf(", %s", matcherErr)
 	}
 
-	record.GeneratedError =
-		fmt.Sprintf("Expected: %s\nActual:   %v%s", m.Description(), x, relativeClause)
+	record.GeneratedError = fmt.Sprintf(
+		"Expected: %s\nActual:   %v%s",
+		m.Description(),
+		x,
+		relativeClause)
 
-  // Record additional failure info.
+	// Record additional failure info.
 	record.FileName = path.Base(file)
 	record.LineNumber = lineNumber
 	record.UserError = userError
