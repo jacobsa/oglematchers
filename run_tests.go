@@ -16,6 +16,8 @@
 package ogletest
 
 import (
+	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -37,4 +39,7 @@ import (
 //     }
 //
 func RunTests(T *testing.T) {
+	for _, suite := range testSuites {
+		fmt.Println("Saw suite:", reflect.TypeOf(suite))
+	}
 }

@@ -76,4 +76,9 @@ import (
 //     }
 //
 func RegisterTestSuite(p interface{}) {
+	// TODO(jacobsa): Panic if p is nil.
+	testSuites = append(testSuites, p)
 }
+
+// The set of test suites previously registered.
+var testSuites = make([]interface{}, 0)
