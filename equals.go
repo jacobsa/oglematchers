@@ -427,6 +427,7 @@ func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResul
 func checkForNil(c reflect.Value) (res MatchResult, err error) {
 	// Make it is legal to call IsNil.
 	switch c.Kind() {
+	case reflect.Invalid:
 	case reflect.Chan:
 	case reflect.Func:
 	case reflect.Interface:
@@ -440,7 +441,9 @@ func checkForNil(c reflect.Value) (res MatchResult, err error) {
 		return
 	}
 
-	if c.IsNil() {
+	// Ask whether the value is nil. Handle a nil literal (kind Invalid)
+	// specially, since it's not legal to call IsNil there.
+	if c.Kind() == reflect.Invalid || c.IsNil() {
 		res = MATCH_TRUE
 	}
 	return
