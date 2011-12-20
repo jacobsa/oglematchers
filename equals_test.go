@@ -17,6 +17,7 @@ package oglematchers_test
 
 import (
 	"fmt"
+	. "github.com/jacobsa/oglematchers"
 	"math"
 	"testing"
 	"unsafe"
