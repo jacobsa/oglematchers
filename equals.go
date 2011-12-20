@@ -25,8 +25,6 @@ import (
 // Equals returns a matcher that matches any value v such that v == x, with the
 // exception that if x is a numeric type, Equals(x) will match equivalent
 // numeric values of any type.
-//
-// TODO(jacobsa): Rename this to Eq?
 func Equals(x interface{}) Matcher {
 	v := reflect.ValueOf(x)
 
