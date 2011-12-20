@@ -38,8 +38,56 @@ import (
 //       ogletest.RunTests(t)
 //     }
 //
-func RunTests(T *testing.T) {
+func RunTests(t *testing.T) {
 	for _, suite := range testSuites {
-		fmt.Println("Saw suite:", reflect.TypeOf(suite))
+		val := reflect.ValueOf(suite)
+		typ := val.Type()
+		suiteName := typ.Elem().Name()
+
+		fmt.Println("=========", suiteName)
+
+		// Run the SetUpTestSuite method, if any.
+		runMethodIfExists(val, "SetUpTestSuite")
+
+		// Run each method.
+		//
+		// TODO(jacobsa): Recover from panics.
+		// TODO(jacobsa): Pay attention to failures.
+		// TODO(jacobsa): Confirm that unexported methods don't show up here.
+		for i := 0; i < typ.NumMethod(); i++ {
+			method := typ.Method(i)
+			if isSpecialMethod(method.Name) {
+				continue
+			}
+
+			fmt.Printf("==== %s.%s\n", suiteName, method.Name)
+
+			// Create a receiver, and call it.
+			rcvr := reflect.New(typ.Elem())
+			runMethodIfExists(rcvr, "SetUp")
+			runMethodIfExists(rcvr, method.Name)
+			runMethodIfExists(rcvr, "TearDown")
+		}
+
+		// Run the TearDownTestSuite method, if any.
+		runMethodIfExists(val, "TearDownTestSuite")
 	}
+}
+
+func runMethodIfExists(v reflect.Value, name string) {
+	method := v.MethodByName(name)
+	if method.Kind() == reflect.Invalid {
+		return
+	}
+
+	// TODO(jacobsa): Panic (or print error?) if method doesn't have the right
+	// signature.
+	method.Call([]reflect.Value{})
+}
+
+func isSpecialMethod(name string) bool {
+	return (name == "SetUpTestSuite") ||
+		(name == "TearDownTestSuite") ||
+		(name == "SetUp") ||
+		(name == "TearDown")
 }
