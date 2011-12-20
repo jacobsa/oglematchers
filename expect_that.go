@@ -78,8 +78,8 @@ func ExpectThat(x interface{}, m Matcher, errorParts ...interface{}) {
 	// actual values align properly.
 	var record internal.FailureRecord
 	relativeClause := ""
-	if matcherErr != "" {
-		relativeClause = fmt.Sprintf(", %s", matcherErr)
+	if matcherErr != nil {
+		relativeClause = fmt.Sprintf(", %s", matcherErr.Error())
 	}
 
 	record.GeneratedError = fmt.Sprintf(

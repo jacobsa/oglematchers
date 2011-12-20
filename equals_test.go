@@ -47,7 +47,7 @@ func checkTestCases(t *testing.T, matcher Matcher, cases []equalsTestCase) {
 				result)
 		}
 
-		if err != c.expectedError {
+		if err.Error() != c.expectedError {
 			t.Errorf("Case %d: expected error %v, got %v", i, c.expectedError, err)
 		}
 	}

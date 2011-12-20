@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -28,8 +29,9 @@ type fakeMatcher struct {
 	description string
 }
 
-func (m *fakeMatcher) Matches(c interface{}) (MatchResult, string) {
-	return m.matchFunc(c)
+func (m *fakeMatcher) Matches(c interface{}) (MatchResult, error) {
+	res, err := m.matchFunc(c)
+	return res, errors.New(err)
 }
 
 func (m *fakeMatcher) Description() string {

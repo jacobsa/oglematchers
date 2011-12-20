@@ -30,13 +30,12 @@ type notMatcher struct {
 	wrapped Matcher
 }
 
-func (m *notMatcher) Matches(c interface{}) (res MatchResult, err string) {
+func (m *notMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	res, err = m.wrapped.Matches(c)
 
 	switch res {
 	case MATCH_FALSE:
 		res = MATCH_TRUE
-		err = ""
 
 	case MATCH_TRUE:
 		res = MATCH_FALSE

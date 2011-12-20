@@ -54,11 +54,10 @@ type Matcher interface {
 	// belongs to the set defined by the matcher.
 	//
 	// If the result is MATCH_FALSE or MATCH_UNDEFINED, it may additionally
-	// return an error string describing why the value doesn't match. Error
-	// strings are relative clauses that are suitable for being placed after the
-	// value. For example, a predicate that matches strings with a particular
-	// substring may, when presented with a numerical value, return the following
-	// string:
+	// return an error describing why the value doesn't match. The error text is
+	// a relative clause that is suitable for being placed after the value. For
+	// example, a predicate that matches strings with a particular substring may,
+	// when presented with a numerical value, return the following error text:
 	//
 	//     "which is not a string"
 	//
@@ -67,7 +66,7 @@ type Matcher interface {
 	//     Expected: is a string with substring "taco"
 	//     Actual:   17, which is not a string
 	//
-	Matches(candidate interface{}) (result MatchResult, error string)
+	Matches(candidate interface{}) (MatchResult, error)
 
 	// Description returns a string describing the property that values matching
 	// this matcher have, as a verb phrase where the subject is the value. For

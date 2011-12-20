@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -29,8 +30,8 @@ type fakeAnyOfMatcher struct {
 	err  string
 }
 
-func (m *fakeAnyOfMatcher) Matches(c interface{}) (MatchResult, string) {
-	return m.res, m.err
+func (m *fakeAnyOfMatcher) Matches(c interface{}) (MatchResult, error) {
+	return m.res, errors.New(m.err)
 }
 
 func (m *fakeAnyOfMatcher) Description() string {
@@ -52,7 +53,7 @@ func TestEmptySet(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err != expectedErr {
+	if err.Error() != expectedErr {
 		t.Errorf("Expected %v, got %v", expectedErr, err)
 	}
 }
@@ -74,7 +75,7 @@ func TestOneTrue(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err != expectedErr {
+	if err.Error() != expectedErr {
 		t.Errorf("Expected %v, got %v", expectedErr, err)
 	}
 }
@@ -97,7 +98,7 @@ func TestOneEqual(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err != expectedErr {
+	if err.Error() != expectedErr {
 		t.Errorf("Expected %v, got %v", expectedErr, err)
 	}
 }
@@ -118,7 +119,7 @@ func TestOneUndefined(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err != expectedErr {
+	if err.Error() != expectedErr {
 		t.Errorf("Expected %v, got %v", expectedErr, err)
 	}
 }
@@ -139,7 +140,7 @@ func TestAllFalseAndNotEqual(t *testing.T) {
 		t.Errorf("Expected %v, got %v", expectedRes, res)
 	}
 
-	if err != expectedErr {
+	if err.Error() != expectedErr {
 		t.Errorf("Expected %v, got %v", expectedErr, err)
 	}
 }

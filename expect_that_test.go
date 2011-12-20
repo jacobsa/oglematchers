@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"errors"
 	"github.com/jacobsa/ogletest/internal"
 	"testing"
 )
@@ -35,8 +36,8 @@ type fakeExpectThatMatcher struct {
 	err  string
 }
 
-func (m *fakeExpectThatMatcher) Matches(c interface{}) (MatchResult, string) {
-	return m.res, m.err
+func (m *fakeExpectThatMatcher) Matches(c interface{}) (MatchResult, error) {
+	return m.res, errors.New(m.err)
 }
 
 func (m *fakeExpectThatMatcher) Description() string {

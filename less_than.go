@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"reflect"
@@ -56,7 +57,7 @@ func (m *lessThanMatcher) Description() string {
 	return fmt.Sprintf("less than %v", m.limit.Interface())
 }
 
-func compareIntegers(v1, v2 reflect.Value) (res MatchResult, err string) {
+func compareIntegers(v1, v2 reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 	switch {
 	case isSignedInteger(v1) && isSignedInteger(v2):
@@ -102,7 +103,7 @@ func getFloat(v reflect.Value) float64 {
 	panic(fmt.Sprintf("getFloat: %v", v))
 }
 
-func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
+func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	v1 := reflect.ValueOf(c)
 	v2 := m.limit
 
@@ -121,7 +122,7 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err string) {
 	v2Legal := isInteger(v2) || isFloat(v2)
 	if !v1Legal || !v2Legal {
 		res = MATCH_UNDEFINED
-		err = "which is not comparable"
+		err = errors.New("which is not comparable")
 		return
 	}
 

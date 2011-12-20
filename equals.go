@@ -16,6 +16,7 @@
 package ogletest
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"reflect"
@@ -72,7 +73,7 @@ func isComplex(v reflect.Value) bool {
 	return k == reflect.Complex64 || k == reflect.Complex128
 }
 
-func checkAgainstInt64(e int64, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstInt64(e int64, c reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 
 	switch {
@@ -94,13 +95,13 @@ func checkAgainstInt64(e int64, c reflect.Value) (res MatchResult, err string) {
 
 	default:
 		res = MATCH_UNDEFINED
-		err = "which is not numeric"
+		err = errors.New("which is not numeric")
 	}
 
 	return
 }
 
-func checkAgainstUint64(e uint64, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstUint64(e uint64, c reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 
 	switch {
@@ -122,13 +123,13 @@ func checkAgainstUint64(e uint64, c reflect.Value) (res MatchResult, err string)
 
 	default:
 		res = MATCH_UNDEFINED
-		err = "which is not numeric"
+		err = errors.New("which is not numeric")
 	}
 
 	return
 }
 
-func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 
 	switch {
@@ -162,13 +163,13 @@ func checkAgainstFloat32(e float32, c reflect.Value) (res MatchResult, err strin
 
 	default:
 		res = MATCH_UNDEFINED
-		err = "which is not numeric"
+		err = errors.New("which is not numeric")
 	}
 
 	return
 }
 
-func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 
 	ck := c.Kind()
@@ -207,13 +208,13 @@ func checkAgainstFloat64(e float64, c reflect.Value) (res MatchResult, err strin
 
 	default:
 		res = MATCH_UNDEFINED
-		err = "which is not numeric"
+		err = errors.New("which is not numeric")
 	}
 
 	return
 }
 
-func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 	realPart := real(e)
 	imaginaryPart := imag(e)
@@ -238,13 +239,13 @@ func checkAgainstComplex64(e complex64, c reflect.Value) (res MatchResult, err s
 
 	default:
 		res = MATCH_UNDEFINED
-		err = "which is not numeric"
+		err = errors.New("which is not numeric")
 	}
 
 	return
 }
 
-func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err error) {
 	res = MATCH_FALSE
 	realPart := real(e)
 	imaginaryPart := imag(e)
@@ -267,7 +268,7 @@ func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err
 
 	default:
 		res = MATCH_UNDEFINED
-		err = "which is not numeric"
+		err = errors.New("which is not numeric")
 	}
 
 	return
@@ -277,10 +278,10 @@ func checkAgainstComplex128(e complex128, c reflect.Value) (res MatchResult, err
 // Other types
 ////////////////////////////////////////////////////////////
 
-func checkAgainstBool(e bool, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstBool(e bool, c reflect.Value) (res MatchResult, err error) {
 	if c.Kind() != reflect.Bool {
 		res = MATCH_UNDEFINED
-		err = "which is not a bool"
+		err = errors.New("which is not a bool")
 		return
 	}
 
@@ -291,10 +292,10 @@ func checkAgainstBool(e bool, c reflect.Value) (res MatchResult, err string) {
 	return
 }
 
-func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err error) {
 	if c.Kind() != reflect.Uintptr {
 		res = MATCH_UNDEFINED
-		err = "which is not a uintptr"
+		err = errors.New("which is not a uintptr")
 		return
 	}
 
@@ -305,7 +306,7 @@ func checkAgainstUintptr(e uintptr, c reflect.Value) (res MatchResult, err strin
 	return
 }
 
-func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Create a description of e's type, e.g. "chan int".
 	typeStr := fmt.Sprintf("%s %s", e.Type().ChanDir(), e.Type().Elem())
 
@@ -314,7 +315,7 @@ func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err st
 		c.Type().ChanDir() != e.Type().ChanDir() ||
 		c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
-		err = fmt.Sprintf("which is not a %s", typeStr)
+		err = errors.New(fmt.Sprintf("which is not a %s", typeStr))
 		return
 	}
 
@@ -325,11 +326,11 @@ func checkAgainstChan(e reflect.Value, c reflect.Value) (res MatchResult, err st
 	return
 }
 
-func checkAgainstFunc(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstFunc(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Make sure c is a function.
 	if c.Kind() != reflect.Func {
 		res = MATCH_UNDEFINED
-		err = "which is not a function"
+		err = errors.New("which is not a function")
 		return
 	}
 
@@ -340,11 +341,11 @@ func checkAgainstFunc(e reflect.Value, c reflect.Value) (res MatchResult, err st
 	return
 }
 
-func checkAgainstMap(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstMap(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Make sure c is a map.
 	if c.Kind() != reflect.Map {
 		res = MATCH_UNDEFINED
-		err = "which is not a map"
+		err = errors.New("which is not a map")
 		return
 	}
 
@@ -355,7 +356,7 @@ func checkAgainstMap(e reflect.Value, c reflect.Value) (res MatchResult, err str
 	return
 }
 
-func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Create a description of e's type, e.g. "*int".
 	typeStr := fmt.Sprintf("*%v", e.Type().Elem())
 
@@ -363,7 +364,7 @@ func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err str
 	if c.Kind() != reflect.Ptr ||
 		c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
-		err = fmt.Sprintf("which is not a %s", typeStr)
+		err = errors.New(fmt.Sprintf("which is not a %s", typeStr))
 		return
 	}
 
@@ -374,7 +375,7 @@ func checkAgainstPtr(e reflect.Value, c reflect.Value) (res MatchResult, err str
 	return
 }
 
-func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Create a description of e's type, e.g. "[]int".
 	typeStr := fmt.Sprintf("[]%v", e.Type().Elem())
 
@@ -382,7 +383,7 @@ func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err s
 	if c.Kind() != reflect.Slice ||
 		c.Type().Elem() != e.Type().Elem() {
 		res = MATCH_UNDEFINED
-		err = fmt.Sprintf("which is not a %s", typeStr)
+		err = errors.New(fmt.Sprintf("which is not a %s", typeStr))
 		return
 	}
 
@@ -393,11 +394,11 @@ func checkAgainstSlice(e reflect.Value, c reflect.Value) (res MatchResult, err s
 	return
 }
 
-func checkAgainstString(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstString(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Make sure c is a string.
 	if c.Kind() != reflect.String {
 		res = MATCH_UNDEFINED
-		err = "which is not a string"
+		err = errors.New("which is not a string")
 		return
 	}
 
@@ -408,11 +409,11 @@ func checkAgainstString(e reflect.Value, c reflect.Value) (res MatchResult, err 
 	return
 }
 
-func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResult, err string) {
+func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResult, err error) {
 	// Make sure c is a pointer.
 	if c.Kind() != reflect.UnsafePointer {
 		res = MATCH_UNDEFINED
-		err = "which is not a unsafe.Pointer"
+		err = errors.New("which is not a unsafe.Pointer")
 		return
 	}
 
@@ -427,7 +428,7 @@ func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResul
 // Public implementation
 ////////////////////////////////////////////////////////////
 
-func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
+func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, error) {
 	e := m.expectedValue
 	c := reflect.ValueOf(candidate)
 	ek := e.Kind()
@@ -479,7 +480,7 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, string) {
 		return checkAgainstUnsafePointer(e, c)
 	}
 
-	return MATCH_UNDEFINED, "TODO"
+	panic(fmt.Sprintf("equalsMatcher.Matches: unexpected kind: %v", ek))
 }
 
 func (m *equalsMatcher) Description() string {
