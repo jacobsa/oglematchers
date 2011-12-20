@@ -17,6 +17,7 @@ package ogletest
 
 import (
 	"fmt"
+	"github.com/jacobsa/ogletest/internal"
 	"reflect"
 	"testing"
 )
@@ -62,11 +63,25 @@ func RunTests(t *testing.T) {
 
 			fmt.Printf("==== %s.%s\n", suiteName, method.Name)
 
+			// Set up a clean slate for this test.
+			internal.CurrentTest = internal.NewTestState()
+
 			// Create a receiver, and call it.
 			rcvr := reflect.New(typ.Elem())
 			runMethodIfExists(rcvr, "SetUp")
 			runMethodIfExists(rcvr, method.Name)
 			runMethodIfExists(rcvr, "TearDown")
+
+			// Print any failures, and mark the test as having failed if there are any.
+			for _, record := range internal.CurrentTest.FailureRecords {
+				t.Fail()
+				fmt.Printf(
+					"%s:%d:\n%s\n%s",
+					record.FileName,
+					record.LineNumber,
+					record.GeneratedError,
+					record.UserError)
+			}
 		}
 
 		// Run the TearDownTestSuite method, if any.
