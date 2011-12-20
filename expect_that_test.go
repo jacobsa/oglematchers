@@ -37,7 +37,12 @@ type fakeExpectThatMatcher struct {
 }
 
 func (m *fakeExpectThatMatcher) Matches(c interface{}) (MatchResult, error) {
-	return m.res, errors.New(m.err)
+	var err error
+	if (m.err != "") {
+		err = errors.New(m.err)
+	}
+
+	return m.res, err
 }
 
 func (m *fakeExpectThatMatcher) Description() string {
@@ -142,7 +147,7 @@ func TestMatchFalseWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqInt(t, 139, record.LineNumber)
+	expectEqInt(t, 144, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }
@@ -156,7 +161,7 @@ func TestMatchUndefinedWithoutMessages(t *testing.T) {
 
 	record := internal.CurrentTest.FailureRecords[0]
 	expectEqStr(t, "expect_that_test.go", record.FileName)
-	expectEqInt(t, 153, record.LineNumber)
+	expectEqInt(t, 158, record.LineNumber)
 	expectEqStr(t, "Expected: taco\nActual:   17", record.GeneratedError)
 	expectEqStr(t, "", record.UserError)
 }
