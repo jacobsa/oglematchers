@@ -9,5 +9,6 @@ GOFILES=\
 	matcher.go \
 	not.go \
 	register_test_suite.go \
+	run_tests.go \
 
 include $(GOROOT)/src/Make.pkg
