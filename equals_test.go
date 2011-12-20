@@ -59,6 +59,49 @@ func checkTestCases(t *testing.T, matcher Matcher, cases []equalsTestCase) {
 }
 
 ////////////////////////////////////////////////////////////
+// nil
+////////////////////////////////////////////////////////////
+
+func TestEqualsNil(t *testing.T) {
+	matcher := Equals(nil)
+	desc := matcher.Description()
+	expectedDesc := "is nil"
+
+	if desc != expectedDesc {
+		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
+	}
+
+	cases := []equalsTestCase{
+		// Legal types
+		equalsTestCase{nil, MATCH_TRUE, ""},
+		equalsTestCase{chan int(nil), MATCH_TRUE, ""},
+		equalsTestCase{(func())(nil), MATCH_TRUE, ""},
+		equalsTestCase{interface{}(nil), MATCH_TRUE, ""},
+		equalsTestCase{map[int]int(nil), MATCH_TRUE, ""},
+		equalsTestCase{(*int)(nil), MATCH_TRUE, ""},
+		equalsTestCase{[]int(nil), MATCH_TRUE, ""},
+
+		equalsTestCase{make(chan int), MATCH_FALSE, ""},
+		equalsTestCase{func() {}, MATCH_FALSE, ""},
+		equalsTestCase{interface{}(17), MATCH_FALSE, ""},
+		equalsTestCase{map[int]int{}, MATCH_FALSE, ""},
+		equalsTestCase{&someInt, MATCH_FALSE, ""},
+		equalsTestCase{[]int{}, MATCH_FALSE, ""},
+
+		// Illegal types
+		equalsTestCase{17, MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{int8(17), MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{uintptr(17), MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{[...]int{}, MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{"taco", MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{&equalsTestCase{}, MATCH_UNDEFINED, "which cannot be compared to nil"},
+		equalsTestCase{unsafe.Pointer(&someInt), MATCH_UNDEFINED, "which cannot be compared to nil"},
+	}
+
+	checkTestCases(t, matcher, cases)
+}
+
+////////////////////////////////////////////////////////////
 // Integer literals
 ////////////////////////////////////////////////////////////
 
