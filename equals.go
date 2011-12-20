@@ -424,6 +424,28 @@ func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (res MatchResul
 	return
 }
 
+func checkForNil(c reflect.Value) (res MatchResult, err error) {
+	// Make it is legal to call IsNil.
+	switch c.Kind() {
+	case reflect.Chan:
+	case reflect.Func:
+	case reflect.Interface:
+	case reflect.Map:
+	case reflect.Ptr:
+	case reflect.Slice:
+
+	default:
+		res = MATCH_UNDEFINED
+		err = errors.New("which cannot be compared to nil")
+		return
+	}
+
+	if c.IsNil() {
+		res = MATCH_TRUE
+	}
+	return
+}
+
 ////////////////////////////////////////////////////////////
 // Public implementation
 ////////////////////////////////////////////////////////////
@@ -478,6 +500,9 @@ func (m *equalsMatcher) Matches(candidate interface{}) (MatchResult, error) {
 
 	case ek == reflect.UnsafePointer:
 		return checkAgainstUnsafePointer(e, c)
+
+	case ek == reflect.Invalid:
+		return checkForNil(c)
 	}
 
 	panic(fmt.Sprintf("equalsMatcher.Matches: unexpected kind: %v", ek))
