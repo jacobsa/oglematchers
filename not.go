@@ -36,11 +36,13 @@ func (m *notMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	switch res {
 	case MATCH_FALSE:
 		res = MATCH_TRUE
+		err = nil
 
 	case MATCH_TRUE:
 		res = MATCH_FALSE
 
 	case MATCH_UNDEFINED:
+		// Pass on the result.
 	}
 
 	return
