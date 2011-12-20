@@ -85,7 +85,7 @@ func (t *NotTest) WrappedReturnsMatchFalse() {
 
 	res, err := matcher.Matches(0)
 	ExpectThat(res, Equals(MATCH_TRUE))
-	ExpectThat(err, Equals(""))
+	ExpectThat(err, Equals(nil))
 }
 
 func (t *NotTest) WrappedReturnsMatchUndefined() {
