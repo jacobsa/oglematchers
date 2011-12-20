@@ -17,6 +17,7 @@ package oglematchers
 
 import (
 	"errors"
+	. "github.com/jacobsa/ogletest"
 	"testing"
 )
 
