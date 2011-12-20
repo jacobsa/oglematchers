@@ -13,6 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO(jacobsa): Move this into the ogletest package and unexport. It was a
+// separate package initially to facilitate writing an ogletest tool, but that
+// probably won't happen now.
 package internal
 
 import (
