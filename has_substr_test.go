@@ -33,5 +33,32 @@ func init() { RegisterTestSuite(&HasSubstrTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *HasSubstrTest) DoesFoo() {
+func (t *HasSubstrTest) ArgIsNil() {
+}
+
+func (t *HasSubstrTest) ArgIsInteger() {
+}
+
+func (t *HasSubstrTest) ArgIsByteSlice() {
+}
+
+func (t *HasSubstrTest) CandidateIsNil() {
+}
+
+func (t *HasSubstrTest) CandidateIsInteger() {
+}
+
+func (t *HasSubstrTest) CandidateIsByteSlice() {
+}
+
+func (t *HasSubstrTest) CandidateDoesntHaveSubstring() {
+}
+
+func (t *HasSubstrTest) CandidateEqualsArg() {
+}
+
+func (t *HasSubstrTest) CandidateHasProperSubstring() {
+}
+
+func (t *HasSubstrTest) EmptyStringIsAlwaysSubString() {
 }
