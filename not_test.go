@@ -99,7 +99,7 @@ func (t *NotTest) WrappedReturnsMatchUndefined() {
 
 	res, err := matcher.Matches(0)
 	ExpectThat(res, Equals(MATCH_UNDEFINED))
-	ExpectThat(err, Equals("taco"))
+	ExpectThat(err, Error(Equals("taco")))
 }
 
 func (t *NotTest) Description() {
