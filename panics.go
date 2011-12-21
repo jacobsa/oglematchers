@@ -46,11 +46,11 @@ func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	// Call the function and check its panic error.
 	defer func() {
 		if e := recover(); e != nil {
-			res, err = t.wrappedMatcher.Matches(e)
+			res, err = m.wrappedMatcher.Matches(e)
 		}
 	}()
 
-	v.Call([]Value{})
+	v.Call([]reflect.Value{})
 
 	// If we got here, the function didn't panic.
 	res = MATCH_FALSE

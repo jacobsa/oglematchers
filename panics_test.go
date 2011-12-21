@@ -119,7 +119,7 @@ func (t *PanicsTest) WrappedReturnsUndefinedWithoutError() {
 
 func (t *PanicsTest) WrappedReturnsUndefinedWithError() {
 	t.wrappedResult = MATCH_UNDEFINED
-	t.wrappedError = "which blah"
+	t.wrappedError = errors.New("which blah")
 	_, err := t.matcher.Matches(func() { panic(17) })
 
 	ExpectThat(err, Error(Equals("which panicked with: 17, which blah")))
@@ -135,7 +135,7 @@ func (t *PanicsTest) WrappedReturnsFalseWithoutError() {
 
 func (t *PanicsTest) WrappedReturnsFalseWithError() {
 	t.wrappedResult = MATCH_FALSE
-	t.wrappedError = "which blah"
+	t.wrappedError = errors.New("which blah")
 	_, err := t.matcher.Matches(func() { panic(17) })
 
 	ExpectThat(err, Error(Equals("which panicked with: 17, which blah")))
