@@ -17,6 +17,7 @@ package oglematchers
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 )
 
@@ -47,6 +48,16 @@ func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			res, err = m.wrappedMatcher.Matches(e)
+
+			// Set a clearer error message if the matcher said no.
+			if res != MATCH_TRUE {
+				wrappedClause := ""
+				if err != nil {
+					wrappedClause = ", " + err.Error()
+				}
+
+				err = errors.New(fmt.Sprintf("which panicked with %v%s", e, wrappedClause))
+			}
 		}
 	}()
 

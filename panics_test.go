@@ -80,7 +80,7 @@ func (t *PanicsTest) CandidateTakesArgs() {
 
 func (t *PanicsTest) CallsFunction() {
 	callCount := 0
-	t.matcher.Matches(func(i int) string {
+	t.matcher.Matches(func() string {
 		callCount++
 		return ""
 	})
