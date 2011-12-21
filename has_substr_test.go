@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 
@@ -33,16 +34,12 @@ func init() { RegisterTestSuite(&HasSubstrTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *HasSubstrTest) ArgIsNil() {
-}
-
-func (t *HasSubstrTest) ArgIsInteger() {
-}
-
-func (t *HasSubstrTest) ArgIsByteSlice() {
-}
-
 func (t *HasSubstrTest) CandidateIsNil() {
+	matcher := HasSubstr("")
+	res, err := matcher.Matches(nil)
+
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Error(Equals("which is not a string")))
 }
 
 func (t *HasSubstrTest) CandidateIsInteger() {
