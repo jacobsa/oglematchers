@@ -45,7 +45,7 @@ func (t *PanicsTest) SetUp() {
 		"foo",
 	}
 
-	t.matcher = Error(wrapped)
+	t.matcher = Panics(wrapped)
 }
 
 ////////////////////////////////////////////////////////////
@@ -64,12 +64,27 @@ func (t *PanicsTest) CandidateIsNil() {
 }
 
 func (t *PanicsTest) CandidateIsString() {
+	res, err := t.matcher.Matches("taco")
+
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Error(Equals("which is not a zero-arg function")))
 }
 
 func (t *PanicsTest) CandidateTakesArgs() {
+	res, err := t.matcher.Matches(func(i int) string { return "" })
+
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Error(Equals("which is not a zero-arg function")))
 }
 
 func (t *PanicsTest) CallsFunction() {
+	callCount := 0
+	t.matcher.Matches(func(i int) string {
+		callCount++
+		return ""
+	})
+
+	ExpectThat(callCount, Equals(1))
 }
 
 func (t *PanicsTest) FunctionDoesntPanic() {
