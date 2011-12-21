@@ -74,11 +74,11 @@ func (t *ErrorTest) CandidateIsString() {
 }
 
 func (t *ErrorTest) CallsWrappedMatcher() {
-	candidate := errors.New("foo")
+	candidate := errors.New("taco")
 	t.matcher.Matches(candidate)
 
 	ExpectThat(t.matcherCalled, Equals(true))
-	ExpectThat(t.suppliedCandidate, Equals(candidate))
+	ExpectThat(t.suppliedCandidate, Equals("taco"))
 }
 
 func (t *ErrorTest) ReturnsWrappedMatcherResult() {
