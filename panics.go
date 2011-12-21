@@ -23,6 +23,12 @@ import (
 
 // Panics matches zero-arg functions which, when invoked, panic with an error
 // that matches the supplied matcher.
+//
+// NOTE(jacobsa): This matcher cannot detect the case where the function panics
+// using panic(nil), by design of the language. See here for more info:
+//
+//     http://goo.gl/9aIQL
+//
 func Panics(m Matcher) Matcher {
 	return &panicsMatcher{m}
 }
@@ -65,6 +71,6 @@ func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
 
 	// If we got here, the function didn't panic.
 	res = MATCH_FALSE
-	err = nil
+	err = errors.New("which didn't panic")
 	return
 }
