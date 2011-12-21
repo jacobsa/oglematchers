@@ -18,8 +18,9 @@ package oglematchers
 import (
 )
 
-// Error returns a matcher that matches values implementing the built-in error
-// interface for whom the return value of Error() matches the supplied matcher.
+// Error returns a matcher that matches non-nil values implementing the
+// built-in error interface for whom the return value of Error() matches the
+// supplied matcher.
 //
 // For example:
 //

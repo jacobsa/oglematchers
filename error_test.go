@@ -33,5 +33,14 @@ func init() { RegisterTestSuite(&ErrorTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *ErrorTest) DoesFoo() {
+func (t *ErrorTest) CandidateIsNil() {
+}
+
+func (t *ErrorTest) CandidateIsString() {
+}
+
+func (t *ErrorTest) CallsWrappedMatcher() {
+}
+
+func (t *ErrorTest) ReturnsWrappedMatcherResult() {
 }
