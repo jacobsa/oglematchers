@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	"errors"
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
@@ -65,10 +66,27 @@ func (t *ErrorTest) CandidateIsNil() {
 }
 
 func (t *ErrorTest) CandidateIsString() {
+	res, err := t.matcher.Matches("taco")
+
+	ExpectThat(t.matcherCalled, Equals(false))
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err.Error(), Equals("which is not an error"))
 }
 
 func (t *ErrorTest) CallsWrappedMatcher() {
+	candidate := errors.New("foo")
+	t.matcher.Matches(candidate)
+
+	ExpectThat(t.matcherCalled, Equals(true))
+	ExpectThat(t.suppliedCandidate, Equals(candidate))
 }
 
 func (t *ErrorTest) ReturnsWrappedMatcherResult() {
+	t.wrappedResult = MATCH_TRUE
+	t.wrappedError = errors.New("burrito")
+
+	res, err := t.matcher.Matches(errors.New(""))
+
+	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(err, Equals(t.wrappedError))
 }
