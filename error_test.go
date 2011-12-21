@@ -25,29 +25,43 @@ import (
 ////////////////////////////////////////////////////////////
 
 type ErrorTest struct {
-	wrapped Matcher
+	matcherCalled bool
 	suppliedCandidate interface{}
 	wrappedResult MatchResult
 	wrappedError error
+
+	matcher Matcher
 }
 
 func init() { RegisterTestSuite(&ErrorTest{}) }
 
 func (t *ErrorTest) SetUp() {
-	t.wrapped = &fakeMatcher{
+	wrapped := &fakeMatcher{
 		func(c interface{}) (MatchResult, error) {
+			t.matcherCalled = true
 			t.suppliedCandidate = c
 			return t.wrappedResult, t.wrappedError
 		},
-		"wrapped description",
+		"is foo",
 	}
+
+	t.matcher = Error(wrapped)
 }
 
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
 
+func (t *ErrorTest) Description() {
+	ExpectThat(t.matcher.Description(), Equals("error that is foo"))
+}
+
 func (t *ErrorTest) CandidateIsNil() {
+	res, err := t.matcher.Matches(nil)
+
+	ExpectThat(t.matcherCalled, Equals(false))
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Equals(nil))
 }
 
 func (t *ErrorTest) CandidateIsString() {
