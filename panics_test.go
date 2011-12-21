@@ -42,7 +42,7 @@ func (t *PanicsTest) SetUp() {
 			t.suppliedCandidate = c
 			return t.wrappedResult, t.wrappedError
 		},
-		"is foo",
+		"foo",
 	}
 
 	t.matcher = Error(wrapped)
@@ -53,9 +53,14 @@ func (t *PanicsTest) SetUp() {
 ////////////////////////////////////////////////////////////
 
 func (t *PanicsTest) Description() {
+	ExpectThat(t.matcher.Description(), Equals("panics with: foo"))
 }
 
 func (t *PanicsTest) CandidateIsNil() {
+	res, err := t.matcher.Matches(nil)
+
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Error(Equals("which is not a zero-arg function")))
 }
 
 func (t *PanicsTest) CandidateIsString() {
