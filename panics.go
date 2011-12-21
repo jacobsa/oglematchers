@@ -16,10 +16,44 @@
 package oglematchers
 
 import (
+	"errors"
+	"reflect"
 )
 
 // Panics matches zero-arg functions which, when invoked, panic with an error
 // that matches the supplied matcher.
 func Panics(m Matcher) Matcher {
-	return nil
+	return &panicsMatcher{m}
+}
+
+type panicsMatcher struct {
+	wrappedMatcher Matcher
+}
+
+func (m *panicsMatcher) Description() string {
+	return "panics with: " + m.wrappedMatcher.Description()
+}
+
+func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
+	// Make sure c is a zero-arg function.
+	v := reflect.ValueOf(c)
+	if v.Kind() != reflect.Func || v.Type().NumIn() != 0 {
+		res = MATCH_UNDEFINED
+		err = errors.New("which is not a zero-arg function")
+		return
+	}
+
+	// Call the function and check its panic error.
+	defer func() {
+		if e := recover(); e != nil {
+			res, err = t.wrappedMatcher.Matches(e)
+		}
+	}()
+
+	v.Call([]Value{})
+
+	// If we got here, the function didn't panic.
+	res = MATCH_FALSE
+	err = nil
+	return
 }
