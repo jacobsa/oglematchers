@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	"errors"
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
@@ -95,7 +96,18 @@ func (t *PanicsTest) FunctionDoesntPanic() {
 }
 
 func (t *PanicsTest) CallsWrappedMatcher() {
+	expectedErr := 17
+	t.matcher.Matches(func() { panic(expectedErr) })
+
+	ExpectThat(t.suppliedCandidate, Equals(expectedErr))
 }
 
 func (t *PanicsTest) ReturnsWrappedMatcherResult() {
+	t.wrappedResult = MatchResult(17)
+	t.wrappedError = errors.New("taco")
+
+	res, err := t.matcher.Matches(func() { panic(nil) })
+
+	ExpectThat(res, Equals(t.wrappedResult))
+	ExpectThat(err, Equals(t.wrappedError))
 }
