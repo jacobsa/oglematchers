@@ -16,7 +16,6 @@
 package oglematchers
 
 import (
-	"errors"
 )
 
 // Panics matches zero-arg functions which, when invoked, panic with an error

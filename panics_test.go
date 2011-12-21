@@ -55,5 +55,23 @@ func (t *PanicsTest) SetUp() {
 func (t *PanicsTest) Description() {
 }
 
-func (t *PanicsTest) DoesFoo() {
+func (t *PanicsTest) CandidateIsNil() {
+}
+
+func (t *PanicsTest) CandidateIsString() {
+}
+
+func (t *PanicsTest) CandidateTakesArgs() {
+}
+
+func (t *PanicsTest) CallsFunction() {
+}
+
+func (t *PanicsTest) FunctionDoesntPanic() {
+}
+
+func (t *PanicsTest) CallsWrappedMatcher() {
+}
+
+func (t *PanicsTest) ReturnsWrappedMatcherResult() {
 }
