@@ -104,10 +104,39 @@ func (t *PanicsTest) CallsWrappedMatcher() {
 
 func (t *PanicsTest) ReturnsWrappedMatcherResult() {
 	t.wrappedResult = MatchResult(17)
-	t.wrappedError = errors.New("taco")
-
-	res, err := t.matcher.Matches(func() { panic(nil) })
+	res, _ := t.matcher.Matches(func() { panic(nil) })
 
 	ExpectThat(res, Equals(t.wrappedResult))
-	ExpectThat(err, Equals(t.wrappedError))
+}
+
+func (t *PanicsTest) WrappedReturnsUndefinedWithoutError() {
+	t.wrappedResult = MATCH_UNDEFINED
+	t.wrappedError = nil
+	_, err := t.matcher.Matches(func() { panic(17) })
+
+	ExpectThat(err, Error(Equals("which panicked with: 17")))
+}
+
+func (t *PanicsTest) WrappedReturnsUndefinedWithError() {
+	t.wrappedResult = MATCH_UNDEFINED
+	t.wrappedError = "which blah"
+	_, err := t.matcher.Matches(func() { panic(17) })
+
+	ExpectThat(err, Error(Equals("which panicked with: 17, which blah")))
+}
+
+func (t *PanicsTest) WrappedReturnsFalseWithoutError() {
+	t.wrappedResult = MATCH_FALSE
+	t.wrappedError = nil
+	_, err := t.matcher.Matches(func() { panic(17) })
+
+	ExpectThat(err, Error(Equals("which panicked with: 17")))
+}
+
+func (t *PanicsTest) WrappedReturnsFalseWithError() {
+	t.wrappedResult = MATCH_FALSE
+	t.wrappedError = "which blah"
+	_, err := t.matcher.Matches(func() { panic(17) })
+
+	ExpectThat(err, Error(Equals("which panicked with: 17, which blah")))
 }
