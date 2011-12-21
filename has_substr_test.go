@@ -67,10 +67,25 @@ func (t *HasSubstrTest) CandidateDoesntHaveSubstring() {
 }
 
 func (t *HasSubstrTest) CandidateEqualsArg() {
+	matcher := HasSubstr("taco")
+	res, err := matcher.Matches("taco")
+
+	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(err, Equals(nil))
 }
 
 func (t *HasSubstrTest) CandidateHasProperSubstring() {
+	matcher := HasSubstr("taco")
+	res, err := matcher.Matches("burritos and tacos")
+
+	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(err, Equals(nil))
 }
 
 func (t *HasSubstrTest) EmptyStringIsAlwaysSubString() {
+	matcher := HasSubstr("")
+	res, err := matcher.Matches("asdf")
+
+	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(err, Equals(nil))
 }
