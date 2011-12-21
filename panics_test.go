@@ -88,6 +88,10 @@ func (t *PanicsTest) CallsFunction() {
 }
 
 func (t *PanicsTest) FunctionDoesntPanic() {
+	res, err := t.matcher.Matches(func() {})
+
+	ExpectThat(res, Equals(MATCH_FALSE))
+	ExpectThat(err, Error(Equals("which didn't panic")))
 }
 
 func (t *PanicsTest) CallsWrappedMatcher() {
