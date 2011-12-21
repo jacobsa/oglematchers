@@ -16,6 +16,7 @@
 package oglematchers
 
 import (
+	"errors"
 )
 
 // Error returns a matcher that matches non-nil values implementing the
@@ -31,5 +32,24 @@ import (
 //     Error(HasSubstr("enchilada"))  // doesn't match err
 //
 func Error(m Matcher) Matcher {
-	return nil
+	return &errorMatcher{m}
+}
+
+type errorMatcher struct {
+	wrappedMatcher Matcher
+}
+
+func (m *errorMatcher) Description() string {
+	return "error " + m.wrappedMatcher.Description()
+}
+
+func (m *errorMatcher) Matches(c interface{}) (MatchResult, error) {
+	// Make sure that c is an error.
+	e, ok := c.(error)
+	if !ok {
+		return MATCH_UNDEFINED, errors.New("which is not an error")
+	}
+
+	// Pass on the error text to the wrapped matcher.
+	return m.wrappedMatcher.Matches(e.Error())
 }

@@ -54,7 +54,7 @@ func (t *ErrorTest) SetUp() {
 ////////////////////////////////////////////////////////////
 
 func (t *ErrorTest) Description() {
-	ExpectThat(t.matcher.Description(), Equals("error that is foo"))
+	ExpectThat(t.matcher.Description(), Equals("error is foo"))
 }
 
 func (t *ErrorTest) CandidateIsNil() {
@@ -62,7 +62,7 @@ func (t *ErrorTest) CandidateIsNil() {
 
 	ExpectThat(t.matcherCalled, Equals(false))
 	ExpectThat(res, Equals(MATCH_UNDEFINED))
-	ExpectThat(err, Equals(nil))
+	ExpectThat(err.Error(), Equals("which is not an error"))
 }
 
 func (t *ErrorTest) CandidateIsString() {
