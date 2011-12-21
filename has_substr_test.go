@@ -34,6 +34,11 @@ func init() { RegisterTestSuite(&HasSubstrTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
+func (t *HasSubstrTest) Description() {
+	matcher := HasSubstr("taco")
+	ExpectThat(matcher.Description(), Equals("has substring \"taco\""))
+}
+
 func (t *HasSubstrTest) CandidateIsNil() {
 	matcher := HasSubstr("")
 	res, err := matcher.Matches(nil)

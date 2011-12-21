@@ -15,8 +15,38 @@
 
 package oglematchers
 
+import (
+	"errors"
+	"fmt"
+	"reflect"
+	"strings"
+)
+
 // HasSubstr returns a matcher that matches strings containing s as a
 // substring.
 func HasSubstr(s string) Matcher {
-	return nil
+	return &hasSubstrMatcher{s}
+}
+
+type hasSubstrMatcher struct {
+	needle string
+}
+
+func (m *hasSubstrMatcher) Description() string {
+	return fmt.Sprintf("has substring \"%s\"", m.needle)
+}
+
+func (m *hasSubstrMatcher) Matches(c interface{}) (MatchResult, error) {
+	v := reflect.ValueOf(c)
+	if v.Kind() != reflect.String {
+		return MATCH_UNDEFINED, errors.New("which is not a string")
+	}
+
+	// Perform the substring search.
+	haystack := v.String()
+	if strings.Contains(haystack, m.needle) {
+		return MATCH_TRUE, nil
+	}
+
+	return MATCH_FALSE, nil
 }
