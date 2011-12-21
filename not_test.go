@@ -27,13 +27,12 @@ import (
 ////////////////////////////////////////////////////////////
 
 type fakeMatcher struct {
-	matchFunc   func(interface{}) (MatchResult, string)
+	matchFunc   func(interface{}) (MatchResult, error)
 	description string
 }
 
 func (m *fakeMatcher) Matches(c interface{}) (MatchResult, error) {
-	res, err := m.matchFunc(c)
-	return res, errors.New(err)
+	return m.matchFunc(c)
 }
 
 func (m *fakeMatcher) Description() string {
@@ -53,9 +52,9 @@ func TestOgletest(t *testing.T) { RunTests(t) }
 
 func (t *NotTest) CallsWrapped() {
 	var suppliedCandidate interface{}
-	matchFunc := func(c interface{}) (MatchResult, string) {
+	matchFunc := func(c interface{}) (MatchResult, error) {
 		suppliedCandidate = c
-		return MATCH_TRUE, ""
+		return MATCH_TRUE, nil
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
@@ -66,8 +65,8 @@ func (t *NotTest) CallsWrapped() {
 }
 
 func (t *NotTest) WrappedReturnsMatchTrue() {
-	matchFunc := func(c interface{}) (MatchResult, string) {
-		return MATCH_TRUE, ""
+	matchFunc := func(c interface{}) (MatchResult, error) {
+		return MATCH_TRUE, nil
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
@@ -78,8 +77,8 @@ func (t *NotTest) WrappedReturnsMatchTrue() {
 }
 
 func (t *NotTest) WrappedReturnsMatchFalse() {
-	matchFunc := func(c interface{}) (MatchResult, string) {
-		return MATCH_FALSE, "taco"
+	matchFunc := func(c interface{}) (MatchResult, error) {
+		return MATCH_FALSE, errors.New("taco")
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
@@ -91,8 +90,8 @@ func (t *NotTest) WrappedReturnsMatchFalse() {
 }
 
 func (t *NotTest) WrappedReturnsMatchUndefined() {
-	matchFunc := func(c interface{}) (MatchResult, string) {
-		return MATCH_UNDEFINED, "taco"
+	matchFunc := func(c interface{}) (MatchResult, error) {
+		return MATCH_UNDEFINED, errors.New("taco")
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}

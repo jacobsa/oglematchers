@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 
@@ -24,10 +25,23 @@ import (
 ////////////////////////////////////////////////////////////
 
 type ErrorTest struct {
-
+	wrapped Matcher
+	suppliedCandidate interface{}
+	wrappedResult MatchResult
+	wrappedError error
 }
 
 func init() { RegisterTestSuite(&ErrorTest{}) }
+
+func (t *ErrorTest) SetUp() {
+	t.wrapped = &fakeMatcher{
+		func(c interface{}) (MatchResult, error) {
+			t.suppliedCandidate = c
+			return t.wrappedResult, t.wrappedError
+		},
+		"wrapped description",
+	}
+}
 
 ////////////////////////////////////////////////////////////
 // Tests
