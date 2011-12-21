@@ -43,12 +43,27 @@ func (t *HasSubstrTest) CandidateIsNil() {
 }
 
 func (t *HasSubstrTest) CandidateIsInteger() {
+	matcher := HasSubstr("")
+	res, err := matcher.Matches(17)
+
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Error(Equals("which is not a string")))
 }
 
 func (t *HasSubstrTest) CandidateIsByteSlice() {
+	matcher := HasSubstr("")
+	res, err := matcher.Matches([]byte{17})
+
+	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(err, Error(Equals("which is not a string")))
 }
 
 func (t *HasSubstrTest) CandidateDoesntHaveSubstring() {
+	matcher := HasSubstr("taco")
+	res, err := matcher.Matches("tac")
+
+	ExpectThat(res, Equals(MATCH_FALSE))
+	ExpectThat(err, Equals(nil))
 }
 
 func (t *HasSubstrTest) CandidateEqualsArg() {
