@@ -62,7 +62,7 @@ func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
 					wrappedClause = ", " + err.Error()
 				}
 
-				err = errors.New(fmt.Sprintf("which panicked with %v%s", e, wrappedClause))
+				err = errors.New(fmt.Sprintf("which panicked with: %v%s", e, wrappedClause))
 			}
 		}
 	}()

@@ -103,7 +103,6 @@ func (t *PanicsTest) CallsWrappedMatcher() {
 }
 
 func (t *PanicsTest) ReturnsWrappedMatcherResult() {
-	panic(nil)
 	t.wrappedResult = MatchResult(17)
 	res, _ := t.matcher.Matches(func() { panic("") })
 
