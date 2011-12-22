@@ -67,6 +67,11 @@ func (t *AllOfTest) DescriptionWithMultipleMatchers() {
 }
 
 func (t *AllOfTest) EmptySet() {
+	m := AllOf()
+	res, err := m.Matches(17)
+
+	ExpectEq(MATCH_TRUE, res)
+	ExpectEq(nil, err)
 }
 
 func (t *AllOfTest) OneMatcherSaysUndefinedAndOneSaysFalse() {
