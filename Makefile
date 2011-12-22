@@ -13,6 +13,7 @@ GOFILES = \
 	less_or_equal.go \
 	less_than.go \
 	matcher.go \
+	matches_regexp.go \
 	not.go \
 	panics.go \
 	transform_description.go \
