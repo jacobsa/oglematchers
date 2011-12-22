@@ -162,7 +162,7 @@ func (t *LessOrEqualTest) BadArgument() {
 func (t *LessOrEqualTest) NegativeIntegerLiteral() {
 	matcher := LessOrEqual(-150)
 	desc := matcher.Description()
-	expectedDesc := "less than -150"
+	expectedDesc := "less than or equal to -150"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -170,13 +170,15 @@ func (t *LessOrEqualTest) NegativeIntegerLiteral() {
 		// Signed integers.
 		leTestCase{-(1 << 30), MATCH_TRUE, ""},
 		leTestCase{-151, MATCH_TRUE, ""},
-		leTestCase{-150, MATCH_FALSE, ""},
+		leTestCase{-150, MATCH_TRUE, ""},
+		leTestCase{-149, MATCH_FALSE, ""},
 		leTestCase{0, MATCH_FALSE, ""},
 		leTestCase{17, MATCH_FALSE, ""},
 
 		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int(-151), MATCH_TRUE, ""},
-		leTestCase{int(-150), MATCH_FALSE, ""},
+		leTestCase{int(-150), MATCH_TRUE, ""},
+		leTestCase{int(-149), MATCH_FALSE, ""},
 		leTestCase{int(0), MATCH_FALSE, ""},
 		leTestCase{int(17), MATCH_FALSE, ""},
 
@@ -186,19 +188,22 @@ func (t *LessOrEqualTest) NegativeIntegerLiteral() {
 
 		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
 		leTestCase{int16(-151), MATCH_TRUE, ""},
-		leTestCase{int16(-150), MATCH_FALSE, ""},
+		leTestCase{int16(-150), MATCH_TRUE, ""},
+		leTestCase{int16(-149), MATCH_FALSE, ""},
 		leTestCase{int16(0), MATCH_FALSE, ""},
 		leTestCase{int16(17), MATCH_FALSE, ""},
 
 		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int32(-151), MATCH_TRUE, ""},
-		leTestCase{int32(-150), MATCH_FALSE, ""},
+		leTestCase{int32(-150), MATCH_TRUE, ""},
+		leTestCase{int32(-149), MATCH_FALSE, ""},
 		leTestCase{int32(0), MATCH_FALSE, ""},
 		leTestCase{int32(17), MATCH_FALSE, ""},
 
 		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int64(-151), MATCH_TRUE, ""},
-		leTestCase{int64(-150), MATCH_FALSE, ""},
+		leTestCase{int64(-150), MATCH_TRUE, ""},
+		leTestCase{int64(-149), MATCH_FALSE, ""},
 		leTestCase{int64(0), MATCH_FALSE, ""},
 		leTestCase{int64(17), MATCH_FALSE, ""},
 
@@ -227,7 +232,7 @@ func (t *LessOrEqualTest) NegativeIntegerLiteral() {
 		leTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{float32(-151), MATCH_TRUE, ""},
 		leTestCase{float32(-150.1), MATCH_TRUE, ""},
-		leTestCase{float32(-150), MATCH_FALSE, ""},
+		leTestCase{float32(-150), MATCH_TRUE, ""},
 		leTestCase{float32(-149.9), MATCH_FALSE, ""},
 		leTestCase{float32(0), MATCH_FALSE, ""},
 		leTestCase{float32(17), MATCH_FALSE, ""},
@@ -236,7 +241,7 @@ func (t *LessOrEqualTest) NegativeIntegerLiteral() {
 		leTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{float64(-151), MATCH_TRUE, ""},
 		leTestCase{float64(-150.1), MATCH_TRUE, ""},
-		leTestCase{float64(-150), MATCH_FALSE, ""},
+		leTestCase{float64(-150), MATCH_TRUE, ""},
 		leTestCase{float64(-149.9), MATCH_FALSE, ""},
 		leTestCase{float64(0), MATCH_FALSE, ""},
 		leTestCase{float64(17), MATCH_FALSE, ""},
@@ -249,7 +254,7 @@ func (t *LessOrEqualTest) NegativeIntegerLiteral() {
 func (t *LessOrEqualTest) ZeroIntegerLiteral() {
 	matcher := LessOrEqual(0)
 	desc := matcher.Description()
-	expectedDesc := "less than 0"
+	expectedDesc := "less than or equal to 0"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -257,66 +262,71 @@ func (t *LessOrEqualTest) ZeroIntegerLiteral() {
 		// Signed integers.
 		leTestCase{-(1 << 30), MATCH_TRUE, ""},
 		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{0, MATCH_FALSE, ""},
+		leTestCase{0, MATCH_TRUE, ""},
 		leTestCase{1, MATCH_FALSE, ""},
 		leTestCase{17, MATCH_FALSE, ""},
 		leTestCase{(1 << 30), MATCH_FALSE, ""},
 
 		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(0), MATCH_FALSE, ""},
+		leTestCase{int(0), MATCH_TRUE, ""},
 		leTestCase{int(1), MATCH_FALSE, ""},
 		leTestCase{int(17), MATCH_FALSE, ""},
 
 		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(0), MATCH_FALSE, ""},
+		leTestCase{int8(0), MATCH_TRUE, ""},
 		leTestCase{int8(1), MATCH_FALSE, ""},
 
 		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
 		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(0), MATCH_FALSE, ""},
+		leTestCase{int16(0), MATCH_TRUE, ""},
 		leTestCase{int16(1), MATCH_FALSE, ""},
 		leTestCase{int16(17), MATCH_FALSE, ""},
 
 		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(0), MATCH_FALSE, ""},
+		leTestCase{int32(0), MATCH_TRUE, ""},
 		leTestCase{int32(1), MATCH_FALSE, ""},
 		leTestCase{int32(17), MATCH_FALSE, ""},
 
 		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(0), MATCH_FALSE, ""},
+		leTestCase{int64(0), MATCH_TRUE, ""},
 		leTestCase{int64(1), MATCH_FALSE, ""},
 		leTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
 		leTestCase{uint((1 << 32) - 1), MATCH_FALSE, ""},
-		leTestCase{uint(0), MATCH_FALSE, ""},
+		leTestCase{uint(0), MATCH_TRUE, ""},
+		leTestCase{uint(1), MATCH_FALSE, ""},
 		leTestCase{uint(17), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_FALSE, ""},
+		leTestCase{uint8(0), MATCH_TRUE, ""},
+		leTestCase{uint8(1), MATCH_FALSE, ""},
 		leTestCase{uint8(17), MATCH_FALSE, ""},
 		leTestCase{uint8(253), MATCH_FALSE, ""},
 
 		leTestCase{uint16((1 << 16) - 1), MATCH_FALSE, ""},
-		leTestCase{uint16(0), MATCH_FALSE, ""},
+		leTestCase{uint16(0), MATCH_TRUE, ""},
+		leTestCase{uint16(1), MATCH_FALSE, ""},
 		leTestCase{uint16(17), MATCH_FALSE, ""},
 
 		leTestCase{uint32((1 << 32) - 1), MATCH_FALSE, ""},
-		leTestCase{uint32(0), MATCH_FALSE, ""},
+		leTestCase{uint32(0), MATCH_TRUE, ""},
+		leTestCase{uint32(1), MATCH_FALSE, ""},
 		leTestCase{uint32(17), MATCH_FALSE, ""},
 
 		leTestCase{uint64((1 << 64) - 1), MATCH_FALSE, ""},
-		leTestCase{uint64(0), MATCH_FALSE, ""},
+		leTestCase{uint64(0), MATCH_TRUE, ""},
+		leTestCase{uint64(1), MATCH_FALSE, ""},
 		leTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{float32(-1), MATCH_TRUE, ""},
 		leTestCase{float32(-0.1), MATCH_TRUE, ""},
-		leTestCase{float32(-0.0), MATCH_FALSE, ""},
-		leTestCase{float32(0), MATCH_FALSE, ""},
+		leTestCase{float32(-0.0), MATCH_TRUE, ""},
+		leTestCase{float32(0), MATCH_TRUE, ""},
 		leTestCase{float32(0.1), MATCH_FALSE, ""},
 		leTestCase{float32(17), MATCH_FALSE, ""},
 		leTestCase{float32(160), MATCH_FALSE, ""},
@@ -324,8 +334,9 @@ func (t *LessOrEqualTest) ZeroIntegerLiteral() {
 		leTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(-0.1), MATCH_TRUE, ""},
-		leTestCase{float64(-0), MATCH_FALSE, ""},
-		leTestCase{float64(0), MATCH_FALSE, ""},
+		leTestCase{float64(-0), MATCH_TRUE, ""},
+		leTestCase{float64(0), MATCH_TRUE, ""},
+		leTestCase{float64(0.1), MATCH_FALSE, ""},
 		leTestCase{float64(17), MATCH_FALSE, ""},
 		leTestCase{float64(160), MATCH_FALSE, ""},
 	}
@@ -336,7 +347,7 @@ func (t *LessOrEqualTest) ZeroIntegerLiteral() {
 func (t *LessOrEqualTest) PositiveIntegerLiteral() {
 	matcher := LessOrEqual(150)
 	desc := matcher.Description()
-	expectedDesc := "less than 150"
+	expectedDesc := "less than or equal to 150"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -344,12 +355,12 @@ func (t *LessOrEqualTest) PositiveIntegerLiteral() {
 		// Signed integers.
 		leTestCase{-1, MATCH_TRUE, ""},
 		leTestCase{149, MATCH_TRUE, ""},
-		leTestCase{150, MATCH_FALSE, ""},
+		leTestCase{150, MATCH_TRUE, ""},
 		leTestCase{151, MATCH_FALSE, ""},
 
 		leTestCase{int(-1), MATCH_TRUE, ""},
 		leTestCase{int(149), MATCH_TRUE, ""},
-		leTestCase{int(150), MATCH_FALSE, ""},
+		leTestCase{int(150), MATCH_TRUE, ""},
 		leTestCase{int(151), MATCH_FALSE, ""},
 
 		leTestCase{int8(-1), MATCH_TRUE, ""},
@@ -359,23 +370,23 @@ func (t *LessOrEqualTest) PositiveIntegerLiteral() {
 
 		leTestCase{int16(-1), MATCH_TRUE, ""},
 		leTestCase{int16(149), MATCH_TRUE, ""},
-		leTestCase{int16(150), MATCH_FALSE, ""},
+		leTestCase{int16(150), MATCH_TRUE, ""},
 		leTestCase{int16(151), MATCH_FALSE, ""},
 
 		leTestCase{int32(-1), MATCH_TRUE, ""},
 		leTestCase{int32(149), MATCH_TRUE, ""},
-		leTestCase{int32(150), MATCH_FALSE, ""},
+		leTestCase{int32(150), MATCH_TRUE, ""},
 		leTestCase{int32(151), MATCH_FALSE, ""},
 
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(149), MATCH_TRUE, ""},
-		leTestCase{int64(150), MATCH_FALSE, ""},
+		leTestCase{int64(150), MATCH_TRUE, ""},
 		leTestCase{int64(151), MATCH_FALSE, ""},
 
 		// Unsigned integers.
 		leTestCase{uint(0), MATCH_TRUE, ""},
 		leTestCase{uint(149), MATCH_TRUE, ""},
-		leTestCase{uint(150), MATCH_FALSE, ""},
+		leTestCase{uint(150), MATCH_TRUE, ""},
 		leTestCase{uint(151), MATCH_FALSE, ""},
 
 		leTestCase{uint8(0), MATCH_TRUE, ""},
@@ -383,31 +394,31 @@ func (t *LessOrEqualTest) PositiveIntegerLiteral() {
 
 		leTestCase{uint16(0), MATCH_TRUE, ""},
 		leTestCase{uint16(149), MATCH_TRUE, ""},
-		leTestCase{uint16(150), MATCH_FALSE, ""},
+		leTestCase{uint16(150), MATCH_TRUE, ""},
 		leTestCase{uint16(151), MATCH_FALSE, ""},
 
 		leTestCase{uint32(0), MATCH_TRUE, ""},
 		leTestCase{uint32(149), MATCH_TRUE, ""},
-		leTestCase{uint32(150), MATCH_FALSE, ""},
+		leTestCase{uint32(150), MATCH_TRUE, ""},
 		leTestCase{uint32(151), MATCH_FALSE, ""},
 
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(149), MATCH_TRUE, ""},
-		leTestCase{uint64(150), MATCH_FALSE, ""},
+		leTestCase{uint64(150), MATCH_TRUE, ""},
 		leTestCase{uint64(151), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float32(-1), MATCH_TRUE, ""},
 		leTestCase{float32(149), MATCH_TRUE, ""},
 		leTestCase{float32(149.9), MATCH_TRUE, ""},
-		leTestCase{float32(150), MATCH_FALSE, ""},
+		leTestCase{float32(150), MATCH_TRUE, ""},
 		leTestCase{float32(150.1), MATCH_FALSE, ""},
 		leTestCase{float32(151), MATCH_FALSE, ""},
 
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(149), MATCH_TRUE, ""},
 		leTestCase{float64(149.9), MATCH_TRUE, ""},
-		leTestCase{float64(150), MATCH_FALSE, ""},
+		leTestCase{float64(150), MATCH_TRUE, ""},
 		leTestCase{float64(150.1), MATCH_FALSE, ""},
 		leTestCase{float64(151), MATCH_FALSE, ""},
 	}
@@ -422,7 +433,7 @@ func (t *LessOrEqualTest) PositiveIntegerLiteral() {
 func (t *LessOrEqualTest) NegativeFloatLiteral() {
 	matcher := LessOrEqual(-150.1)
 	desc := matcher.Description()
-	expectedDesc := "less than -150.1"
+	expectedDesc := "less than or equal to -150.1"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -430,13 +441,15 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 		// Signed integers.
 		leTestCase{-(1 << 30), MATCH_TRUE, ""},
 		leTestCase{-151, MATCH_TRUE, ""},
-		leTestCase{-150, MATCH_FALSE, ""},
+		leTestCase{-150, MATCH_TRUE, ""},
+		leTestCase{-149, MATCH_FALSE, ""},
 		leTestCase{0, MATCH_FALSE, ""},
 		leTestCase{17, MATCH_FALSE, ""},
 
 		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int(-151), MATCH_TRUE, ""},
-		leTestCase{int(-150), MATCH_FALSE, ""},
+		leTestCase{int(-150), MATCH_TRUE, ""},
+		leTestCase{int(-149), MATCH_FALSE, ""},
 		leTestCase{int(0), MATCH_FALSE, ""},
 		leTestCase{int(17), MATCH_FALSE, ""},
 
@@ -446,19 +459,22 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 
 		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
 		leTestCase{int16(-151), MATCH_TRUE, ""},
-		leTestCase{int16(-150), MATCH_FALSE, ""},
+		leTestCase{int16(-150), MATCH_TRUE, ""},
+		leTestCase{int16(-149), MATCH_FALSE, ""},
 		leTestCase{int16(0), MATCH_FALSE, ""},
 		leTestCase{int16(17), MATCH_FALSE, ""},
 
 		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int32(-151), MATCH_TRUE, ""},
-		leTestCase{int32(-150), MATCH_FALSE, ""},
+		leTestCase{int32(-150), MATCH_TRUE, ""},
+		leTestCase{int32(-149), MATCH_FALSE, ""},
 		leTestCase{int32(0), MATCH_FALSE, ""},
 		leTestCase{int32(17), MATCH_FALSE, ""},
 
 		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int64(-151), MATCH_TRUE, ""},
-		leTestCase{int64(-150), MATCH_FALSE, ""},
+		leTestCase{int64(-150), MATCH_TRUE, ""},
+		leTestCase{int64(-149), MATCH_FALSE, ""},
 		leTestCase{int64(0), MATCH_FALSE, ""},
 		leTestCase{int64(17), MATCH_FALSE, ""},
 
@@ -487,7 +503,7 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 		leTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{float32(-151), MATCH_TRUE, ""},
 		leTestCase{float32(-150.2), MATCH_TRUE, ""},
-		leTestCase{float32(-150.1), MATCH_FALSE, ""},
+		leTestCase{float32(-150.1), MATCH_TRUE, ""},
 		leTestCase{float32(-150), MATCH_FALSE, ""},
 		leTestCase{float32(0), MATCH_FALSE, ""},
 		leTestCase{float32(17), MATCH_FALSE, ""},
@@ -496,7 +512,7 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 		leTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{float64(-151), MATCH_TRUE, ""},
 		leTestCase{float64(-150.2), MATCH_TRUE, ""},
-		leTestCase{float64(-150.1), MATCH_FALSE, ""},
+		leTestCase{float64(-150.1), MATCH_TRUE, ""},
 		leTestCase{float64(-150), MATCH_FALSE, ""},
 		leTestCase{float64(0), MATCH_FALSE, ""},
 		leTestCase{float64(17), MATCH_FALSE, ""},
@@ -509,7 +525,7 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 func (t *LessOrEqualTest) PositiveFloatLiteral() {
 	matcher := LessOrEqual(149.9)
 	desc := matcher.Description()
-	expectedDesc := "less than 149.9"
+	expectedDesc := "less than or equal to 149.9"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -517,6 +533,7 @@ func (t *LessOrEqualTest) PositiveFloatLiteral() {
 		// Signed integers.
 		leTestCase{-1, MATCH_TRUE, ""},
 		leTestCase{149, MATCH_TRUE, ""},
+		leTestCase{149.9, MATCH_TRUE, ""},
 		leTestCase{150, MATCH_FALSE, ""},
 		leTestCase{151, MATCH_FALSE, ""},
 
@@ -573,14 +590,14 @@ func (t *LessOrEqualTest) PositiveFloatLiteral() {
 		leTestCase{float32(-1), MATCH_TRUE, ""},
 		leTestCase{float32(149), MATCH_TRUE, ""},
 		leTestCase{float32(149.8), MATCH_TRUE, ""},
-		leTestCase{float32(149.9), MATCH_FALSE, ""},
+		leTestCase{float32(149.9), MATCH_TRUE, ""},
 		leTestCase{float32(150), MATCH_FALSE, ""},
 		leTestCase{float32(151), MATCH_FALSE, ""},
 
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(149), MATCH_TRUE, ""},
 		leTestCase{float64(149.8), MATCH_TRUE, ""},
-		leTestCase{float64(149.9), MATCH_FALSE, ""},
+		leTestCase{float64(149.9), MATCH_TRUE, ""},
 		leTestCase{float64(150), MATCH_FALSE, ""},
 		leTestCase{float64(151), MATCH_FALSE, ""},
 	}
@@ -600,7 +617,7 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
 	matcher := LessOrEqual(int64(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 33554433"
+	expectedDesc := "less than or equal to 33554433"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -608,12 +625,12 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
 		// Signed integers.
 		leTestCase{-1, MATCH_TRUE, ""},
 		leTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 1, MATCH_FALSE, ""},
+		leTestCase{kTwoTo25 + 1, MATCH_TRUE, ""},
 		leTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
 
 		leTestCase{int(-1), MATCH_TRUE, ""},
 		leTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{int(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{int8(-1), MATCH_TRUE, ""},
@@ -625,18 +642,18 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
 
 		leTestCase{int32(-1), MATCH_TRUE, ""},
 		leTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{int32(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
 		leTestCase{uint(0), MATCH_TRUE, ""},
 		leTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{uint(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{uint8(0), MATCH_TRUE, ""},
@@ -647,29 +664,29 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
 
 		leTestCase{uint32(0), MATCH_TRUE, ""},
 		leTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{uint32(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float32(-1), MATCH_TRUE, ""},
 		leTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
@@ -684,7 +701,7 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableByDoublePrecision() {
 	matcher := LessOrEqual(int64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 18014398509481985"
+	expectedDesc := "less than or equal to 18014398509481985"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -709,7 +726,7 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableByDoublePrecision() {
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		leTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
@@ -728,15 +745,15 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableByDoublePrecision() {
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		leTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
 		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
@@ -752,7 +769,7 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 	matcher := LessOrEqual(uint64(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 33554433"
+	expectedDesc := "less than or equal to 33554433"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -760,12 +777,12 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 		// Signed integers.
 		leTestCase{-1, MATCH_TRUE, ""},
 		leTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 1, MATCH_FALSE, ""},
+		leTestCase{kTwoTo25 + 1, MATCH_TRUE, ""},
 		leTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
 
 		leTestCase{int(-1), MATCH_TRUE, ""},
 		leTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{int(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{int8(-1), MATCH_TRUE, ""},
@@ -777,18 +794,18 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 
 		leTestCase{int32(-1), MATCH_TRUE, ""},
 		leTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{int32(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
 		leTestCase{uint(0), MATCH_TRUE, ""},
 		leTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{uint(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{uint8(0), MATCH_TRUE, ""},
@@ -799,28 +816,28 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 
 		leTestCase{uint32(0), MATCH_TRUE, ""},
 		leTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{uint32(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float32(-1), MATCH_TRUE, ""},
 		leTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
@@ -836,7 +853,7 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 	matcher := LessOrEqual(uint64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 18014398509481985"
+	expectedDesc := "less than or equal to 18014398509481985"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -861,7 +878,7 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		leTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
@@ -880,16 +897,16 @@ func (t *LessOrEqualTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		leTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
@@ -904,7 +921,7 @@ func (t *LessOrEqualTest) Float32AboveExactIntegerRange() {
 	matcher := LessOrEqual(float32(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 3.3554432e+07"
+	expectedDesc := "less than or equal to 3.3554432e+07"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -912,36 +929,36 @@ func (t *LessOrEqualTest) Float32AboveExactIntegerRange() {
 		// Signed integers.
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		leTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		leTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		leTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		leTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Unsigned integers.
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		leTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		leTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		leTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		leTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float32(-1), MATCH_TRUE, ""},
 		leTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
@@ -956,7 +973,7 @@ func (t *LessOrEqualTest) Float64AboveExactIntegerRange() {
 	matcher := LessOrEqual(float64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 1.8014398509481984e+16"
+	expectedDesc := "less than or equal to 1.8014398509481984e+16"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -964,28 +981,28 @@ func (t *LessOrEqualTest) Float64AboveExactIntegerRange() {
 		// Signed integers.
 		leTestCase{int64(-1), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		leTestCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		leTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		leTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		leTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		leTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		leTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		leTestCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
 		leTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Unsigned integers.
 		leTestCase{uint64(0), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		leTestCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		leTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		leTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		leTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		leTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		leTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		leTestCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
 		leTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Floating point.
 		leTestCase{float64(-1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
@@ -999,12 +1016,12 @@ func (t *LessOrEqualTest) Float64AboveExactIntegerRange() {
 func (t *LessOrEqualTest) EmptyString() {
 	matcher := LessOrEqual("")
 	desc := matcher.Description()
-	expectedDesc := "less than \"\""
+	expectedDesc := "less than or equal to \"\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []leTestCase{
-		leTestCase{"", MATCH_FALSE, ""},
+		leTestCase{"", MATCH_TRUE, ""},
 		leTestCase{"\x00", MATCH_FALSE, ""},
 		leTestCase{"a", MATCH_FALSE, ""},
 		leTestCase{"foo", MATCH_FALSE, ""},
@@ -1016,13 +1033,14 @@ func (t *LessOrEqualTest) EmptyString() {
 func (t *LessOrEqualTest) SingleNullByte() {
 	matcher := LessOrEqual("\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than \"\x00\""
+	expectedDesc := "less than or equal to \"\x00\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []leTestCase{
 		leTestCase{"", MATCH_TRUE, ""},
-		leTestCase{"\x00", MATCH_FALSE, ""},
+		leTestCase{"\x00", MATCH_TRUE, ""},
+		leTestCase{"\x00\x00", MATCH_FALSE, ""},
 		leTestCase{"a", MATCH_FALSE, ""},
 		leTestCase{"foo", MATCH_FALSE, ""},
 	}
@@ -1033,7 +1051,7 @@ func (t *LessOrEqualTest) SingleNullByte() {
 func (t *LessOrEqualTest) LongerString() {
 	matcher := LessOrEqual("foo\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than \"foo\x00\""
+	expectedDesc := "less than or equal to \"foo\x00\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
@@ -1042,7 +1060,8 @@ func (t *LessOrEqualTest) LongerString() {
 		leTestCase{"\x00", MATCH_TRUE, ""},
 		leTestCase{"bar", MATCH_TRUE, ""},
 		leTestCase{"foo", MATCH_TRUE, ""},
-		leTestCase{"foo\x00", MATCH_FALSE, ""},
+		leTestCase{"foo\x00", MATCH_TRUE, ""},
+		leTestCase{"foo\x00\x00", MATCH_FALSE, ""},
 		leTestCase{"fooa", MATCH_FALSE, ""},
 		leTestCase{"qux", MATCH_FALSE, ""},
 	}
