@@ -13,6 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package oglematchers provides a set of matchers useful in a testing or
+// mocking framework. These matchers are inspired by and mostly compatible with
+// Goolge Test for C++ and Google JS Test.
+//
+// This package is used by github.com/jacobsa/ogletest and
+// github.com/jacobsa/oglemock, which may be more directly useful if you're not
+// writing your own testing package or defining your own matchers.
 package oglematchers
 
 // A MatchResult is an integer equal to one of the MATCH_* constants below.
