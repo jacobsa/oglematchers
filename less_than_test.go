@@ -17,13 +17,18 @@ package oglematchers_test
 
 import (
 	. "github.com/jacobsa/oglematchers"
+	. "github.com/jacobsa/ogletest"
 	"math"
-	"testing"
 )
 
 ////////////////////////////////////////////////////////////
 // Helpers
 ////////////////////////////////////////////////////////////
+
+type LessThanTest struct {
+}
+
+func init() { RegisterTestSuite(&LessThanTest{}) }
 
 type ltTestCase struct {
 	candidate      interface{}
@@ -31,27 +36,28 @@ type ltTestCase struct {
 	expectedError  string
 }
 
-func checkLtTestCases(t *testing.T, matcher Matcher, cases []ltTestCase) {
+func (t *LessThanTest) checkTestCases(matcher Matcher, cases []ltTestCase) {
 	for i, c := range cases {
 		result, err := matcher.Matches(c.candidate)
 
-		if result != c.expectedResult {
-			t.Errorf(
-				"Case %d (candidate %v): expected %v, got %v",
-				i,
-				c.candidate,
-				c.expectedResult,
-				result)
+		ExpectThat(
+			result,
+			Equals(c.expectedResult),
+			"Case %d (candidate %v)",
+			i,
+			c.candidate)
+
+		errorMatcher := Error(Equals(c.expectedError))
+		if c.expectedError == "" {
+			errorMatcher = Equals(nil)
 		}
 
-		actualError := ""
-		if err != nil {
-			actualError = err.Error()
-		}
-
-		if actualError != c.expectedError {
-			t.Errorf("Case %d: expected error %v, got %v", i, c.expectedError, err)
-		}
+		ExpectThat(
+			err,
+			errorMatcher,
+			"Case %d (candidate %v)",
+			i,
+			c.candidate)
 	}
 }
 
@@ -59,7 +65,7 @@ func checkLtTestCases(t *testing.T, matcher Matcher, cases []ltTestCase) {
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func TestLtIntegerBadTypes(t *testing.T) {
+func (t *LessThanTest) IntegerCandidateBadTypes() {
 	matcher := LessThan(int(-150))
 
 	cases := []ltTestCase{
@@ -77,10 +83,10 @@ func TestLtIntegerBadTypes(t *testing.T) {
 		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtFloatBadTypes(t *testing.T) {
+func (t *LessThanTest) FloatCandidateBadTypes() {
 	matcher := LessThan(float32(-150))
 
 	cases := []ltTestCase{
@@ -98,10 +104,10 @@ func TestLtFloatBadTypes(t *testing.T) {
 		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtStringBadTypes(t *testing.T) {
+func (t *LessThanTest) StringCandidateBadTypes() {
 	matcher := LessThan("17")
 
 	cases := []ltTestCase{
@@ -130,16 +136,14 @@ func TestLtStringBadTypes(t *testing.T) {
 		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtBadArg(t *testing.T) {
+func (t *LessThanTest) BadArgument() {
 	panicked := false
 
 	defer func() {
-		if !panicked {
-			t.Errorf("Expected panic; got none.")
-		}
+		ExpectThat(panicked, Equals(true))
 	}()
 
 	defer func() {
@@ -155,14 +159,12 @@ func TestLtBadArg(t *testing.T) {
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func TestLtNegativeIntegerLiteral(t *testing.T) {
+func (t *LessThanTest) NegativeIntegerLiteral() {
 	matcher := LessThan(-150)
 	desc := matcher.Description()
 	expectedDesc := "less than -150"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -241,17 +243,15 @@ func TestLtNegativeIntegerLiteral(t *testing.T) {
 		ltTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtZeroIntegerLiteral(t *testing.T) {
+func (t *LessThanTest) ZeroIntegerLiteral() {
 	matcher := LessThan(0)
 	desc := matcher.Description()
 	expectedDesc := "less than 0"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -330,17 +330,15 @@ func TestLtZeroIntegerLiteral(t *testing.T) {
 		ltTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtPositiveIntegerLiteral(t *testing.T) {
+func (t *LessThanTest) PositiveIntegerLiteral() {
 	matcher := LessThan(150)
 	desc := matcher.Description()
 	expectedDesc := "less than 150"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -414,21 +412,19 @@ func TestLtPositiveIntegerLiteral(t *testing.T) {
 		ltTestCase{float64(151), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // Float literals
 ////////////////////////////////////////////////////////////
 
-func TestLtNegativeFloatLiteral(t *testing.T) {
+func (t *LessThanTest) NegativeFloatLiteral() {
 	matcher := LessThan(-150.1)
 	desc := matcher.Description()
 	expectedDesc := "less than -150.1"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -507,17 +503,15 @@ func TestLtNegativeFloatLiteral(t *testing.T) {
 		ltTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtPositiveFloatLiteral(t *testing.T) {
+func (t *LessThanTest) PositiveFloatLiteral() {
 	matcher := LessThan(149.9)
 	desc := matcher.Description()
 	expectedDesc := "less than 149.9"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -591,14 +585,14 @@ func TestLtPositiveFloatLiteral(t *testing.T) {
 		ltTestCase{float64(151), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // Subtle cases
 ////////////////////////////////////////////////////////////
 
-func TestLtInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
+func (t *LessThanTest) Int64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -608,9 +602,7 @@ func TestLtInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 	desc := matcher.Description()
 	expectedDesc := "less than 33554433"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -681,10 +673,10 @@ func TestLtInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
+func (t *LessThanTest) Int64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -694,9 +686,7 @@ func TestLtInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 	desc := matcher.Description()
 	expectedDesc := "less than 18014398509481985"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -751,10 +741,10 @@ func TestLtInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtUint64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
+func (t *LessThanTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -764,9 +754,7 @@ func TestLtUint64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 	desc := matcher.Description()
 	expectedDesc := "less than 33554433"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -837,10 +825,10 @@ func TestLtUint64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
+func (t *LessThanTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -850,9 +838,7 @@ func TestLtUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 	desc := matcher.Description()
 	expectedDesc := "less than 18014398509481985"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -907,10 +893,10 @@ func TestLtUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtFloat32AboveExactIntegerRange(t *testing.T) {
+func (t *LessThanTest) Float32AboveExactIntegerRange() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -920,9 +906,7 @@ func TestLtFloat32AboveExactIntegerRange(t *testing.T) {
 	desc := matcher.Description()
 	expectedDesc := "less than 3.3554432e+07"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -961,10 +945,10 @@ func TestLtFloat32AboveExactIntegerRange(t *testing.T) {
 		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtFloat64AboveExactIntegerRange(t *testing.T) {
+func (t *LessThanTest) Float64AboveExactIntegerRange() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
@@ -974,9 +958,7 @@ func TestLtFloat64AboveExactIntegerRange(t *testing.T) {
 	desc := matcher.Description()
 	expectedDesc := "less than 1.8014398509481984e+16"
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		// Signed integers.
@@ -1007,21 +989,19 @@ func TestLtFloat64AboveExactIntegerRange(t *testing.T) {
 		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // String literals
 ////////////////////////////////////////////////////////////
 
-func TestLtEmptyString(t *testing.T) {
+func (t *LessThanTest) EmptyString() {
 	matcher := LessThan("")
 	desc := matcher.Description()
 	expectedDesc := "less than \"\""
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		ltTestCase{"", MATCH_FALSE, ""},
@@ -1030,17 +1010,15 @@ func TestLtEmptyString(t *testing.T) {
 		ltTestCase{"foo", MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtSingleNullByte(t *testing.T) {
+func (t *LessThanTest) SingleNullByte() {
 	matcher := LessThan("\x00")
 	desc := matcher.Description()
 	expectedDesc := "less than \"\x00\""
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		ltTestCase{"", MATCH_TRUE, ""},
@@ -1049,17 +1027,15 @@ func TestLtSingleNullByte(t *testing.T) {
 		ltTestCase{"foo", MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLtLongerString(t *testing.T) {
+func (t *LessThanTest) LongerString() {
 	matcher := LessThan("foo\x00")
 	desc := matcher.Description()
 	expectedDesc := "less than \"foo\x00\""
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectThat(desc, Equals(expectedDesc))
 
 	cases := []ltTestCase{
 		ltTestCase{"", MATCH_TRUE, ""},
@@ -1071,5 +1047,5 @@ func TestLtLongerString(t *testing.T) {
 		ltTestCase{"qux", MATCH_FALSE, ""},
 	}
 
-	checkLtTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
