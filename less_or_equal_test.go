@@ -441,14 +441,15 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 		// Signed integers.
 		leTestCase{-(1 << 30), MATCH_TRUE, ""},
 		leTestCase{-151, MATCH_TRUE, ""},
-		leTestCase{-150, MATCH_TRUE, ""},
+		leTestCase{-150.1, MATCH_TRUE, ""},
+		leTestCase{-150, MATCH_FALSE, ""},
 		leTestCase{-149, MATCH_FALSE, ""},
 		leTestCase{0, MATCH_FALSE, ""},
 		leTestCase{17, MATCH_FALSE, ""},
 
 		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int(-151), MATCH_TRUE, ""},
-		leTestCase{int(-150), MATCH_TRUE, ""},
+		leTestCase{int(-150), MATCH_FALSE, ""},
 		leTestCase{int(-149), MATCH_FALSE, ""},
 		leTestCase{int(0), MATCH_FALSE, ""},
 		leTestCase{int(17), MATCH_FALSE, ""},
@@ -459,21 +460,21 @@ func (t *LessOrEqualTest) NegativeFloatLiteral() {
 
 		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
 		leTestCase{int16(-151), MATCH_TRUE, ""},
-		leTestCase{int16(-150), MATCH_TRUE, ""},
+		leTestCase{int16(-150), MATCH_FALSE, ""},
 		leTestCase{int16(-149), MATCH_FALSE, ""},
 		leTestCase{int16(0), MATCH_FALSE, ""},
 		leTestCase{int16(17), MATCH_FALSE, ""},
 
 		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int32(-151), MATCH_TRUE, ""},
-		leTestCase{int32(-150), MATCH_TRUE, ""},
+		leTestCase{int32(-150), MATCH_FALSE, ""},
 		leTestCase{int32(-149), MATCH_FALSE, ""},
 		leTestCase{int32(0), MATCH_FALSE, ""},
 		leTestCase{int32(17), MATCH_FALSE, ""},
 
 		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
 		leTestCase{int64(-151), MATCH_TRUE, ""},
-		leTestCase{int64(-150), MATCH_TRUE, ""},
+		leTestCase{int64(-150), MATCH_FALSE, ""},
 		leTestCase{int64(-149), MATCH_FALSE, ""},
 		leTestCase{int64(0), MATCH_FALSE, ""},
 		leTestCase{int64(17), MATCH_FALSE, ""},
@@ -686,7 +687,7 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
 		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		leTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
 		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
@@ -754,7 +755,7 @@ func (t *LessOrEqualTest) Int64NotExactlyRepresentableByDoublePrecision() {
 		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		leTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
 		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
