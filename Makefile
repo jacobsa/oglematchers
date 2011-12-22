@@ -11,5 +11,6 @@ GOFILES = \
 	matcher.go \
 	not.go \
 	panics.go \
+	transform_description.go \
 
 include $(GOROOT)/src/Make.pkg

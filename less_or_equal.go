@@ -15,6 +15,11 @@
 
 package oglematchers
 
+import (
+	"fmt"
+	"reflect"
+)
+
 // LessOrEqual returns a matcher that matches integer, floating point, or
 // strings values v such that v <= x. Comparison is not defined between numeric
 // and string types, but is defined between all integer and floating point
@@ -23,7 +28,14 @@ package oglematchers
 // x must itself be an integer, floating point, or string type; otherwise,
 // LessOrEqual will panic.
 func LessOrEqual(x interface{}) Matcher {
+	desc := fmt.Sprintf("less than or equal to %v", x)
+
+	// Special case: make it clear that strings are strings.
+	if reflect.TypeOf(x).Kind() == reflect.String {
+		desc = fmt.Sprintf("less than or equal to \"%s\"", x)
+	}
+
 	// Put LessThan last so that its error messages will be used in the event of
 	// failure.
-	return AnyOf(Equals(x), LessThan(x))
+	return transformDescription(AnyOf(Equals(x), LessThan(x)), desc)
 }
