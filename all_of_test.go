@@ -18,6 +18,7 @@ package oglematchers_test
 import (
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
+	"errors"
 )
 
 ////////////////////////////////////////////////////////////
@@ -74,7 +75,17 @@ func (t *AllOfTest) EmptySet() {
 	ExpectEq(nil, err)
 }
 
-func (t *AllOfTest) OneMatcherSaysUndefinedAndOneSaysFalse() {
+func (t *AllOfTest) OneMatcherSaysUndefinedAndSomeSayFalse() {
+	m := AllOf(
+		&allOfFakeMatcher{"", MATCH_FALSE, errors.New("")},
+		&allOfFakeMatcher{"", MATCH_UNDEFINED, errors.New("taco")},
+		&allOfFakeMatcher{"", MATCH_FALSE, errors.New("")},
+		&allOfFakeMatcher{"", MATCH_TRUE, nil})
+
+	res, err := m.Matches(17)
+
+	ExpectEq(MATCH_UNDEFINED, res)
+	ExpectThat(err, Error(Equals("taco")))
 }
 
 func (t *AllOfTest) OneMatcherSaysFalseAndOthersSayTrue() {
