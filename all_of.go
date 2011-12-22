@@ -30,6 +30,6 @@ import (
 //  3. Otherwise, return  MATCH_FALSE.
 //
 // This is akin to a logical AND operation for matchers.
-func AllOf(matchers []Matcher) Matcher {
+func AllOf(matchers ...Matcher) Matcher {
 	return nil
 }

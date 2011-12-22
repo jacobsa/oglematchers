@@ -42,13 +42,15 @@ func (m *allOfFakeMatcher) Description() string {
 type AllOfTest struct {
 }
 
-func init()                     { RegisterTestSuite(&AllOfTest{}) }
+func init() { RegisterTestSuite(&AllOfTest{}) }
 
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
 
 func (t *AllOfTest) DescriptionWithEmptySet() {
+	m := AllOf()
+	ExpectEq("is anything", m.Description())
 }
 
 func (t *AllOfTest) DescriptionWithNonEmptySet() {
