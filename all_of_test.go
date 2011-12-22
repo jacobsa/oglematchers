@@ -16,12 +16,28 @@
 package oglematchers_test
 
 import (
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
+	"errors"
 )
 
 ////////////////////////////////////////////////////////////
 // Helpers
 ////////////////////////////////////////////////////////////
+
+type allOfFakeMatcher struct {
+	desc string
+	res  MatchResult
+	err  string
+}
+
+func (m *allOfFakeMatcher) Matches(c interface{}) (MatchResult, error) {
+	return m.res, errors.New(m.err)
+}
+
+func (m *allOfFakeMatcher) Description() string {
+	return m.desc
+}
 
 type AllOfTest struct {
 }
