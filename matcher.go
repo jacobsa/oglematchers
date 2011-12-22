@@ -63,13 +63,13 @@ type Matcher interface {
 	//
 	// Then the failure message may look like:
 	//
-	//     Expected: is a string with substring "taco"
+	//     Expected: has substring "taco"
 	//     Actual:   17, which is not a string
 	//
 	Matches(candidate interface{}) (MatchResult, error)
 
 	// Description returns a string describing the property that values matching
 	// this matcher have, as a verb phrase where the subject is the value. For
-	// example, "is greather than 17" or "is a string with substring "taco"".
+	// example, "is greather than 17" or "has substring "taco"".
 	Description() string
 }
