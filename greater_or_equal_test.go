@@ -25,18 +25,18 @@ import (
 // Helpers
 ////////////////////////////////////////////////////////////
 
-type LessThanTest struct {
+type GreaterOrEqualTest struct {
 }
 
-func init() { RegisterTestSuite(&LessThanTest{}) }
+func init() { RegisterTestSuite(&GreaterOrEqualTest{}) }
 
-type ltTestCase struct {
+type geTestCase struct {
 	candidate      interface{}
 	expectedResult MatchResult
 	expectedError  string
 }
 
-func (t *LessThanTest) checkTestCases(matcher Matcher, cases []ltTestCase) {
+func (t *GreaterOrEqualTest) checkTestCases(matcher Matcher, cases []geTestCase) {
 	for i, c := range cases {
 		result, err := matcher.Matches(c.candidate)
 
@@ -65,81 +65,81 @@ func (t *LessThanTest) checkTestCases(matcher Matcher, cases []ltTestCase) {
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessThanTest) IntegerCandidateBadTypes() {
-	matcher := LessThan(int(-150))
+func (t *GreaterOrEqualTest) IntegerCandidateBadTypes() {
+	matcher := GreaterOrEqual(int(-150))
 
-	cases := []ltTestCase{
-		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	cases := []geTestCase{
+		geTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{&geTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{geTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) FloatCandidateBadTypes() {
-	matcher := LessThan(float32(-150))
+func (t *GreaterOrEqualTest) FloatCandidateBadTypes() {
+	matcher := GreaterOrEqual(float32(-150))
 
-	cases := []ltTestCase{
-		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	cases := []geTestCase{
+		geTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{&geTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{geTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) StringCandidateBadTypes() {
-	matcher := LessThan("17")
+func (t *GreaterOrEqualTest) StringCandidateBadTypes() {
+	matcher := GreaterOrEqual("17")
 
-	cases := []ltTestCase{
-		ltTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{int(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{int8(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{int16(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{int32(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{int64(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uint(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uint8(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uint16(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uint32(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uint64(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{float32(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{float64(0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{&ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		ltTestCase{ltTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	cases := []geTestCase{
+		geTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{int(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{int8(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{int16(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{int32(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{int64(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uint(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uint8(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uint16(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uint32(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uint64(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{float32(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{float64(0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{&geTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		geTestCase{geTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) BadArgument() {
+func (t *GreaterOrEqualTest) BadArgument() {
 	panicked := false
 
 	defer func() {
@@ -152,264 +152,264 @@ func (t *LessThanTest) BadArgument() {
 		}
 	}()
 
-	LessThan(complex128(0))
+	GreaterOrEqual(complex128(0))
 }
 
 ////////////////////////////////////////////////////////////
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessThanTest) NegativeIntegerLiteral() {
-	matcher := LessThan(-150)
+func (t *GreaterOrEqualTest) NegativeIntegerLiteral() {
+	matcher := GreaterOrEqual(-150)
 	desc := matcher.Description()
-	expectedDesc := "less than -150"
+	expectedDesc := "greater than or equal to -150"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-(1 << 30), MATCH_TRUE, ""},
-		ltTestCase{-151, MATCH_TRUE, ""},
-		ltTestCase{-150, MATCH_FALSE, ""},
-		ltTestCase{0, MATCH_FALSE, ""},
-		ltTestCase{17, MATCH_FALSE, ""},
+		geTestCase{-(1 << 30), MATCH_TRUE, ""},
+		geTestCase{-151, MATCH_TRUE, ""},
+		geTestCase{-150, MATCH_FALSE, ""},
+		geTestCase{0, MATCH_FALSE, ""},
+		geTestCase{17, MATCH_FALSE, ""},
 
-		ltTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int(-151), MATCH_TRUE, ""},
-		ltTestCase{int(-150), MATCH_FALSE, ""},
-		ltTestCase{int(0), MATCH_FALSE, ""},
-		ltTestCase{int(17), MATCH_FALSE, ""},
+		geTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int(-151), MATCH_TRUE, ""},
+		geTestCase{int(-150), MATCH_FALSE, ""},
+		geTestCase{int(0), MATCH_FALSE, ""},
+		geTestCase{int(17), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-127), MATCH_FALSE, ""},
-		ltTestCase{int8(0), MATCH_FALSE, ""},
-		ltTestCase{int8(17), MATCH_FALSE, ""},
+		geTestCase{int8(-127), MATCH_FALSE, ""},
+		geTestCase{int8(0), MATCH_FALSE, ""},
+		geTestCase{int8(17), MATCH_FALSE, ""},
 
-		ltTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
-		ltTestCase{int16(-151), MATCH_TRUE, ""},
-		ltTestCase{int16(-150), MATCH_FALSE, ""},
-		ltTestCase{int16(0), MATCH_FALSE, ""},
-		ltTestCase{int16(17), MATCH_FALSE, ""},
+		geTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		geTestCase{int16(-151), MATCH_TRUE, ""},
+		geTestCase{int16(-150), MATCH_FALSE, ""},
+		geTestCase{int16(0), MATCH_FALSE, ""},
+		geTestCase{int16(17), MATCH_FALSE, ""},
 
-		ltTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int32(-151), MATCH_TRUE, ""},
-		ltTestCase{int32(-150), MATCH_FALSE, ""},
-		ltTestCase{int32(0), MATCH_FALSE, ""},
-		ltTestCase{int32(17), MATCH_FALSE, ""},
+		geTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int32(-151), MATCH_TRUE, ""},
+		geTestCase{int32(-150), MATCH_FALSE, ""},
+		geTestCase{int32(0), MATCH_FALSE, ""},
+		geTestCase{int32(17), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int64(-151), MATCH_TRUE, ""},
-		ltTestCase{int64(-150), MATCH_FALSE, ""},
-		ltTestCase{int64(0), MATCH_FALSE, ""},
-		ltTestCase{int64(17), MATCH_FALSE, ""},
+		geTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int64(-151), MATCH_TRUE, ""},
+		geTestCase{int64(-150), MATCH_FALSE, ""},
+		geTestCase{int64(0), MATCH_FALSE, ""},
+		geTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint(0), MATCH_FALSE, ""},
-		ltTestCase{uint(17), MATCH_FALSE, ""},
+		geTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_FALSE, ""},
+		geTestCase{uint(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_FALSE, ""},
-		ltTestCase{uint8(17), MATCH_FALSE, ""},
-		ltTestCase{uint8(253), MATCH_FALSE, ""},
+		geTestCase{uint8(0), MATCH_FALSE, ""},
+		geTestCase{uint8(17), MATCH_FALSE, ""},
+		geTestCase{uint8(253), MATCH_FALSE, ""},
 
-		ltTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint16(0), MATCH_FALSE, ""},
-		ltTestCase{uint16(17), MATCH_FALSE, ""},
+		geTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
+		geTestCase{uint16(0), MATCH_FALSE, ""},
+		geTestCase{uint16(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint32(0), MATCH_FALSE, ""},
-		ltTestCase{uint32(17), MATCH_FALSE, ""},
+		geTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_FALSE, ""},
+		geTestCase{uint32(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint64(0), MATCH_FALSE, ""},
-		ltTestCase{uint64(17), MATCH_FALSE, ""},
+		geTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_FALSE, ""},
+		geTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{float32(-151), MATCH_TRUE, ""},
-		ltTestCase{float32(-150.1), MATCH_TRUE, ""},
-		ltTestCase{float32(-150), MATCH_FALSE, ""},
-		ltTestCase{float32(-149.9), MATCH_FALSE, ""},
-		ltTestCase{float32(0), MATCH_FALSE, ""},
-		ltTestCase{float32(17), MATCH_FALSE, ""},
-		ltTestCase{float32(160), MATCH_FALSE, ""},
+		geTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{float32(-151), MATCH_TRUE, ""},
+		geTestCase{float32(-150.1), MATCH_TRUE, ""},
+		geTestCase{float32(-150), MATCH_FALSE, ""},
+		geTestCase{float32(-149.9), MATCH_FALSE, ""},
+		geTestCase{float32(0), MATCH_FALSE, ""},
+		geTestCase{float32(17), MATCH_FALSE, ""},
+		geTestCase{float32(160), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{float64(-151), MATCH_TRUE, ""},
-		ltTestCase{float64(-150.1), MATCH_TRUE, ""},
-		ltTestCase{float64(-150), MATCH_FALSE, ""},
-		ltTestCase{float64(-149.9), MATCH_FALSE, ""},
-		ltTestCase{float64(0), MATCH_FALSE, ""},
-		ltTestCase{float64(17), MATCH_FALSE, ""},
-		ltTestCase{float64(160), MATCH_FALSE, ""},
+		geTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{float64(-151), MATCH_TRUE, ""},
+		geTestCase{float64(-150.1), MATCH_TRUE, ""},
+		geTestCase{float64(-150), MATCH_FALSE, ""},
+		geTestCase{float64(-149.9), MATCH_FALSE, ""},
+		geTestCase{float64(0), MATCH_FALSE, ""},
+		geTestCase{float64(17), MATCH_FALSE, ""},
+		geTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) ZeroIntegerLiteral() {
-	matcher := LessThan(0)
+func (t *GreaterOrEqualTest) ZeroIntegerLiteral() {
+	matcher := GreaterOrEqual(0)
 	desc := matcher.Description()
-	expectedDesc := "less than 0"
+	expectedDesc := "greater than or equal to 0"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-(1 << 30), MATCH_TRUE, ""},
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{0, MATCH_FALSE, ""},
-		ltTestCase{1, MATCH_FALSE, ""},
-		ltTestCase{17, MATCH_FALSE, ""},
-		ltTestCase{(1 << 30), MATCH_FALSE, ""},
+		geTestCase{-(1 << 30), MATCH_TRUE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{0, MATCH_FALSE, ""},
+		geTestCase{1, MATCH_FALSE, ""},
+		geTestCase{17, MATCH_FALSE, ""},
+		geTestCase{(1 << 30), MATCH_FALSE, ""},
 
-		ltTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(0), MATCH_FALSE, ""},
-		ltTestCase{int(1), MATCH_FALSE, ""},
-		ltTestCase{int(17), MATCH_FALSE, ""},
+		geTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(0), MATCH_FALSE, ""},
+		geTestCase{int(1), MATCH_FALSE, ""},
+		geTestCase{int(17), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(0), MATCH_FALSE, ""},
-		ltTestCase{int8(1), MATCH_FALSE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(0), MATCH_FALSE, ""},
+		geTestCase{int8(1), MATCH_FALSE, ""},
 
-		ltTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(0), MATCH_FALSE, ""},
-		ltTestCase{int16(1), MATCH_FALSE, ""},
-		ltTestCase{int16(17), MATCH_FALSE, ""},
+		geTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(0), MATCH_FALSE, ""},
+		geTestCase{int16(1), MATCH_FALSE, ""},
+		geTestCase{int16(17), MATCH_FALSE, ""},
 
-		ltTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(0), MATCH_FALSE, ""},
-		ltTestCase{int32(1), MATCH_FALSE, ""},
-		ltTestCase{int32(17), MATCH_FALSE, ""},
+		geTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(0), MATCH_FALSE, ""},
+		geTestCase{int32(1), MATCH_FALSE, ""},
+		geTestCase{int32(17), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(0), MATCH_FALSE, ""},
-		ltTestCase{int64(1), MATCH_FALSE, ""},
-		ltTestCase{int64(17), MATCH_FALSE, ""},
+		geTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(0), MATCH_FALSE, ""},
+		geTestCase{int64(1), MATCH_FALSE, ""},
+		geTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint((1 << 32) - 1), MATCH_FALSE, ""},
-		ltTestCase{uint(0), MATCH_FALSE, ""},
-		ltTestCase{uint(17), MATCH_FALSE, ""},
+		geTestCase{uint((1 << 32) - 1), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_FALSE, ""},
+		geTestCase{uint(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_FALSE, ""},
-		ltTestCase{uint8(17), MATCH_FALSE, ""},
-		ltTestCase{uint8(253), MATCH_FALSE, ""},
+		geTestCase{uint8(0), MATCH_FALSE, ""},
+		geTestCase{uint8(17), MATCH_FALSE, ""},
+		geTestCase{uint8(253), MATCH_FALSE, ""},
 
-		ltTestCase{uint16((1 << 16) - 1), MATCH_FALSE, ""},
-		ltTestCase{uint16(0), MATCH_FALSE, ""},
-		ltTestCase{uint16(17), MATCH_FALSE, ""},
+		geTestCase{uint16((1 << 16) - 1), MATCH_FALSE, ""},
+		geTestCase{uint16(0), MATCH_FALSE, ""},
+		geTestCase{uint16(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint32((1 << 32) - 1), MATCH_FALSE, ""},
-		ltTestCase{uint32(0), MATCH_FALSE, ""},
-		ltTestCase{uint32(17), MATCH_FALSE, ""},
+		geTestCase{uint32((1 << 32) - 1), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_FALSE, ""},
+		geTestCase{uint32(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint64((1 << 64) - 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(0), MATCH_FALSE, ""},
-		ltTestCase{uint64(17), MATCH_FALSE, ""},
+		geTestCase{uint64((1 << 64) - 1), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_FALSE, ""},
+		geTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{float32(-1), MATCH_TRUE, ""},
-		ltTestCase{float32(-0.1), MATCH_TRUE, ""},
-		ltTestCase{float32(-0.0), MATCH_FALSE, ""},
-		ltTestCase{float32(0), MATCH_FALSE, ""},
-		ltTestCase{float32(0.1), MATCH_FALSE, ""},
-		ltTestCase{float32(17), MATCH_FALSE, ""},
-		ltTestCase{float32(160), MATCH_FALSE, ""},
+		geTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{float32(-1), MATCH_TRUE, ""},
+		geTestCase{float32(-0.1), MATCH_TRUE, ""},
+		geTestCase{float32(-0.0), MATCH_FALSE, ""},
+		geTestCase{float32(0), MATCH_FALSE, ""},
+		geTestCase{float32(0.1), MATCH_FALSE, ""},
+		geTestCase{float32(17), MATCH_FALSE, ""},
+		geTestCase{float32(160), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(-0.1), MATCH_TRUE, ""},
-		ltTestCase{float64(-0), MATCH_FALSE, ""},
-		ltTestCase{float64(0), MATCH_FALSE, ""},
-		ltTestCase{float64(17), MATCH_FALSE, ""},
-		ltTestCase{float64(160), MATCH_FALSE, ""},
+		geTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(-0.1), MATCH_TRUE, ""},
+		geTestCase{float64(-0), MATCH_FALSE, ""},
+		geTestCase{float64(0), MATCH_FALSE, ""},
+		geTestCase{float64(17), MATCH_FALSE, ""},
+		geTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) PositiveIntegerLiteral() {
-	matcher := LessThan(150)
+func (t *GreaterOrEqualTest) PositiveIntegerLiteral() {
+	matcher := GreaterOrEqual(150)
 	desc := matcher.Description()
-	expectedDesc := "less than 150"
+	expectedDesc := "greater than or equal to 150"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{149, MATCH_TRUE, ""},
-		ltTestCase{150, MATCH_FALSE, ""},
-		ltTestCase{151, MATCH_FALSE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{149, MATCH_TRUE, ""},
+		geTestCase{150, MATCH_FALSE, ""},
+		geTestCase{151, MATCH_FALSE, ""},
 
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(149), MATCH_TRUE, ""},
-		ltTestCase{int(150), MATCH_FALSE, ""},
-		ltTestCase{int(151), MATCH_FALSE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(149), MATCH_TRUE, ""},
+		geTestCase{int(150), MATCH_FALSE, ""},
+		geTestCase{int(151), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(0), MATCH_TRUE, ""},
-		ltTestCase{int8(17), MATCH_TRUE, ""},
-		ltTestCase{int8(127), MATCH_TRUE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(0), MATCH_TRUE, ""},
+		geTestCase{int8(17), MATCH_TRUE, ""},
+		geTestCase{int8(127), MATCH_TRUE, ""},
 
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(149), MATCH_TRUE, ""},
-		ltTestCase{int16(150), MATCH_FALSE, ""},
-		ltTestCase{int16(151), MATCH_FALSE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(149), MATCH_TRUE, ""},
+		geTestCase{int16(150), MATCH_FALSE, ""},
+		geTestCase{int16(151), MATCH_FALSE, ""},
 
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(149), MATCH_TRUE, ""},
-		ltTestCase{int32(150), MATCH_FALSE, ""},
-		ltTestCase{int32(151), MATCH_FALSE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(149), MATCH_TRUE, ""},
+		geTestCase{int32(150), MATCH_FALSE, ""},
+		geTestCase{int32(151), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(149), MATCH_TRUE, ""},
-		ltTestCase{int64(150), MATCH_FALSE, ""},
-		ltTestCase{int64(151), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(149), MATCH_TRUE, ""},
+		geTestCase{int64(150), MATCH_FALSE, ""},
+		geTestCase{int64(151), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint(0), MATCH_TRUE, ""},
-		ltTestCase{uint(149), MATCH_TRUE, ""},
-		ltTestCase{uint(150), MATCH_FALSE, ""},
-		ltTestCase{uint(151), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_TRUE, ""},
+		geTestCase{uint(149), MATCH_TRUE, ""},
+		geTestCase{uint(150), MATCH_FALSE, ""},
+		geTestCase{uint(151), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_TRUE, ""},
-		ltTestCase{uint8(127), MATCH_TRUE, ""},
+		geTestCase{uint8(0), MATCH_TRUE, ""},
+		geTestCase{uint8(127), MATCH_TRUE, ""},
 
-		ltTestCase{uint16(0), MATCH_TRUE, ""},
-		ltTestCase{uint16(149), MATCH_TRUE, ""},
-		ltTestCase{uint16(150), MATCH_FALSE, ""},
-		ltTestCase{uint16(151), MATCH_FALSE, ""},
+		geTestCase{uint16(0), MATCH_TRUE, ""},
+		geTestCase{uint16(149), MATCH_TRUE, ""},
+		geTestCase{uint16(150), MATCH_FALSE, ""},
+		geTestCase{uint16(151), MATCH_FALSE, ""},
 
-		ltTestCase{uint32(0), MATCH_TRUE, ""},
-		ltTestCase{uint32(149), MATCH_TRUE, ""},
-		ltTestCase{uint32(150), MATCH_FALSE, ""},
-		ltTestCase{uint32(151), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_TRUE, ""},
+		geTestCase{uint32(149), MATCH_TRUE, ""},
+		geTestCase{uint32(150), MATCH_FALSE, ""},
+		geTestCase{uint32(151), MATCH_FALSE, ""},
 
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(149), MATCH_TRUE, ""},
-		ltTestCase{uint64(150), MATCH_FALSE, ""},
-		ltTestCase{uint64(151), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(149), MATCH_TRUE, ""},
+		geTestCase{uint64(150), MATCH_FALSE, ""},
+		geTestCase{uint64(151), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-1), MATCH_TRUE, ""},
-		ltTestCase{float32(149), MATCH_TRUE, ""},
-		ltTestCase{float32(149.9), MATCH_TRUE, ""},
-		ltTestCase{float32(150), MATCH_FALSE, ""},
-		ltTestCase{float32(150.1), MATCH_FALSE, ""},
-		ltTestCase{float32(151), MATCH_FALSE, ""},
+		geTestCase{float32(-1), MATCH_TRUE, ""},
+		geTestCase{float32(149), MATCH_TRUE, ""},
+		geTestCase{float32(149.9), MATCH_TRUE, ""},
+		geTestCase{float32(150), MATCH_FALSE, ""},
+		geTestCase{float32(150.1), MATCH_FALSE, ""},
+		geTestCase{float32(151), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(149), MATCH_TRUE, ""},
-		ltTestCase{float64(149.9), MATCH_TRUE, ""},
-		ltTestCase{float64(150), MATCH_FALSE, ""},
-		ltTestCase{float64(150.1), MATCH_FALSE, ""},
-		ltTestCase{float64(151), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(149), MATCH_TRUE, ""},
+		geTestCase{float64(149.9), MATCH_TRUE, ""},
+		geTestCase{float64(150), MATCH_FALSE, ""},
+		geTestCase{float64(150.1), MATCH_FALSE, ""},
+		geTestCase{float64(151), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -419,170 +419,170 @@ func (t *LessThanTest) PositiveIntegerLiteral() {
 // Float literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessThanTest) NegativeFloatLiteral() {
-	matcher := LessThan(-150.1)
+func (t *GreaterOrEqualTest) NegativeFloatLiteral() {
+	matcher := GreaterOrEqual(-150.1)
 	desc := matcher.Description()
-	expectedDesc := "less than -150.1"
+	expectedDesc := "greater than or equal to -150.1"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-(1 << 30), MATCH_TRUE, ""},
-		ltTestCase{-151, MATCH_TRUE, ""},
-		ltTestCase{-150, MATCH_FALSE, ""},
-		ltTestCase{0, MATCH_FALSE, ""},
-		ltTestCase{17, MATCH_FALSE, ""},
+		geTestCase{-(1 << 30), MATCH_TRUE, ""},
+		geTestCase{-151, MATCH_TRUE, ""},
+		geTestCase{-150, MATCH_FALSE, ""},
+		geTestCase{0, MATCH_FALSE, ""},
+		geTestCase{17, MATCH_FALSE, ""},
 
-		ltTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int(-151), MATCH_TRUE, ""},
-		ltTestCase{int(-150), MATCH_FALSE, ""},
-		ltTestCase{int(0), MATCH_FALSE, ""},
-		ltTestCase{int(17), MATCH_FALSE, ""},
+		geTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int(-151), MATCH_TRUE, ""},
+		geTestCase{int(-150), MATCH_FALSE, ""},
+		geTestCase{int(0), MATCH_FALSE, ""},
+		geTestCase{int(17), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-127), MATCH_FALSE, ""},
-		ltTestCase{int8(0), MATCH_FALSE, ""},
-		ltTestCase{int8(17), MATCH_FALSE, ""},
+		geTestCase{int8(-127), MATCH_FALSE, ""},
+		geTestCase{int8(0), MATCH_FALSE, ""},
+		geTestCase{int8(17), MATCH_FALSE, ""},
 
-		ltTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
-		ltTestCase{int16(-151), MATCH_TRUE, ""},
-		ltTestCase{int16(-150), MATCH_FALSE, ""},
-		ltTestCase{int16(0), MATCH_FALSE, ""},
-		ltTestCase{int16(17), MATCH_FALSE, ""},
+		geTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		geTestCase{int16(-151), MATCH_TRUE, ""},
+		geTestCase{int16(-150), MATCH_FALSE, ""},
+		geTestCase{int16(0), MATCH_FALSE, ""},
+		geTestCase{int16(17), MATCH_FALSE, ""},
 
-		ltTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int32(-151), MATCH_TRUE, ""},
-		ltTestCase{int32(-150), MATCH_FALSE, ""},
-		ltTestCase{int32(0), MATCH_FALSE, ""},
-		ltTestCase{int32(17), MATCH_FALSE, ""},
+		geTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int32(-151), MATCH_TRUE, ""},
+		geTestCase{int32(-150), MATCH_FALSE, ""},
+		geTestCase{int32(0), MATCH_FALSE, ""},
+		geTestCase{int32(17), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{int64(-151), MATCH_TRUE, ""},
-		ltTestCase{int64(-150), MATCH_FALSE, ""},
-		ltTestCase{int64(0), MATCH_FALSE, ""},
-		ltTestCase{int64(17), MATCH_FALSE, ""},
+		geTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{int64(-151), MATCH_TRUE, ""},
+		geTestCase{int64(-150), MATCH_FALSE, ""},
+		geTestCase{int64(0), MATCH_FALSE, ""},
+		geTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint(0), MATCH_FALSE, ""},
-		ltTestCase{uint(17), MATCH_FALSE, ""},
+		geTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_FALSE, ""},
+		geTestCase{uint(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_FALSE, ""},
-		ltTestCase{uint8(17), MATCH_FALSE, ""},
-		ltTestCase{uint8(253), MATCH_FALSE, ""},
+		geTestCase{uint8(0), MATCH_FALSE, ""},
+		geTestCase{uint8(17), MATCH_FALSE, ""},
+		geTestCase{uint8(253), MATCH_FALSE, ""},
 
-		ltTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint16(0), MATCH_FALSE, ""},
-		ltTestCase{uint16(17), MATCH_FALSE, ""},
+		geTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
+		geTestCase{uint16(0), MATCH_FALSE, ""},
+		geTestCase{uint16(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint32(0), MATCH_FALSE, ""},
-		ltTestCase{uint32(17), MATCH_FALSE, ""},
+		geTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_FALSE, ""},
+		geTestCase{uint32(17), MATCH_FALSE, ""},
 
-		ltTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
-		ltTestCase{uint64(0), MATCH_FALSE, ""},
-		ltTestCase{uint64(17), MATCH_FALSE, ""},
+		geTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_FALSE, ""},
+		geTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{float32(-151), MATCH_TRUE, ""},
-		ltTestCase{float32(-150.2), MATCH_TRUE, ""},
-		ltTestCase{float32(-150.1), MATCH_FALSE, ""},
-		ltTestCase{float32(-150), MATCH_FALSE, ""},
-		ltTestCase{float32(0), MATCH_FALSE, ""},
-		ltTestCase{float32(17), MATCH_FALSE, ""},
-		ltTestCase{float32(160), MATCH_FALSE, ""},
+		geTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{float32(-151), MATCH_TRUE, ""},
+		geTestCase{float32(-150.2), MATCH_TRUE, ""},
+		geTestCase{float32(-150.1), MATCH_FALSE, ""},
+		geTestCase{float32(-150), MATCH_FALSE, ""},
+		geTestCase{float32(0), MATCH_FALSE, ""},
+		geTestCase{float32(17), MATCH_FALSE, ""},
+		geTestCase{float32(160), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
-		ltTestCase{float64(-151), MATCH_TRUE, ""},
-		ltTestCase{float64(-150.2), MATCH_TRUE, ""},
-		ltTestCase{float64(-150.1), MATCH_FALSE, ""},
-		ltTestCase{float64(-150), MATCH_FALSE, ""},
-		ltTestCase{float64(0), MATCH_FALSE, ""},
-		ltTestCase{float64(17), MATCH_FALSE, ""},
-		ltTestCase{float64(160), MATCH_FALSE, ""},
+		geTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		geTestCase{float64(-151), MATCH_TRUE, ""},
+		geTestCase{float64(-150.2), MATCH_TRUE, ""},
+		geTestCase{float64(-150.1), MATCH_FALSE, ""},
+		geTestCase{float64(-150), MATCH_FALSE, ""},
+		geTestCase{float64(0), MATCH_FALSE, ""},
+		geTestCase{float64(17), MATCH_FALSE, ""},
+		geTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) PositiveFloatLiteral() {
-	matcher := LessThan(149.9)
+func (t *GreaterOrEqualTest) PositiveFloatLiteral() {
+	matcher := GreaterOrEqual(149.9)
 	desc := matcher.Description()
-	expectedDesc := "less than 149.9"
+	expectedDesc := "greater than or equal to 149.9"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{149, MATCH_TRUE, ""},
-		ltTestCase{150, MATCH_FALSE, ""},
-		ltTestCase{151, MATCH_FALSE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{149, MATCH_TRUE, ""},
+		geTestCase{150, MATCH_FALSE, ""},
+		geTestCase{151, MATCH_FALSE, ""},
 
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(149), MATCH_TRUE, ""},
-		ltTestCase{int(150), MATCH_FALSE, ""},
-		ltTestCase{int(151), MATCH_FALSE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(149), MATCH_TRUE, ""},
+		geTestCase{int(150), MATCH_FALSE, ""},
+		geTestCase{int(151), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(0), MATCH_TRUE, ""},
-		ltTestCase{int8(17), MATCH_TRUE, ""},
-		ltTestCase{int8(127), MATCH_TRUE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(0), MATCH_TRUE, ""},
+		geTestCase{int8(17), MATCH_TRUE, ""},
+		geTestCase{int8(127), MATCH_TRUE, ""},
 
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(149), MATCH_TRUE, ""},
-		ltTestCase{int16(150), MATCH_FALSE, ""},
-		ltTestCase{int16(151), MATCH_FALSE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(149), MATCH_TRUE, ""},
+		geTestCase{int16(150), MATCH_FALSE, ""},
+		geTestCase{int16(151), MATCH_FALSE, ""},
 
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(149), MATCH_TRUE, ""},
-		ltTestCase{int32(150), MATCH_FALSE, ""},
-		ltTestCase{int32(151), MATCH_FALSE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(149), MATCH_TRUE, ""},
+		geTestCase{int32(150), MATCH_FALSE, ""},
+		geTestCase{int32(151), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(149), MATCH_TRUE, ""},
-		ltTestCase{int64(150), MATCH_FALSE, ""},
-		ltTestCase{int64(151), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(149), MATCH_TRUE, ""},
+		geTestCase{int64(150), MATCH_FALSE, ""},
+		geTestCase{int64(151), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint(0), MATCH_TRUE, ""},
-		ltTestCase{uint(149), MATCH_TRUE, ""},
-		ltTestCase{uint(150), MATCH_FALSE, ""},
-		ltTestCase{uint(151), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_TRUE, ""},
+		geTestCase{uint(149), MATCH_TRUE, ""},
+		geTestCase{uint(150), MATCH_FALSE, ""},
+		geTestCase{uint(151), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_TRUE, ""},
-		ltTestCase{uint8(127), MATCH_TRUE, ""},
+		geTestCase{uint8(0), MATCH_TRUE, ""},
+		geTestCase{uint8(127), MATCH_TRUE, ""},
 
-		ltTestCase{uint16(0), MATCH_TRUE, ""},
-		ltTestCase{uint16(149), MATCH_TRUE, ""},
-		ltTestCase{uint16(150), MATCH_FALSE, ""},
-		ltTestCase{uint16(151), MATCH_FALSE, ""},
+		geTestCase{uint16(0), MATCH_TRUE, ""},
+		geTestCase{uint16(149), MATCH_TRUE, ""},
+		geTestCase{uint16(150), MATCH_FALSE, ""},
+		geTestCase{uint16(151), MATCH_FALSE, ""},
 
-		ltTestCase{uint32(0), MATCH_TRUE, ""},
-		ltTestCase{uint32(149), MATCH_TRUE, ""},
-		ltTestCase{uint32(150), MATCH_FALSE, ""},
-		ltTestCase{uint32(151), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_TRUE, ""},
+		geTestCase{uint32(149), MATCH_TRUE, ""},
+		geTestCase{uint32(150), MATCH_FALSE, ""},
+		geTestCase{uint32(151), MATCH_FALSE, ""},
 
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(149), MATCH_TRUE, ""},
-		ltTestCase{uint64(150), MATCH_FALSE, ""},
-		ltTestCase{uint64(151), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(149), MATCH_TRUE, ""},
+		geTestCase{uint64(150), MATCH_FALSE, ""},
+		geTestCase{uint64(151), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-1), MATCH_TRUE, ""},
-		ltTestCase{float32(149), MATCH_TRUE, ""},
-		ltTestCase{float32(149.8), MATCH_TRUE, ""},
-		ltTestCase{float32(149.9), MATCH_FALSE, ""},
-		ltTestCase{float32(150), MATCH_FALSE, ""},
-		ltTestCase{float32(151), MATCH_FALSE, ""},
+		geTestCase{float32(-1), MATCH_TRUE, ""},
+		geTestCase{float32(149), MATCH_TRUE, ""},
+		geTestCase{float32(149.8), MATCH_TRUE, ""},
+		geTestCase{float32(149.9), MATCH_FALSE, ""},
+		geTestCase{float32(150), MATCH_FALSE, ""},
+		geTestCase{float32(151), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(149), MATCH_TRUE, ""},
-		ltTestCase{float64(149.8), MATCH_TRUE, ""},
-		ltTestCase{float64(149.9), MATCH_FALSE, ""},
-		ltTestCase{float64(150), MATCH_FALSE, ""},
-		ltTestCase{float64(151), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(149), MATCH_TRUE, ""},
+		geTestCase{float64(149.8), MATCH_TRUE, ""},
+		geTestCase{float64(149.9), MATCH_FALSE, ""},
+		geTestCase{float64(150), MATCH_FALSE, ""},
+		geTestCase{float64(151), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -592,401 +592,401 @@ func (t *LessThanTest) PositiveFloatLiteral() {
 // Subtle cases
 ////////////////////////////////////////////////////////////
 
-func (t *LessThanTest) Int64NotExactlyRepresentableBySinglePrecision() {
+func (t *GreaterOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
-	matcher := LessThan(int64(kTwoTo25 + 1))
+	matcher := GreaterOrEqual(int64(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 33554433"
+	expectedDesc := "greater than or equal to 33554433"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
-		ltTestCase{kTwoTo25 + 1, MATCH_FALSE, ""},
-		ltTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
+		geTestCase{kTwoTo25 + 1, MATCH_FALSE, ""},
+		geTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
 
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{int(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{int(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(127), MATCH_TRUE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(127), MATCH_TRUE, ""},
 
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(0), MATCH_TRUE, ""},
-		ltTestCase{int16(32767), MATCH_TRUE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(0), MATCH_TRUE, ""},
+		geTestCase{int16(32767), MATCH_TRUE, ""},
 
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{int32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{int32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint(0), MATCH_TRUE, ""},
-		ltTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_TRUE, ""},
+		geTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{uint(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_TRUE, ""},
-		ltTestCase{uint8(255), MATCH_TRUE, ""},
+		geTestCase{uint8(0), MATCH_TRUE, ""},
+		geTestCase{uint8(255), MATCH_TRUE, ""},
 
-		ltTestCase{uint16(0), MATCH_TRUE, ""},
-		ltTestCase{uint16(65535), MATCH_TRUE, ""},
+		geTestCase{uint16(0), MATCH_TRUE, ""},
+		geTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		ltTestCase{uint32(0), MATCH_TRUE, ""},
-		ltTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_TRUE, ""},
+		geTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{uint32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-1), MATCH_TRUE, ""},
-		ltTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{float32(-1), MATCH_TRUE, ""},
+		geTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) Int64NotExactlyRepresentableByDoublePrecision() {
+func (t *GreaterOrEqualTest) Int64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
-	matcher := LessThan(int64(kTwoTo54 + 1))
+	matcher := GreaterOrEqual(int64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 18014398509481985"
+	expectedDesc := "greater than or equal to 18014398509481985"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{1 << 30, MATCH_TRUE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{1 << 30, MATCH_TRUE, ""},
 
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(127), MATCH_TRUE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(127), MATCH_TRUE, ""},
 
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(0), MATCH_TRUE, ""},
-		ltTestCase{int16(32767), MATCH_TRUE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(0), MATCH_TRUE, ""},
+		geTestCase{int16(32767), MATCH_TRUE, ""},
 
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
 
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint(0), MATCH_TRUE, ""},
-		ltTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
+		geTestCase{uint(0), MATCH_TRUE, ""},
+		geTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
 
-		ltTestCase{uint8(0), MATCH_TRUE, ""},
-		ltTestCase{uint8(255), MATCH_TRUE, ""},
+		geTestCase{uint8(0), MATCH_TRUE, ""},
+		geTestCase{uint8(255), MATCH_TRUE, ""},
 
-		ltTestCase{uint16(0), MATCH_TRUE, ""},
-		ltTestCase{uint16(65535), MATCH_TRUE, ""},
+		geTestCase{uint16(0), MATCH_TRUE, ""},
+		geTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		ltTestCase{uint32(0), MATCH_TRUE, ""},
-		ltTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
+		geTestCase{uint32(0), MATCH_TRUE, ""},
+		geTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
 
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) Uint64NotExactlyRepresentableBySinglePrecision() {
+func (t *GreaterOrEqualTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
-	matcher := LessThan(uint64(kTwoTo25 + 1))
+	matcher := GreaterOrEqual(uint64(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 33554433"
+	expectedDesc := "greater than or equal to 33554433"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
-		ltTestCase{kTwoTo25 + 1, MATCH_FALSE, ""},
-		ltTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
+		geTestCase{kTwoTo25 + 1, MATCH_FALSE, ""},
+		geTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
 
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{int(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{int(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(127), MATCH_TRUE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(127), MATCH_TRUE, ""},
 
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(0), MATCH_TRUE, ""},
-		ltTestCase{int16(32767), MATCH_TRUE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(0), MATCH_TRUE, ""},
+		geTestCase{int16(32767), MATCH_TRUE, ""},
 
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{int32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{int32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint(0), MATCH_TRUE, ""},
-		ltTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint(0), MATCH_TRUE, ""},
+		geTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{uint(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{uint8(0), MATCH_TRUE, ""},
-		ltTestCase{uint8(255), MATCH_TRUE, ""},
+		geTestCase{uint8(0), MATCH_TRUE, ""},
+		geTestCase{uint8(255), MATCH_TRUE, ""},
 
-		ltTestCase{uint16(0), MATCH_TRUE, ""},
-		ltTestCase{uint16(65535), MATCH_TRUE, ""},
+		geTestCase{uint16(0), MATCH_TRUE, ""},
+		geTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		ltTestCase{uint32(0), MATCH_TRUE, ""},
-		ltTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint32(0), MATCH_TRUE, ""},
+		geTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{uint32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-1), MATCH_TRUE, ""},
-		ltTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{float32(-1), MATCH_TRUE, ""},
+		geTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) Uint64NotExactlyRepresentableByDoublePrecision() {
+func (t *GreaterOrEqualTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
-	matcher := LessThan(uint64(kTwoTo54 + 1))
+	matcher := GreaterOrEqual(uint64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 18014398509481985"
+	expectedDesc := "greater than or equal to 18014398509481985"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{-1, MATCH_TRUE, ""},
-		ltTestCase{1 << 30, MATCH_TRUE, ""},
+		geTestCase{-1, MATCH_TRUE, ""},
+		geTestCase{1 << 30, MATCH_TRUE, ""},
 
-		ltTestCase{int(-1), MATCH_TRUE, ""},
-		ltTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
+		geTestCase{int(-1), MATCH_TRUE, ""},
+		geTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
 
-		ltTestCase{int8(-1), MATCH_TRUE, ""},
-		ltTestCase{int8(127), MATCH_TRUE, ""},
+		geTestCase{int8(-1), MATCH_TRUE, ""},
+		geTestCase{int8(127), MATCH_TRUE, ""},
 
-		ltTestCase{int16(-1), MATCH_TRUE, ""},
-		ltTestCase{int16(0), MATCH_TRUE, ""},
-		ltTestCase{int16(32767), MATCH_TRUE, ""},
+		geTestCase{int16(-1), MATCH_TRUE, ""},
+		geTestCase{int16(0), MATCH_TRUE, ""},
+		geTestCase{int16(32767), MATCH_TRUE, ""},
 
-		ltTestCase{int32(-1), MATCH_TRUE, ""},
-		ltTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
+		geTestCase{int32(-1), MATCH_TRUE, ""},
+		geTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
 
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint(0), MATCH_TRUE, ""},
-		ltTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
+		geTestCase{uint(0), MATCH_TRUE, ""},
+		geTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
 
-		ltTestCase{uint8(0), MATCH_TRUE, ""},
-		ltTestCase{uint8(255), MATCH_TRUE, ""},
+		geTestCase{uint8(0), MATCH_TRUE, ""},
+		geTestCase{uint8(255), MATCH_TRUE, ""},
 
-		ltTestCase{uint16(0), MATCH_TRUE, ""},
-		ltTestCase{uint16(65535), MATCH_TRUE, ""},
+		geTestCase{uint16(0), MATCH_TRUE, ""},
+		geTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		ltTestCase{uint32(0), MATCH_TRUE, ""},
-		ltTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
+		geTestCase{uint32(0), MATCH_TRUE, ""},
+		geTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
 
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) Float32AboveExactIntegerRange() {
+func (t *GreaterOrEqualTest) Float32AboveExactIntegerRange() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
-	matcher := LessThan(float32(kTwoTo25 + 1))
+	matcher := GreaterOrEqual(float32(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 3.3554432e+07"
+	expectedDesc := "greater than or equal to 3.3554432e+07"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float32(-1), MATCH_TRUE, ""},
-		ltTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{float32(-1), MATCH_TRUE, ""},
+		geTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{float32(kTwoTo25 - 1), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 0), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo25 - 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo25 - 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 0), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) Float64AboveExactIntegerRange() {
+func (t *GreaterOrEqualTest) Float64AboveExactIntegerRange() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
-	matcher := LessThan(float64(kTwoTo54 + 1))
+	matcher := GreaterOrEqual(float64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than 1.8014398509481984e+16"
+	expectedDesc := "greater than or equal to 1.8014398509481984e+16"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
+	cases := []geTestCase{
 		// Signed integers.
-		ltTestCase{int64(-1), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		ltTestCase{int64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
-		ltTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		geTestCase{int64(-1), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		geTestCase{int64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		ltTestCase{uint64(0), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		ltTestCase{uint64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
-		ltTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		geTestCase{uint64(0), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		geTestCase{uint64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Floating point.
-		ltTestCase{float64(-1), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		ltTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
-		ltTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		geTestCase{float64(-1), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		geTestCase{float64(kTwoTo54 - 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 0), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 1), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		geTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -996,55 +996,55 @@ func (t *LessThanTest) Float64AboveExactIntegerRange() {
 // String literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessThanTest) EmptyString() {
-	matcher := LessThan("")
+func (t *GreaterOrEqualTest) EmptyString() {
+	matcher := GreaterOrEqual("")
 	desc := matcher.Description()
-	expectedDesc := "less than \"\""
+	expectedDesc := "greater than or equal to \"\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
-		ltTestCase{"", MATCH_FALSE, ""},
-		ltTestCase{"\x00", MATCH_FALSE, ""},
-		ltTestCase{"a", MATCH_FALSE, ""},
-		ltTestCase{"foo", MATCH_FALSE, ""},
+	cases := []geTestCase{
+		geTestCase{"", MATCH_FALSE, ""},
+		geTestCase{"\x00", MATCH_FALSE, ""},
+		geTestCase{"a", MATCH_FALSE, ""},
+		geTestCase{"foo", MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) SingleNullByte() {
-	matcher := LessThan("\x00")
+func (t *GreaterOrEqualTest) SingleNullByte() {
+	matcher := GreaterOrEqual("\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than \"\x00\""
+	expectedDesc := "greater than or equal to \"\x00\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
-		ltTestCase{"", MATCH_TRUE, ""},
-		ltTestCase{"\x00", MATCH_FALSE, ""},
-		ltTestCase{"a", MATCH_FALSE, ""},
-		ltTestCase{"foo", MATCH_FALSE, ""},
+	cases := []geTestCase{
+		geTestCase{"", MATCH_TRUE, ""},
+		geTestCase{"\x00", MATCH_FALSE, ""},
+		geTestCase{"a", MATCH_FALSE, ""},
+		geTestCase{"foo", MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessThanTest) LongerString() {
-	matcher := LessThan("foo\x00")
+func (t *GreaterOrEqualTest) LongerString() {
+	matcher := GreaterOrEqual("foo\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than \"foo\x00\""
+	expectedDesc := "greater than or equal to \"foo\x00\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []ltTestCase{
-		ltTestCase{"", MATCH_TRUE, ""},
-		ltTestCase{"\x00", MATCH_TRUE, ""},
-		ltTestCase{"bar", MATCH_TRUE, ""},
-		ltTestCase{"foo", MATCH_TRUE, ""},
-		ltTestCase{"foo\x00", MATCH_FALSE, ""},
-		ltTestCase{"fooa", MATCH_FALSE, ""},
-		ltTestCase{"qux", MATCH_FALSE, ""},
+	cases := []geTestCase{
+		geTestCase{"", MATCH_TRUE, ""},
+		geTestCase{"\x00", MATCH_TRUE, ""},
+		geTestCase{"bar", MATCH_TRUE, ""},
+		geTestCase{"foo", MATCH_TRUE, ""},
+		geTestCase{"foo\x00", MATCH_FALSE, ""},
+		geTestCase{"fooa", MATCH_FALSE, ""},
+		geTestCase{"qux", MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
