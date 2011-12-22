@@ -27,6 +27,24 @@ AnyOf(LessThan(17), GreaterThan(19))
 There are lots more; see [here][reference] for a reference. You can also add
 your own simply by implementing the `oglematchers.Matcher` interface.
 
+
+Installation
+------------
+
+Use `goinstall` to install `oglematchers` and keep it up to date:
+
+    goinstall -u github.com/jacobsa/oglematchers
+
+
+Documentation
+-------------
+
+See [here][reference] for documentation hosted on GoPkgDoc. Alternatively, you
+can install the package and then use `godoc`:
+
+    godoc github.com/jacobsa/oglematchers
+
+
 [reference]: http://gopkgdoc.appspot.com/pkg/github.com/jacobsa/oglematchers
 [googletest]: http://code.google.com/p/googletest/
 [google-js-test]: http://code.google.com/p/google-js-test/
