@@ -22,7 +22,7 @@ import (
 )
 
 // AnyOf accepts a set of values S and returns a matcher that follows the
-// algorithm below:
+// algorithm below when considering a candidate c:
 //
 //  1. If there exists a value m in S such that m implements the Matcher
 //     interface and m matches c, return MATCH_TRUE.
@@ -37,7 +37,8 @@ import (
 //
 //  4. Otherwise, return  MATCH_FALSE.
 //
-// This is akin to a logical OR operation for matchers.
+// This is akin to a logical AND operation for matchers, with non-matchers x
+// being treated as Equals(x).
 func AnyOf(vals ...interface{}) Matcher {
 	// Get ahold of a type variable for the Matcher interface.
 	var dummy *Matcher
