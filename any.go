@@ -15,14 +15,7 @@
 
 package oglematchers
 
-Foo(Ǝ, Ǝ)
-Foo(Ɂ, Ɂ)
-Foo(A, A)
-Foo(𝐀, 𝐀)
-Foo(Ə, Ə)
-Foo(Г, Г)
-Foo(Ꙩ, Ꙩ)
-
-import (
-	"strings"
-)
+// Any returns a matcher that matches any value.
+func Any() Matcher {
+	return nil
+}
