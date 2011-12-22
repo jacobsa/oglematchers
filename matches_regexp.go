@@ -15,10 +15,54 @@
 
 package oglematchers
 
+import (
+	"errors"
+	"fmt"
+	"reflect"
+	"regexp"
+)
+
 // MatchesRegexp returns a matcher that matches strings and byte slices whose
 // contents match the supplide regular expression. The semantics are those of
 // regexp.Match. In particular, that means the match is not implicitly anchored
 // to the ends of the string: MatchesRegexp("bar") will match "foo bar baz".
 func MatchesRegexp(pattern string) Matcher {
-	return nil
+	re, err := regexp.Compile(pattern)
+	if err != nil {
+		panic("MatchesRegexp: " + err.Error())
+	}
+
+	return &matchesRegexpMatcher{re}
+}
+
+type matchesRegexpMatcher struct {
+	re *regexp.Regexp
+}
+
+func (m *matchesRegexpMatcher) Description() string {
+	return fmt.Sprintf("matches regexp \"%s\"", m.re.String())
+}
+
+func (m *matchesRegexpMatcher) Matches(c interface{}) (res MatchResult, err error) {
+	v := reflect.ValueOf(c)
+	isString := v.Kind() == reflect.String
+	isByteSlice := v.Kind() == reflect.Slice && v.Elem().Kind() == reflect.Uint8
+
+	switch {
+	case isString:
+		if m.re.MatchString(v.String()) {
+			res = MATCH_TRUE
+		}
+
+	case isByteSlice:
+		if m.re.Match(v.Bytes()) {
+			res = MATCH_TRUE
+		}
+
+	default:
+		res = MATCH_UNDEFINED
+		err = errors.New("which is not a string or []byte")
+	}
+
+	return
 }

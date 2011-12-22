@@ -38,6 +38,12 @@ func (t *MatchesRegexpTest) Description() {
 	ExpectEq("matches regexp \"foo.*bar\"", m.Description())
 }
 
+func (t *MatchesRegexpTest) InvalidRegexp() {
+	ExpectThat(
+		func() { MatchesRegexp("(foo") },
+		Panics(HasSubstr("missing closing )")))
+}
+
 func (t *MatchesRegexpTest) CandidateIsNil() {
 	m := MatchesRegexp("")
 	res, err := m.Matches(nil)
