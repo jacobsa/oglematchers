@@ -18,7 +18,6 @@ package oglematchers_test
 import (
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
-	"errors"
 )
 
 ////////////////////////////////////////////////////////////
@@ -28,11 +27,11 @@ import (
 type allOfFakeMatcher struct {
 	desc string
 	res  MatchResult
-	err  string
+	err  error
 }
 
 func (m *allOfFakeMatcher) Matches(c interface{}) (MatchResult, error) {
-	return m.res, errors.New(m.err)
+	return m.res, m.err
 }
 
 func (m *allOfFakeMatcher) Description() string {
@@ -53,7 +52,18 @@ func (t *AllOfTest) DescriptionWithEmptySet() {
 	ExpectEq("is anything", m.Description())
 }
 
-func (t *AllOfTest) DescriptionWithNonEmptySet() {
+func (t *AllOfTest) DescriptionWithOneMatcher() {
+	m := AllOf(&allOfFakeMatcher{"taco", MATCH_FALSE, nil})
+	ExpectEq("taco", m.Description())
+}
+
+func (t *AllOfTest) DescriptionWithMultipleMatchers() {
+	m := AllOf(
+		&allOfFakeMatcher{"taco", MATCH_FALSE, nil},
+		&allOfFakeMatcher{"burrito", MATCH_FALSE, nil},
+		&allOfFakeMatcher{"enchilada", MATCH_FALSE, nil})
+
+	ExpectEq("taco, and burrito, and enchilada", m.Description())
 }
 
 func (t *AllOfTest) EmptySet() {
