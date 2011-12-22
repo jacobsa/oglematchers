@@ -48,5 +48,20 @@ func init()                     { RegisterTestSuite(&AllOfTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *AllOfTest) DoesFoo() {
+func (t *AllOfTest) DescriptionWithEmptySet() {
+}
+
+func (t *AllOfTest) DescriptionWithNonEmptySet() {
+}
+
+func (t *AllOfTest) EmptySet() {
+}
+
+func (t *AllOfTest) OneMatcherSaysUndefinedAndOneSaysFalse() {
+}
+
+func (t *AllOfTest) OneMatcherSaysFalseAndOthersSayTrue() {
+}
+
+func (t *AllOfTest) AllMatchersSayTrue() {
 }
