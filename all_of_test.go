@@ -89,7 +89,25 @@ func (t *AllOfTest) OneMatcherSaysUndefinedAndSomeSayFalse() {
 }
 
 func (t *AllOfTest) OneMatcherSaysFalseAndOthersSayTrue() {
+	m := AllOf(
+		&allOfFakeMatcher{"", MATCH_TRUE, nil},
+		&allOfFakeMatcher{"", MATCH_FALSE, errors.New("taco")},
+		&allOfFakeMatcher{"", MATCH_TRUE, nil})
+
+	res, err := m.Matches(17)
+
+	ExpectEq(MATCH_FALSE, res)
+	ExpectThat(err, Error(Equals("taco")))
 }
 
 func (t *AllOfTest) AllMatchersSayTrue() {
+	m := AllOf(
+		&allOfFakeMatcher{"", MATCH_TRUE, nil},
+		&allOfFakeMatcher{"", MATCH_TRUE, nil},
+		&allOfFakeMatcher{"", MATCH_TRUE, nil})
+
+	res, err := m.Matches(17)
+
+	ExpectEq(MATCH_TRUE, res)
+	ExpectEq(nil, err)
 }
