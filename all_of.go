@@ -16,6 +16,7 @@
 package oglematchers
 
 import (
+	"strings"
 )
 
 // AllOf accepts a set of matchers S and returns a matcher that follows the
@@ -31,5 +32,46 @@ import (
 //
 // This is akin to a logical AND operation for matchers.
 func AllOf(matchers ...Matcher) Matcher {
-	return nil
+	return &allOfMatcher{matchers}
+}
+
+type allOfMatcher struct {
+	wrappedMatchers []Matcher
+}
+
+func (m *allOfMatcher) Description() string {
+	// Special case: the empty set.
+	if len(m.wrappedMatchers) == 0 {
+		return "is anything"
+	}
+
+	// Join the descriptions for the wrapped matchers.
+	wrappedDescs := make([]string, len(m.wrappedMatchers))
+	for i, wrappedMatcher := range m.wrappedMatchers {
+		wrappedDescs[i] = wrappedMatcher.Description()
+	}
+
+	return strings.Join(wrappedDescs, ", and ")
+}
+
+func (m *allOfMatcher) Matches(c interface{}) (res MatchResult, err error) {
+	res = MATCH_TRUE
+	for _, wrappedMatcher := range m.wrappedMatchers {
+		wrappedRes, wrappedErr := wrappedMatcher.Matches(c)
+
+		switch wrappedRes {
+		case MATCH_UNDEFINED:
+			// Return immediately.
+			res = MATCH_UNDEFINED
+			err = wrappedErr
+			return
+
+		case MATCH_FALSE:
+			// Note the failure.
+			res = MATCH_FALSE
+			err = wrappedErr
+		}
+	}
+
+	return
 }
