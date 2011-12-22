@@ -20,20 +20,20 @@ import (
 	"reflect"
 )
 
-// GreaterThan returns a matcher that matches integer, floating point, or
-// strings values v such that v > x. Comparison is not defined between numeric
+// GreaterOrEqual returns a matcher that matches integer, floating point, or
+// strings values v such that v >= x. Comparison is not defined between numeric
 // and string types, but is defined between all integer and floating point
 // types.
 //
 // x must itself be an integer, floating point, or string type; otherwise,
-// GreaterThan will panic.
-func GreaterThan(x interface{}) Matcher {
-	desc := fmt.Sprintf("greater than %v", x)
+// GreaterOrEqual will panic.
+func GreaterOrEqual(x interface{}) Matcher {
+	desc := fmt.Sprintf("greater than or equal to %v", x)
 
 	// Special case: make it clear that strings are strings.
 	if reflect.TypeOf(x).Kind() == reflect.String {
-		desc = fmt.Sprintf("greater than \"%s\"", x)
+		desc = fmt.Sprintf("greater than or equal to \"%s\"", x)
 	}
 
-	return transformDescription(Not(LessOrEqual(x)), desc)
+	return transformDescription(Not(LessThan(x)), desc)
 }
