@@ -17,5 +17,5 @@ package oglematchers
 
 // LessOrEqual(x) is equivalent to AnyOf(LessThan(x), Equals(x)).
 func LessOrEqual(x interface{}) Matcher {
-	return nil
+	return AnyOf(LessThan(x), Equals(x))
 }
