@@ -17,5 +17,16 @@ package oglematchers
 
 // Any returns a matcher that matches any value.
 func Any() Matcher {
-	return nil
+	return &anyMatcher{}
+}
+
+type anyMatcher struct {
+}
+
+func (m *anyMatcher) Description() string {
+	return "is anything"
+}
+
+func (m *anyMatcher) Matches(c interface{}) (MatchResult, error) {
+	return MATCH_TRUE, nil
 }
