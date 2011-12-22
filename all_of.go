@@ -18,20 +18,18 @@ package oglematchers
 import (
 )
 
-// AllOf accepts a set of values S and returns a matcher that follows the
+// AllOf accepts a set of matchers S and returns a matcher that follows the
 // algorithm below when considering a candidate c:
 //
-//  1. Return MATCH_TRUE if for every Matcher m in S, m matches c, and for
-//     every non-matcher v in S, Equals(v) matches c.
+//  1. Return MATCH_TRUE if for every Matcher m in S, m matches c.
 //
-//  2. Otherwise, if there is a value m in S such that m implements the Matcher
-//     interface and m returns MATCH_UNDEFINED for c, return MATCH_UNDEFINED
-//     with that matcher's error message.
+//  2. Otherwise, if there is a matcher m in S such that m returns
+//     MATCH_UNDEFINED for c, return MATCH_UNDEFINED with that matcher's error
+//     message.
 //
 //  3. Otherwise, return  MATCH_FALSE.
 //
-// This is akin to a logical AND operation for matchers, with non-matchers x
-// being treated as Equals(x).
-func AllOf(vals ...interface{}) Matcher {
+// This is akin to a logical AND operation for matchers.
+func AllOf(matchers []Matcher) Matcher {
 	return nil
 }
