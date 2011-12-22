@@ -5,6 +5,7 @@ GOFILES = \
 	any_of.go \
 	equals.go \
 	error.go \
+	greater_or_equal.go \
 	greater_than.go \
 	has_substr.go \
 	less_or_equal.go \
