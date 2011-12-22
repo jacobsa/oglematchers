@@ -23,5 +23,7 @@ package oglematchers
 // x must itself be an integer, floating point, or string type; otherwise,
 // LessOrEqual will panic.
 func LessOrEqual(x interface{}) Matcher {
-	return AnyOf(LessThan(x), Equals(x))
+	// Put LessThan last so that its error messages will be used in the event of
+	// failure.
+	return AnyOf(Equals(x), LessThan(x))
 }
