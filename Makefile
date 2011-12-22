@@ -6,6 +6,7 @@ GOFILES = \
 	equals.go \
 	error.go \
 	has_substr.go \
+	less_or_equal.go \
 	less_than.go \
 	matcher.go \
 	not.go \
