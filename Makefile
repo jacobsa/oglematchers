@@ -3,6 +3,7 @@ include $(GOROOT)/src/Make.inc
 TARG = github.com/jacobsa/oglematchers
 GOFILES = \
 	all_of.go \
+	any.go \
 	any_of.go \
 	equals.go \
 	error.go \
