@@ -25,18 +25,18 @@ import (
 // Helpers
 ////////////////////////////////////////////////////////////
 
-type LessOrEqualTest struct {
+type GreaterThanTest struct {
 }
 
-func init() { RegisterTestSuite(&LessOrEqualTest{}) }
+func init() { RegisterTestSuite(&GreaterThanTest{}) }
 
-type leTestCase struct {
+type gtTestCase struct {
 	candidate      interface{}
 	expectedResult MatchResult
 	expectedError  string
 }
 
-func (t *LessOrEqualTest) checkTestCases(matcher Matcher, cases []leTestCase) {
+func (t *GreaterThanTest) checkTestCases(matcher Matcher, cases []gtTestCase) {
 	for i, c := range cases {
 		result, err := matcher.Matches(c.candidate)
 
@@ -65,81 +65,81 @@ func (t *LessOrEqualTest) checkTestCases(matcher Matcher, cases []leTestCase) {
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessOrEqualTest) IntegerCandidateBadTypes() {
-	matcher := LessOrEqual(int(-150))
+func (t *GreaterThanTest) IntegerCandidateBadTypes() {
+	matcher := GreaterThan(int(-150))
 
-	cases := []leTestCase{
-		leTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{&leTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{leTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	cases := []gtTestCase{
+		gtTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{&gtTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{gtTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) FloatCandidateBadTypes() {
-	matcher := LessOrEqual(float32(-150))
+func (t *GreaterThanTest) FloatCandidateBadTypes() {
+	matcher := GreaterThan(float32(-150))
 
-	cases := []leTestCase{
-		leTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{&leTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{leTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	cases := []gtTestCase{
+		gtTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{&gtTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{"-151", MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{gtTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) StringCandidateBadTypes() {
-	matcher := LessOrEqual("17")
+func (t *GreaterThanTest) StringCandidateBadTypes() {
+	matcher := GreaterThan("17")
 
-	cases := []leTestCase{
-		leTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{int(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{int8(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{int16(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{int32(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{int64(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uint(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uint8(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uint16(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uint32(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uint64(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{float32(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{float64(0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{&leTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
-		leTestCase{leTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+	cases := []gtTestCase{
+		gtTestCase{true, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{int(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{int8(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{int16(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{int32(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{int64(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uint(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uint8(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uint16(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uint32(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uint64(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{uintptr(17), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{float32(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{float64(0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{complex64(-151), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{complex128(-151), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{[...]int{-151}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{make(chan int), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{func() {}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{map[int]int{}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{&gtTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{make([]int, 0), MATCH_UNDEFINED, "which is not comparable"},
+		gtTestCase{gtTestCase{}, MATCH_UNDEFINED, "which is not comparable"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) BadArgument() {
+func (t *GreaterThanTest) BadArgument() {
 	panicked := false
 
 	defer func() {
@@ -152,275 +152,275 @@ func (t *LessOrEqualTest) BadArgument() {
 		}
 	}()
 
-	LessOrEqual(complex128(0))
+	GreaterThan(complex128(0))
 }
 
 ////////////////////////////////////////////////////////////
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessOrEqualTest) NegativeIntegerLiteral() {
-	matcher := LessOrEqual(-150)
+func (t *GreaterThanTest) NegativeIntegerLiteral() {
+	matcher := GreaterThan(-150)
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to -150"
+	expectedDesc := "greater than -150"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-(1 << 30), MATCH_TRUE, ""},
-		leTestCase{-151, MATCH_TRUE, ""},
-		leTestCase{-150, MATCH_TRUE, ""},
-		leTestCase{-149, MATCH_FALSE, ""},
-		leTestCase{0, MATCH_FALSE, ""},
-		leTestCase{17, MATCH_FALSE, ""},
+		gtTestCase{-(1 << 30), MATCH_TRUE, ""},
+		gtTestCase{-151, MATCH_TRUE, ""},
+		gtTestCase{-150, MATCH_TRUE, ""},
+		gtTestCase{-149, MATCH_FALSE, ""},
+		gtTestCase{0, MATCH_FALSE, ""},
+		gtTestCase{17, MATCH_FALSE, ""},
 
-		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int(-151), MATCH_TRUE, ""},
-		leTestCase{int(-150), MATCH_TRUE, ""},
-		leTestCase{int(-149), MATCH_FALSE, ""},
-		leTestCase{int(0), MATCH_FALSE, ""},
-		leTestCase{int(17), MATCH_FALSE, ""},
+		gtTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int(-151), MATCH_TRUE, ""},
+		gtTestCase{int(-150), MATCH_TRUE, ""},
+		gtTestCase{int(-149), MATCH_FALSE, ""},
+		gtTestCase{int(0), MATCH_FALSE, ""},
+		gtTestCase{int(17), MATCH_FALSE, ""},
 
-		leTestCase{int8(-127), MATCH_FALSE, ""},
-		leTestCase{int8(0), MATCH_FALSE, ""},
-		leTestCase{int8(17), MATCH_FALSE, ""},
+		gtTestCase{int8(-127), MATCH_FALSE, ""},
+		gtTestCase{int8(0), MATCH_FALSE, ""},
+		gtTestCase{int8(17), MATCH_FALSE, ""},
 
-		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
-		leTestCase{int16(-151), MATCH_TRUE, ""},
-		leTestCase{int16(-150), MATCH_TRUE, ""},
-		leTestCase{int16(-149), MATCH_FALSE, ""},
-		leTestCase{int16(0), MATCH_FALSE, ""},
-		leTestCase{int16(17), MATCH_FALSE, ""},
+		gtTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		gtTestCase{int16(-151), MATCH_TRUE, ""},
+		gtTestCase{int16(-150), MATCH_TRUE, ""},
+		gtTestCase{int16(-149), MATCH_FALSE, ""},
+		gtTestCase{int16(0), MATCH_FALSE, ""},
+		gtTestCase{int16(17), MATCH_FALSE, ""},
 
-		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int32(-151), MATCH_TRUE, ""},
-		leTestCase{int32(-150), MATCH_TRUE, ""},
-		leTestCase{int32(-149), MATCH_FALSE, ""},
-		leTestCase{int32(0), MATCH_FALSE, ""},
-		leTestCase{int32(17), MATCH_FALSE, ""},
+		gtTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int32(-151), MATCH_TRUE, ""},
+		gtTestCase{int32(-150), MATCH_TRUE, ""},
+		gtTestCase{int32(-149), MATCH_FALSE, ""},
+		gtTestCase{int32(0), MATCH_FALSE, ""},
+		gtTestCase{int32(17), MATCH_FALSE, ""},
 
-		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int64(-151), MATCH_TRUE, ""},
-		leTestCase{int64(-150), MATCH_TRUE, ""},
-		leTestCase{int64(-149), MATCH_FALSE, ""},
-		leTestCase{int64(0), MATCH_FALSE, ""},
-		leTestCase{int64(17), MATCH_FALSE, ""},
+		gtTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int64(-151), MATCH_TRUE, ""},
+		gtTestCase{int64(-150), MATCH_TRUE, ""},
+		gtTestCase{int64(-149), MATCH_FALSE, ""},
+		gtTestCase{int64(0), MATCH_FALSE, ""},
+		gtTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
-		leTestCase{uint(0), MATCH_FALSE, ""},
-		leTestCase{uint(17), MATCH_FALSE, ""},
+		gtTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_FALSE, ""},
+		gtTestCase{uint(17), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_FALSE, ""},
-		leTestCase{uint8(17), MATCH_FALSE, ""},
-		leTestCase{uint8(253), MATCH_FALSE, ""},
+		gtTestCase{uint8(0), MATCH_FALSE, ""},
+		gtTestCase{uint8(17), MATCH_FALSE, ""},
+		gtTestCase{uint8(253), MATCH_FALSE, ""},
 
-		leTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
-		leTestCase{uint16(0), MATCH_FALSE, ""},
-		leTestCase{uint16(17), MATCH_FALSE, ""},
+		gtTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint16(0), MATCH_FALSE, ""},
+		gtTestCase{uint16(17), MATCH_FALSE, ""},
 
-		leTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
-		leTestCase{uint32(0), MATCH_FALSE, ""},
-		leTestCase{uint32(17), MATCH_FALSE, ""},
+		gtTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_FALSE, ""},
+		gtTestCase{uint32(17), MATCH_FALSE, ""},
 
-		leTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
-		leTestCase{uint64(0), MATCH_FALSE, ""},
-		leTestCase{uint64(17), MATCH_FALSE, ""},
+		gtTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_FALSE, ""},
+		gtTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{float32(-151), MATCH_TRUE, ""},
-		leTestCase{float32(-150.1), MATCH_TRUE, ""},
-		leTestCase{float32(-150), MATCH_TRUE, ""},
-		leTestCase{float32(-149.9), MATCH_FALSE, ""},
-		leTestCase{float32(0), MATCH_FALSE, ""},
-		leTestCase{float32(17), MATCH_FALSE, ""},
-		leTestCase{float32(160), MATCH_FALSE, ""},
+		gtTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{float32(-151), MATCH_TRUE, ""},
+		gtTestCase{float32(-150.1), MATCH_TRUE, ""},
+		gtTestCase{float32(-150), MATCH_TRUE, ""},
+		gtTestCase{float32(-149.9), MATCH_FALSE, ""},
+		gtTestCase{float32(0), MATCH_FALSE, ""},
+		gtTestCase{float32(17), MATCH_FALSE, ""},
+		gtTestCase{float32(160), MATCH_FALSE, ""},
 
-		leTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{float64(-151), MATCH_TRUE, ""},
-		leTestCase{float64(-150.1), MATCH_TRUE, ""},
-		leTestCase{float64(-150), MATCH_TRUE, ""},
-		leTestCase{float64(-149.9), MATCH_FALSE, ""},
-		leTestCase{float64(0), MATCH_FALSE, ""},
-		leTestCase{float64(17), MATCH_FALSE, ""},
-		leTestCase{float64(160), MATCH_FALSE, ""},
+		gtTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{float64(-151), MATCH_TRUE, ""},
+		gtTestCase{float64(-150.1), MATCH_TRUE, ""},
+		gtTestCase{float64(-150), MATCH_TRUE, ""},
+		gtTestCase{float64(-149.9), MATCH_FALSE, ""},
+		gtTestCase{float64(0), MATCH_FALSE, ""},
+		gtTestCase{float64(17), MATCH_FALSE, ""},
+		gtTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) ZeroIntegerLiteral() {
-	matcher := LessOrEqual(0)
+func (t *GreaterThanTest) ZeroIntegerLiteral() {
+	matcher := GreaterThan(0)
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 0"
+	expectedDesc := "greater than 0"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-(1 << 30), MATCH_TRUE, ""},
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{0, MATCH_TRUE, ""},
-		leTestCase{1, MATCH_FALSE, ""},
-		leTestCase{17, MATCH_FALSE, ""},
-		leTestCase{(1 << 30), MATCH_FALSE, ""},
+		gtTestCase{-(1 << 30), MATCH_TRUE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{0, MATCH_TRUE, ""},
+		gtTestCase{1, MATCH_FALSE, ""},
+		gtTestCase{17, MATCH_FALSE, ""},
+		gtTestCase{(1 << 30), MATCH_FALSE, ""},
 
-		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(0), MATCH_TRUE, ""},
-		leTestCase{int(1), MATCH_FALSE, ""},
-		leTestCase{int(17), MATCH_FALSE, ""},
+		gtTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(0), MATCH_TRUE, ""},
+		gtTestCase{int(1), MATCH_FALSE, ""},
+		gtTestCase{int(17), MATCH_FALSE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(0), MATCH_TRUE, ""},
-		leTestCase{int8(1), MATCH_FALSE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(0), MATCH_TRUE, ""},
+		gtTestCase{int8(1), MATCH_FALSE, ""},
 
-		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(0), MATCH_TRUE, ""},
-		leTestCase{int16(1), MATCH_FALSE, ""},
-		leTestCase{int16(17), MATCH_FALSE, ""},
+		gtTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(0), MATCH_TRUE, ""},
+		gtTestCase{int16(1), MATCH_FALSE, ""},
+		gtTestCase{int16(17), MATCH_FALSE, ""},
 
-		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(0), MATCH_TRUE, ""},
-		leTestCase{int32(1), MATCH_FALSE, ""},
-		leTestCase{int32(17), MATCH_FALSE, ""},
+		gtTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(0), MATCH_TRUE, ""},
+		gtTestCase{int32(1), MATCH_FALSE, ""},
+		gtTestCase{int32(17), MATCH_FALSE, ""},
 
-		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(0), MATCH_TRUE, ""},
-		leTestCase{int64(1), MATCH_FALSE, ""},
-		leTestCase{int64(17), MATCH_FALSE, ""},
+		gtTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(0), MATCH_TRUE, ""},
+		gtTestCase{int64(1), MATCH_FALSE, ""},
+		gtTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint((1 << 32) - 1), MATCH_FALSE, ""},
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(1), MATCH_FALSE, ""},
-		leTestCase{uint(17), MATCH_FALSE, ""},
+		gtTestCase{uint((1 << 32) - 1), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(1), MATCH_FALSE, ""},
+		gtTestCase{uint(17), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(1), MATCH_FALSE, ""},
-		leTestCase{uint8(17), MATCH_FALSE, ""},
-		leTestCase{uint8(253), MATCH_FALSE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(1), MATCH_FALSE, ""},
+		gtTestCase{uint8(17), MATCH_FALSE, ""},
+		gtTestCase{uint8(253), MATCH_FALSE, ""},
 
-		leTestCase{uint16((1 << 16) - 1), MATCH_FALSE, ""},
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(1), MATCH_FALSE, ""},
-		leTestCase{uint16(17), MATCH_FALSE, ""},
+		gtTestCase{uint16((1 << 16) - 1), MATCH_FALSE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(1), MATCH_FALSE, ""},
+		gtTestCase{uint16(17), MATCH_FALSE, ""},
 
-		leTestCase{uint32((1 << 32) - 1), MATCH_FALSE, ""},
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(1), MATCH_FALSE, ""},
-		leTestCase{uint32(17), MATCH_FALSE, ""},
+		gtTestCase{uint32((1 << 32) - 1), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(1), MATCH_FALSE, ""},
+		gtTestCase{uint32(17), MATCH_FALSE, ""},
 
-		leTestCase{uint64((1 << 64) - 1), MATCH_FALSE, ""},
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(1), MATCH_FALSE, ""},
-		leTestCase{uint64(17), MATCH_FALSE, ""},
+		gtTestCase{uint64((1 << 64) - 1), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(1), MATCH_FALSE, ""},
+		gtTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{float32(-1), MATCH_TRUE, ""},
-		leTestCase{float32(-0.1), MATCH_TRUE, ""},
-		leTestCase{float32(-0.0), MATCH_TRUE, ""},
-		leTestCase{float32(0), MATCH_TRUE, ""},
-		leTestCase{float32(0.1), MATCH_FALSE, ""},
-		leTestCase{float32(17), MATCH_FALSE, ""},
-		leTestCase{float32(160), MATCH_FALSE, ""},
+		gtTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{float32(-1), MATCH_TRUE, ""},
+		gtTestCase{float32(-0.1), MATCH_TRUE, ""},
+		gtTestCase{float32(-0.0), MATCH_TRUE, ""},
+		gtTestCase{float32(0), MATCH_TRUE, ""},
+		gtTestCase{float32(0.1), MATCH_FALSE, ""},
+		gtTestCase{float32(17), MATCH_FALSE, ""},
+		gtTestCase{float32(160), MATCH_FALSE, ""},
 
-		leTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(-0.1), MATCH_TRUE, ""},
-		leTestCase{float64(-0), MATCH_TRUE, ""},
-		leTestCase{float64(0), MATCH_TRUE, ""},
-		leTestCase{float64(0.1), MATCH_FALSE, ""},
-		leTestCase{float64(17), MATCH_FALSE, ""},
-		leTestCase{float64(160), MATCH_FALSE, ""},
+		gtTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(-0.1), MATCH_TRUE, ""},
+		gtTestCase{float64(-0), MATCH_TRUE, ""},
+		gtTestCase{float64(0), MATCH_TRUE, ""},
+		gtTestCase{float64(0.1), MATCH_FALSE, ""},
+		gtTestCase{float64(17), MATCH_FALSE, ""},
+		gtTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) PositiveIntegerLiteral() {
-	matcher := LessOrEqual(150)
+func (t *GreaterThanTest) PositiveIntegerLiteral() {
+	matcher := GreaterThan(150)
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 150"
+	expectedDesc := "greater than 150"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{149, MATCH_TRUE, ""},
-		leTestCase{150, MATCH_TRUE, ""},
-		leTestCase{151, MATCH_FALSE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{149, MATCH_TRUE, ""},
+		gtTestCase{150, MATCH_TRUE, ""},
+		gtTestCase{151, MATCH_FALSE, ""},
 
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(149), MATCH_TRUE, ""},
-		leTestCase{int(150), MATCH_TRUE, ""},
-		leTestCase{int(151), MATCH_FALSE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(149), MATCH_TRUE, ""},
+		gtTestCase{int(150), MATCH_TRUE, ""},
+		gtTestCase{int(151), MATCH_FALSE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(0), MATCH_TRUE, ""},
-		leTestCase{int8(17), MATCH_TRUE, ""},
-		leTestCase{int8(127), MATCH_TRUE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(0), MATCH_TRUE, ""},
+		gtTestCase{int8(17), MATCH_TRUE, ""},
+		gtTestCase{int8(127), MATCH_TRUE, ""},
 
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(149), MATCH_TRUE, ""},
-		leTestCase{int16(150), MATCH_TRUE, ""},
-		leTestCase{int16(151), MATCH_FALSE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(149), MATCH_TRUE, ""},
+		gtTestCase{int16(150), MATCH_TRUE, ""},
+		gtTestCase{int16(151), MATCH_FALSE, ""},
 
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(149), MATCH_TRUE, ""},
-		leTestCase{int32(150), MATCH_TRUE, ""},
-		leTestCase{int32(151), MATCH_FALSE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(149), MATCH_TRUE, ""},
+		gtTestCase{int32(150), MATCH_TRUE, ""},
+		gtTestCase{int32(151), MATCH_FALSE, ""},
 
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(149), MATCH_TRUE, ""},
-		leTestCase{int64(150), MATCH_TRUE, ""},
-		leTestCase{int64(151), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(149), MATCH_TRUE, ""},
+		gtTestCase{int64(150), MATCH_TRUE, ""},
+		gtTestCase{int64(151), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(149), MATCH_TRUE, ""},
-		leTestCase{uint(150), MATCH_TRUE, ""},
-		leTestCase{uint(151), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(149), MATCH_TRUE, ""},
+		gtTestCase{uint(150), MATCH_TRUE, ""},
+		gtTestCase{uint(151), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(127), MATCH_TRUE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(127), MATCH_TRUE, ""},
 
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(149), MATCH_TRUE, ""},
-		leTestCase{uint16(150), MATCH_TRUE, ""},
-		leTestCase{uint16(151), MATCH_FALSE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(149), MATCH_TRUE, ""},
+		gtTestCase{uint16(150), MATCH_TRUE, ""},
+		gtTestCase{uint16(151), MATCH_FALSE, ""},
 
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(149), MATCH_TRUE, ""},
-		leTestCase{uint32(150), MATCH_TRUE, ""},
-		leTestCase{uint32(151), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(149), MATCH_TRUE, ""},
+		gtTestCase{uint32(150), MATCH_TRUE, ""},
+		gtTestCase{uint32(151), MATCH_FALSE, ""},
 
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(149), MATCH_TRUE, ""},
-		leTestCase{uint64(150), MATCH_TRUE, ""},
-		leTestCase{uint64(151), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(149), MATCH_TRUE, ""},
+		gtTestCase{uint64(150), MATCH_TRUE, ""},
+		gtTestCase{uint64(151), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-1), MATCH_TRUE, ""},
-		leTestCase{float32(149), MATCH_TRUE, ""},
-		leTestCase{float32(149.9), MATCH_TRUE, ""},
-		leTestCase{float32(150), MATCH_TRUE, ""},
-		leTestCase{float32(150.1), MATCH_FALSE, ""},
-		leTestCase{float32(151), MATCH_FALSE, ""},
+		gtTestCase{float32(-1), MATCH_TRUE, ""},
+		gtTestCase{float32(149), MATCH_TRUE, ""},
+		gtTestCase{float32(149.9), MATCH_TRUE, ""},
+		gtTestCase{float32(150), MATCH_TRUE, ""},
+		gtTestCase{float32(150.1), MATCH_FALSE, ""},
+		gtTestCase{float32(151), MATCH_FALSE, ""},
 
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(149), MATCH_TRUE, ""},
-		leTestCase{float64(149.9), MATCH_TRUE, ""},
-		leTestCase{float64(150), MATCH_TRUE, ""},
-		leTestCase{float64(150.1), MATCH_FALSE, ""},
-		leTestCase{float64(151), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(149), MATCH_TRUE, ""},
+		gtTestCase{float64(149.9), MATCH_TRUE, ""},
+		gtTestCase{float64(150), MATCH_TRUE, ""},
+		gtTestCase{float64(150.1), MATCH_FALSE, ""},
+		gtTestCase{float64(151), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -430,177 +430,177 @@ func (t *LessOrEqualTest) PositiveIntegerLiteral() {
 // Float literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessOrEqualTest) NegativeFloatLiteral() {
-	matcher := LessOrEqual(-150.1)
+func (t *GreaterThanTest) NegativeFloatLiteral() {
+	matcher := GreaterThan(-150.1)
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to -150.1"
+	expectedDesc := "greater than -150.1"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-(1 << 30), MATCH_TRUE, ""},
-		leTestCase{-151, MATCH_TRUE, ""},
-		leTestCase{-150.1, MATCH_TRUE, ""},
-		leTestCase{-150, MATCH_FALSE, ""},
-		leTestCase{-149, MATCH_FALSE, ""},
-		leTestCase{0, MATCH_FALSE, ""},
-		leTestCase{17, MATCH_FALSE, ""},
+		gtTestCase{-(1 << 30), MATCH_TRUE, ""},
+		gtTestCase{-151, MATCH_TRUE, ""},
+		gtTestCase{-150.1, MATCH_TRUE, ""},
+		gtTestCase{-150, MATCH_FALSE, ""},
+		gtTestCase{-149, MATCH_FALSE, ""},
+		gtTestCase{0, MATCH_FALSE, ""},
+		gtTestCase{17, MATCH_FALSE, ""},
 
-		leTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int(-151), MATCH_TRUE, ""},
-		leTestCase{int(-150), MATCH_FALSE, ""},
-		leTestCase{int(-149), MATCH_FALSE, ""},
-		leTestCase{int(0), MATCH_FALSE, ""},
-		leTestCase{int(17), MATCH_FALSE, ""},
+		gtTestCase{int(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int(-151), MATCH_TRUE, ""},
+		gtTestCase{int(-150), MATCH_FALSE, ""},
+		gtTestCase{int(-149), MATCH_FALSE, ""},
+		gtTestCase{int(0), MATCH_FALSE, ""},
+		gtTestCase{int(17), MATCH_FALSE, ""},
 
-		leTestCase{int8(-127), MATCH_FALSE, ""},
-		leTestCase{int8(0), MATCH_FALSE, ""},
-		leTestCase{int8(17), MATCH_FALSE, ""},
+		gtTestCase{int8(-127), MATCH_FALSE, ""},
+		gtTestCase{int8(0), MATCH_FALSE, ""},
+		gtTestCase{int8(17), MATCH_FALSE, ""},
 
-		leTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
-		leTestCase{int16(-151), MATCH_TRUE, ""},
-		leTestCase{int16(-150), MATCH_FALSE, ""},
-		leTestCase{int16(-149), MATCH_FALSE, ""},
-		leTestCase{int16(0), MATCH_FALSE, ""},
-		leTestCase{int16(17), MATCH_FALSE, ""},
+		gtTestCase{int16(-(1 << 14)), MATCH_TRUE, ""},
+		gtTestCase{int16(-151), MATCH_TRUE, ""},
+		gtTestCase{int16(-150), MATCH_FALSE, ""},
+		gtTestCase{int16(-149), MATCH_FALSE, ""},
+		gtTestCase{int16(0), MATCH_FALSE, ""},
+		gtTestCase{int16(17), MATCH_FALSE, ""},
 
-		leTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int32(-151), MATCH_TRUE, ""},
-		leTestCase{int32(-150), MATCH_FALSE, ""},
-		leTestCase{int32(-149), MATCH_FALSE, ""},
-		leTestCase{int32(0), MATCH_FALSE, ""},
-		leTestCase{int32(17), MATCH_FALSE, ""},
+		gtTestCase{int32(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int32(-151), MATCH_TRUE, ""},
+		gtTestCase{int32(-150), MATCH_FALSE, ""},
+		gtTestCase{int32(-149), MATCH_FALSE, ""},
+		gtTestCase{int32(0), MATCH_FALSE, ""},
+		gtTestCase{int32(17), MATCH_FALSE, ""},
 
-		leTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{int64(-151), MATCH_TRUE, ""},
-		leTestCase{int64(-150), MATCH_FALSE, ""},
-		leTestCase{int64(-149), MATCH_FALSE, ""},
-		leTestCase{int64(0), MATCH_FALSE, ""},
-		leTestCase{int64(17), MATCH_FALSE, ""},
+		gtTestCase{int64(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{int64(-151), MATCH_TRUE, ""},
+		gtTestCase{int64(-150), MATCH_FALSE, ""},
+		gtTestCase{int64(-149), MATCH_FALSE, ""},
+		gtTestCase{int64(0), MATCH_FALSE, ""},
+		gtTestCase{int64(17), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
-		leTestCase{uint(0), MATCH_FALSE, ""},
-		leTestCase{uint(17), MATCH_FALSE, ""},
+		gtTestCase{uint((1 << 32) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_FALSE, ""},
+		gtTestCase{uint(17), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_FALSE, ""},
-		leTestCase{uint8(17), MATCH_FALSE, ""},
-		leTestCase{uint8(253), MATCH_FALSE, ""},
+		gtTestCase{uint8(0), MATCH_FALSE, ""},
+		gtTestCase{uint8(17), MATCH_FALSE, ""},
+		gtTestCase{uint8(253), MATCH_FALSE, ""},
 
-		leTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
-		leTestCase{uint16(0), MATCH_FALSE, ""},
-		leTestCase{uint16(17), MATCH_FALSE, ""},
+		gtTestCase{uint16((1 << 16) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint16(0), MATCH_FALSE, ""},
+		gtTestCase{uint16(17), MATCH_FALSE, ""},
 
-		leTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
-		leTestCase{uint32(0), MATCH_FALSE, ""},
-		leTestCase{uint32(17), MATCH_FALSE, ""},
+		gtTestCase{uint32((1 << 32) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_FALSE, ""},
+		gtTestCase{uint32(17), MATCH_FALSE, ""},
 
-		leTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
-		leTestCase{uint64(0), MATCH_FALSE, ""},
-		leTestCase{uint64(17), MATCH_FALSE, ""},
+		gtTestCase{uint64((1 << 64) - 151), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_FALSE, ""},
+		gtTestCase{uint64(17), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{float32(-151), MATCH_TRUE, ""},
-		leTestCase{float32(-150.2), MATCH_TRUE, ""},
-		leTestCase{float32(-150.1), MATCH_TRUE, ""},
-		leTestCase{float32(-150), MATCH_FALSE, ""},
-		leTestCase{float32(0), MATCH_FALSE, ""},
-		leTestCase{float32(17), MATCH_FALSE, ""},
-		leTestCase{float32(160), MATCH_FALSE, ""},
+		gtTestCase{float32(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{float32(-151), MATCH_TRUE, ""},
+		gtTestCase{float32(-150.2), MATCH_TRUE, ""},
+		gtTestCase{float32(-150.1), MATCH_TRUE, ""},
+		gtTestCase{float32(-150), MATCH_FALSE, ""},
+		gtTestCase{float32(0), MATCH_FALSE, ""},
+		gtTestCase{float32(17), MATCH_FALSE, ""},
+		gtTestCase{float32(160), MATCH_FALSE, ""},
 
-		leTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
-		leTestCase{float64(-151), MATCH_TRUE, ""},
-		leTestCase{float64(-150.2), MATCH_TRUE, ""},
-		leTestCase{float64(-150.1), MATCH_TRUE, ""},
-		leTestCase{float64(-150), MATCH_FALSE, ""},
-		leTestCase{float64(0), MATCH_FALSE, ""},
-		leTestCase{float64(17), MATCH_FALSE, ""},
-		leTestCase{float64(160), MATCH_FALSE, ""},
+		gtTestCase{float64(-(1 << 30)), MATCH_TRUE, ""},
+		gtTestCase{float64(-151), MATCH_TRUE, ""},
+		gtTestCase{float64(-150.2), MATCH_TRUE, ""},
+		gtTestCase{float64(-150.1), MATCH_TRUE, ""},
+		gtTestCase{float64(-150), MATCH_FALSE, ""},
+		gtTestCase{float64(0), MATCH_FALSE, ""},
+		gtTestCase{float64(17), MATCH_FALSE, ""},
+		gtTestCase{float64(160), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) PositiveFloatLiteral() {
-	matcher := LessOrEqual(149.9)
+func (t *GreaterThanTest) PositiveFloatLiteral() {
+	matcher := GreaterThan(149.9)
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 149.9"
+	expectedDesc := "greater than 149.9"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{149, MATCH_TRUE, ""},
-		leTestCase{149.9, MATCH_TRUE, ""},
-		leTestCase{150, MATCH_FALSE, ""},
-		leTestCase{151, MATCH_FALSE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{149, MATCH_TRUE, ""},
+		gtTestCase{149.9, MATCH_TRUE, ""},
+		gtTestCase{150, MATCH_FALSE, ""},
+		gtTestCase{151, MATCH_FALSE, ""},
 
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(149), MATCH_TRUE, ""},
-		leTestCase{int(150), MATCH_FALSE, ""},
-		leTestCase{int(151), MATCH_FALSE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(149), MATCH_TRUE, ""},
+		gtTestCase{int(150), MATCH_FALSE, ""},
+		gtTestCase{int(151), MATCH_FALSE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(0), MATCH_TRUE, ""},
-		leTestCase{int8(17), MATCH_TRUE, ""},
-		leTestCase{int8(127), MATCH_TRUE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(0), MATCH_TRUE, ""},
+		gtTestCase{int8(17), MATCH_TRUE, ""},
+		gtTestCase{int8(127), MATCH_TRUE, ""},
 
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(149), MATCH_TRUE, ""},
-		leTestCase{int16(150), MATCH_FALSE, ""},
-		leTestCase{int16(151), MATCH_FALSE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(149), MATCH_TRUE, ""},
+		gtTestCase{int16(150), MATCH_FALSE, ""},
+		gtTestCase{int16(151), MATCH_FALSE, ""},
 
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(149), MATCH_TRUE, ""},
-		leTestCase{int32(150), MATCH_FALSE, ""},
-		leTestCase{int32(151), MATCH_FALSE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(149), MATCH_TRUE, ""},
+		gtTestCase{int32(150), MATCH_FALSE, ""},
+		gtTestCase{int32(151), MATCH_FALSE, ""},
 
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(149), MATCH_TRUE, ""},
-		leTestCase{int64(150), MATCH_FALSE, ""},
-		leTestCase{int64(151), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(149), MATCH_TRUE, ""},
+		gtTestCase{int64(150), MATCH_FALSE, ""},
+		gtTestCase{int64(151), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(149), MATCH_TRUE, ""},
-		leTestCase{uint(150), MATCH_FALSE, ""},
-		leTestCase{uint(151), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(149), MATCH_TRUE, ""},
+		gtTestCase{uint(150), MATCH_FALSE, ""},
+		gtTestCase{uint(151), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(127), MATCH_TRUE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(127), MATCH_TRUE, ""},
 
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(149), MATCH_TRUE, ""},
-		leTestCase{uint16(150), MATCH_FALSE, ""},
-		leTestCase{uint16(151), MATCH_FALSE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(149), MATCH_TRUE, ""},
+		gtTestCase{uint16(150), MATCH_FALSE, ""},
+		gtTestCase{uint16(151), MATCH_FALSE, ""},
 
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(149), MATCH_TRUE, ""},
-		leTestCase{uint32(150), MATCH_FALSE, ""},
-		leTestCase{uint32(151), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(149), MATCH_TRUE, ""},
+		gtTestCase{uint32(150), MATCH_FALSE, ""},
+		gtTestCase{uint32(151), MATCH_FALSE, ""},
 
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(149), MATCH_TRUE, ""},
-		leTestCase{uint64(150), MATCH_FALSE, ""},
-		leTestCase{uint64(151), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(149), MATCH_TRUE, ""},
+		gtTestCase{uint64(150), MATCH_FALSE, ""},
+		gtTestCase{uint64(151), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-1), MATCH_TRUE, ""},
-		leTestCase{float32(149), MATCH_TRUE, ""},
-		leTestCase{float32(149.8), MATCH_TRUE, ""},
-		leTestCase{float32(149.9), MATCH_TRUE, ""},
-		leTestCase{float32(150), MATCH_FALSE, ""},
-		leTestCase{float32(151), MATCH_FALSE, ""},
+		gtTestCase{float32(-1), MATCH_TRUE, ""},
+		gtTestCase{float32(149), MATCH_TRUE, ""},
+		gtTestCase{float32(149.8), MATCH_TRUE, ""},
+		gtTestCase{float32(149.9), MATCH_TRUE, ""},
+		gtTestCase{float32(150), MATCH_FALSE, ""},
+		gtTestCase{float32(151), MATCH_FALSE, ""},
 
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(149), MATCH_TRUE, ""},
-		leTestCase{float64(149.8), MATCH_TRUE, ""},
-		leTestCase{float64(149.9), MATCH_TRUE, ""},
-		leTestCase{float64(150), MATCH_FALSE, ""},
-		leTestCase{float64(151), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(149), MATCH_TRUE, ""},
+		gtTestCase{float64(149.8), MATCH_TRUE, ""},
+		gtTestCase{float64(149.9), MATCH_TRUE, ""},
+		gtTestCase{float64(150), MATCH_FALSE, ""},
+		gtTestCase{float64(151), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -610,401 +610,401 @@ func (t *LessOrEqualTest) PositiveFloatLiteral() {
 // Subtle cases
 ////////////////////////////////////////////////////////////
 
-func (t *LessOrEqualTest) Int64NotExactlyRepresentableBySinglePrecision() {
+func (t *GreaterThanTest) Int64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
-	matcher := LessOrEqual(int64(kTwoTo25 + 1))
+	matcher := GreaterThan(int64(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 33554433"
+	expectedDesc := "greater than 33554433"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 1, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
+		gtTestCase{kTwoTo25 + 1, MATCH_TRUE, ""},
+		gtTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
 
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(127), MATCH_TRUE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(127), MATCH_TRUE, ""},
 
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(0), MATCH_TRUE, ""},
-		leTestCase{int16(32767), MATCH_TRUE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(0), MATCH_TRUE, ""},
+		gtTestCase{int16(32767), MATCH_TRUE, ""},
 
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(255), MATCH_TRUE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(255), MATCH_TRUE, ""},
 
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(65535), MATCH_TRUE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{float32(-1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) Int64NotExactlyRepresentableByDoublePrecision() {
+func (t *GreaterThanTest) Int64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
-	matcher := LessOrEqual(int64(kTwoTo54 + 1))
+	matcher := GreaterThan(int64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 18014398509481985"
+	expectedDesc := "greater than 18014398509481985"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{1 << 30, MATCH_TRUE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{1 << 30, MATCH_TRUE, ""},
 
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(127), MATCH_TRUE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(127), MATCH_TRUE, ""},
 
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(0), MATCH_TRUE, ""},
-		leTestCase{int16(32767), MATCH_TRUE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(0), MATCH_TRUE, ""},
+		gtTestCase{int16(32767), MATCH_TRUE, ""},
 
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
 
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(255), MATCH_TRUE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(255), MATCH_TRUE, ""},
 
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(65535), MATCH_TRUE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
 
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) Uint64NotExactlyRepresentableBySinglePrecision() {
+func (t *GreaterThanTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
-	matcher := LessOrEqual(uint64(kTwoTo25 + 1))
+	matcher := GreaterThan(uint64(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 33554433"
+	expectedDesc := "greater than 33554433"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 1, MATCH_TRUE, ""},
-		leTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{kTwoTo25 + 0, MATCH_TRUE, ""},
+		gtTestCase{kTwoTo25 + 1, MATCH_TRUE, ""},
+		gtTestCase{kTwoTo25 + 2, MATCH_FALSE, ""},
 
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(127), MATCH_TRUE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(127), MATCH_TRUE, ""},
 
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(0), MATCH_TRUE, ""},
-		leTestCase{int16(32767), MATCH_TRUE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(0), MATCH_TRUE, ""},
+		gtTestCase{int16(32767), MATCH_TRUE, ""},
 
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(255), MATCH_TRUE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(255), MATCH_TRUE, ""},
 
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(65535), MATCH_TRUE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint32(kTwoTo25 + 2), MATCH_FALSE, ""},
 
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{float32(-1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
-		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 2), MATCH_FALSE, ""},
+		gtTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) Uint64NotExactlyRepresentableByDoublePrecision() {
+func (t *GreaterThanTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
-	matcher := LessOrEqual(uint64(kTwoTo54 + 1))
+	matcher := GreaterThan(uint64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 18014398509481985"
+	expectedDesc := "greater than 18014398509481985"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{-1, MATCH_TRUE, ""},
-		leTestCase{1 << 30, MATCH_TRUE, ""},
+		gtTestCase{-1, MATCH_TRUE, ""},
+		gtTestCase{1 << 30, MATCH_TRUE, ""},
 
-		leTestCase{int(-1), MATCH_TRUE, ""},
-		leTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
+		gtTestCase{int(-1), MATCH_TRUE, ""},
+		gtTestCase{int(math.MaxInt32), MATCH_TRUE, ""},
 
-		leTestCase{int8(-1), MATCH_TRUE, ""},
-		leTestCase{int8(127), MATCH_TRUE, ""},
+		gtTestCase{int8(-1), MATCH_TRUE, ""},
+		gtTestCase{int8(127), MATCH_TRUE, ""},
 
-		leTestCase{int16(-1), MATCH_TRUE, ""},
-		leTestCase{int16(0), MATCH_TRUE, ""},
-		leTestCase{int16(32767), MATCH_TRUE, ""},
+		gtTestCase{int16(-1), MATCH_TRUE, ""},
+		gtTestCase{int16(0), MATCH_TRUE, ""},
+		gtTestCase{int16(32767), MATCH_TRUE, ""},
 
-		leTestCase{int32(-1), MATCH_TRUE, ""},
-		leTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
+		gtTestCase{int32(-1), MATCH_TRUE, ""},
+		gtTestCase{int32(math.MaxInt32), MATCH_TRUE, ""},
 
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint(0), MATCH_TRUE, ""},
-		leTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
+		gtTestCase{uint(0), MATCH_TRUE, ""},
+		gtTestCase{uint(math.MaxUint32), MATCH_TRUE, ""},
 
-		leTestCase{uint8(0), MATCH_TRUE, ""},
-		leTestCase{uint8(255), MATCH_TRUE, ""},
+		gtTestCase{uint8(0), MATCH_TRUE, ""},
+		gtTestCase{uint8(255), MATCH_TRUE, ""},
 
-		leTestCase{uint16(0), MATCH_TRUE, ""},
-		leTestCase{uint16(65535), MATCH_TRUE, ""},
+		gtTestCase{uint16(0), MATCH_TRUE, ""},
+		gtTestCase{uint16(65535), MATCH_TRUE, ""},
 
-		leTestCase{uint32(0), MATCH_TRUE, ""},
-		leTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
+		gtTestCase{uint32(0), MATCH_TRUE, ""},
+		gtTestCase{uint32(math.MaxUint32), MATCH_TRUE, ""},
 
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 2), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) Float32AboveExactIntegerRange() {
+func (t *GreaterThanTest) Float32AboveExactIntegerRange() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
-	matcher := LessOrEqual(float32(kTwoTo25 + 1))
+	matcher := GreaterThan(float32(kTwoTo25 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 3.3554432e+07"
+	expectedDesc := "greater than 3.3554432e+07"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo25 + 3), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float32(-1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
-		leTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{float32(-1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 2), MATCH_TRUE, ""},
+		gtTestCase{float32(kTwoTo25 + 3), MATCH_FALSE, ""},
 
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 - 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 - 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 0), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo25 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) Float64AboveExactIntegerRange() {
+func (t *GreaterThanTest) Float64AboveExactIntegerRange() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
-	matcher := LessOrEqual(float64(kTwoTo54 + 1))
+	matcher := GreaterThan(float64(kTwoTo54 + 1))
 
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to 1.8014398509481984e+16"
+	expectedDesc := "greater than 1.8014398509481984e+16"
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
+	cases := []gtTestCase{
 		// Signed integers.
-		leTestCase{int64(-1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		leTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		gtTestCase{int64(-1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		gtTestCase{int64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Unsigned integers.
-		leTestCase{uint64(0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		leTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		gtTestCase{uint64(0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		gtTestCase{uint64(kTwoTo54 + 3), MATCH_FALSE, ""},
 
 		// Floating point.
-		leTestCase{float64(-1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
-		leTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
+		gtTestCase{float64(-1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 - 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 - 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 0), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 1), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 2), MATCH_TRUE, ""},
+		gtTestCase{float64(kTwoTo54 + 3), MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -1014,57 +1014,57 @@ func (t *LessOrEqualTest) Float64AboveExactIntegerRange() {
 // String literals
 ////////////////////////////////////////////////////////////
 
-func (t *LessOrEqualTest) EmptyString() {
-	matcher := LessOrEqual("")
+func (t *GreaterThanTest) EmptyString() {
+	matcher := GreaterThan("")
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to \"\""
+	expectedDesc := "greater than \"\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
-		leTestCase{"", MATCH_TRUE, ""},
-		leTestCase{"\x00", MATCH_FALSE, ""},
-		leTestCase{"a", MATCH_FALSE, ""},
-		leTestCase{"foo", MATCH_FALSE, ""},
+	cases := []gtTestCase{
+		gtTestCase{"", MATCH_TRUE, ""},
+		gtTestCase{"\x00", MATCH_FALSE, ""},
+		gtTestCase{"a", MATCH_FALSE, ""},
+		gtTestCase{"foo", MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) SingleNullByte() {
-	matcher := LessOrEqual("\x00")
+func (t *GreaterThanTest) SingleNullByte() {
+	matcher := GreaterThan("\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to \"\x00\""
+	expectedDesc := "greater than \"\x00\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
-		leTestCase{"", MATCH_TRUE, ""},
-		leTestCase{"\x00", MATCH_TRUE, ""},
-		leTestCase{"\x00\x00", MATCH_FALSE, ""},
-		leTestCase{"a", MATCH_FALSE, ""},
-		leTestCase{"foo", MATCH_FALSE, ""},
+	cases := []gtTestCase{
+		gtTestCase{"", MATCH_TRUE, ""},
+		gtTestCase{"\x00", MATCH_TRUE, ""},
+		gtTestCase{"\x00\x00", MATCH_FALSE, ""},
+		gtTestCase{"a", MATCH_FALSE, ""},
+		gtTestCase{"foo", MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *LessOrEqualTest) LongerString() {
-	matcher := LessOrEqual("foo\x00")
+func (t *GreaterThanTest) LongerString() {
+	matcher := GreaterThan("foo\x00")
 	desc := matcher.Description()
-	expectedDesc := "less than or equal to \"foo\x00\""
+	expectedDesc := "greater than \"foo\x00\""
 
 	ExpectThat(desc, Equals(expectedDesc))
 
-	cases := []leTestCase{
-		leTestCase{"", MATCH_TRUE, ""},
-		leTestCase{"\x00", MATCH_TRUE, ""},
-		leTestCase{"bar", MATCH_TRUE, ""},
-		leTestCase{"foo", MATCH_TRUE, ""},
-		leTestCase{"foo\x00", MATCH_TRUE, ""},
-		leTestCase{"foo\x00\x00", MATCH_FALSE, ""},
-		leTestCase{"fooa", MATCH_FALSE, ""},
-		leTestCase{"qux", MATCH_FALSE, ""},
+	cases := []gtTestCase{
+		gtTestCase{"", MATCH_TRUE, ""},
+		gtTestCase{"\x00", MATCH_TRUE, ""},
+		gtTestCase{"bar", MATCH_TRUE, ""},
+		gtTestCase{"foo", MATCH_TRUE, ""},
+		gtTestCase{"foo\x00", MATCH_TRUE, ""},
+		gtTestCase{"foo\x00\x00", MATCH_FALSE, ""},
+		gtTestCase{"fooa", MATCH_FALSE, ""},
+		gtTestCase{"qux", MATCH_FALSE, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
