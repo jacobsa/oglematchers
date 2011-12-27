@@ -36,7 +36,7 @@ type ErrorTest struct {
 
 func init() { RegisterTestSuite(&ErrorTest{}) }
 
-func (t *ErrorTest) SetUp() {
+func (t *ErrorTest) SetUp(i *TestInfo) {
 	wrapped := &fakeMatcher{
 		func(c interface{}) (bool, error) {
 			t.matcherCalled = true
