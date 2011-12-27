@@ -41,12 +41,12 @@ func (m *panicsMatcher) Description() string {
 	return "panics with: " + m.wrappedMatcher.Description()
 }
 
-func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
+func (m *panicsMatcher) Matches(c interface{}) (res bool, err error) {
 	// Make sure c is a zero-arg function.
 	v := reflect.ValueOf(c)
 	if v.Kind() != reflect.Func || v.Type().NumIn() != 0 {
-		res = MATCH_UNDEFINED
-		err = errors.New("which is not a zero-arg function")
+		res = false
+		err = NewFatalError("which is not a zero-arg function")
 		return
 	}
 
@@ -56,7 +56,7 @@ func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
 			res, err = m.wrappedMatcher.Matches(e)
 
 			// Set a clearer error message if the matcher said no.
-			if res != MATCH_TRUE {
+			if !res {
 				wrappedClause := ""
 				if err != nil {
 					wrappedClause = ", " + err.Error()
@@ -69,8 +69,8 @@ func (m *panicsMatcher) Matches(c interface{}) (res MatchResult, err error) {
 
 	v.Call([]reflect.Value{})
 
-	// If we got here, the function didn't panic.
-	res = MATCH_FALSE
+	// If we get here, the function didn't panic.
+	res = false
 	err = errors.New("which didn't panic")
 	return
 }
