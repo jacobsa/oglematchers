@@ -27,6 +27,6 @@ func (m *anyMatcher) Description() string {
 	return "is anything"
 }
 
-func (m *anyMatcher) Matches(c interface{}) (MatchResult, error) {
-	return MATCH_TRUE, nil
+func (m *anyMatcher) Matches(c interface{}) (bool, error) {
+	return true, nil
 }
