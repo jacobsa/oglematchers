@@ -22,13 +22,12 @@ import (
 // AllOf accepts a set of matchers S and returns a matcher that follows the
 // algorithm below when considering a candidate c:
 //
-//  1. Return MATCH_TRUE if for every Matcher m in S, m matches c.
+//  1. Return true if for every Matcher m in S, m matches c.
 //
-//  2. Otherwise, if there is a matcher m in S such that m returns
-//     MATCH_UNDEFINED for c, return MATCH_UNDEFINED with that matcher's error
-//     message.
+//  2. Otherwise, if there is a matcher m in S such that m returns a fatal
+//     error for c, return that matcher's error message.
 //
-//  3. Otherwise, return  MATCH_FALSE.
+//  3. Otherwise, return false with the error from some wrapped matcher.
 //
 // This is akin to a logical AND operation for matchers.
 func AllOf(matchers ...Matcher) Matcher {
@@ -54,22 +53,21 @@ func (m *allOfMatcher) Description() string {
 	return strings.Join(wrappedDescs, ", and ")
 }
 
-func (m *allOfMatcher) Matches(c interface{}) (res MatchResult, err error) {
-	res = MATCH_TRUE
+func (m *allOfMatcher) Matches(c interface{}) (res bool, err error) {
+	res = true
+
 	for _, wrappedMatcher := range m.wrappedMatchers {
 		wrappedRes, wrappedErr := wrappedMatcher.Matches(c)
 
-		switch wrappedRes {
-		case MATCH_UNDEFINED:
-			// Return immediately.
-			res = MATCH_UNDEFINED
+		if !wrappedRes {
+			res = false
 			err = wrappedErr
-			return
 
-		case MATCH_FALSE:
-			// Note the failure.
-			res = MATCH_FALSE
-			err = wrappedErr
+			// If the error is fatal, return immediately with this error.
+			_, ok := wrappedErr.(*FatalError)
+			if ok {
+				return
+			}
 		}
 	}
 
