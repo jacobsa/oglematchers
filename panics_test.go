@@ -28,7 +28,7 @@ import (
 type PanicsTest struct {
 	matcherCalled bool
 	suppliedCandidate interface{}
-	wrappedResult MatchResult
+	wrappedResult bool
 	wrappedError error
 
 	matcher Matcher
@@ -38,7 +38,7 @@ func init() { RegisterTestSuite(&PanicsTest{}) }
 
 func (t *PanicsTest) SetUp() {
 	wrapped := &fakeMatcher{
-		func(c interface{}) (MatchResult, error) {
+		func(c interface{}) (bool, error) {
 			t.matcherCalled = true
 			t.suppliedCandidate = c
 			return t.wrappedResult, t.wrappedError
@@ -60,22 +60,25 @@ func (t *PanicsTest) Description() {
 func (t *PanicsTest) CandidateIsNil() {
 	res, err := t.matcher.Matches(nil)
 
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which is not a zero-arg function")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *PanicsTest) CandidateIsString() {
 	res, err := t.matcher.Matches("taco")
 
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which is not a zero-arg function")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *PanicsTest) CandidateTakesArgs() {
 	res, err := t.matcher.Matches(func(i int) string { return "" })
 
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which is not a zero-arg function")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *PanicsTest) CallsFunction() {
@@ -91,8 +94,9 @@ func (t *PanicsTest) CallsFunction() {
 func (t *PanicsTest) FunctionDoesntPanic() {
 	res, err := t.matcher.Matches(func() {})
 
-	ExpectThat(res, Equals(MATCH_FALSE))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which didn't panic")))
+	ExpectFalse(isFatal(err))
 }
 
 func (t *PanicsTest) CallsWrappedMatcher() {
@@ -102,41 +106,50 @@ func (t *PanicsTest) CallsWrappedMatcher() {
 	ExpectThat(t.suppliedCandidate, Equals(expectedErr))
 }
 
-func (t *PanicsTest) ReturnsWrappedMatcherResult() {
-	t.wrappedResult = MatchResult(17)
-	res, _ := t.matcher.Matches(func() { panic("") })
+func (t *PanicsTest) WrappedReturnsTrue() {
+	t.wrappedResult = true
+	res, err := t.matcher.Matches(func() { panic("") })
 
-	ExpectThat(res, Equals(t.wrappedResult))
+	ExpectTrue(res)
+	ExpectEq(nil, err)
 }
 
-func (t *PanicsTest) WrappedReturnsUndefinedWithoutError() {
-	t.wrappedResult = MATCH_UNDEFINED
-	t.wrappedError = nil
-	_, err := t.matcher.Matches(func() { panic(17) })
+func (t *PanicsTest) WrappedReturnsFatalErrorWithoutText() {
+	t.wrappedResult = false
+	t.wrappedError = NewFatalError("")
+	res, err := t.matcher.Matches(func() { panic(17) })
 
+	ExpectFalse(res)
 	ExpectThat(err, Error(Equals("which panicked with: 17")))
+	ExpectFalse(isFatal(err))
 }
 
-func (t *PanicsTest) WrappedReturnsUndefinedWithError() {
-	t.wrappedResult = MATCH_UNDEFINED
-	t.wrappedError = errors.New("which blah")
-	_, err := t.matcher.Matches(func() { panic(17) })
+func (t *PanicsTest) WrappedReturnsFatalErrorWithText() {
+	t.wrappedResult = false
+	t.wrappedError = NewFatalError("which blah")
+	res, err := t.matcher.Matches(func() { panic(17) })
 
+	ExpectFalse(res)
 	ExpectThat(err, Error(Equals("which panicked with: 17, which blah")))
+	ExpectFalse(isFatal(err))
 }
 
-func (t *PanicsTest) WrappedReturnsFalseWithoutError() {
-	t.wrappedResult = MATCH_FALSE
-	t.wrappedError = nil
-	_, err := t.matcher.Matches(func() { panic(17) })
+func (t *PanicsTest) WrappedReturnsNonFatalErrorWithoutText() {
+	t.wrappedResult = false
+	t.wrappedError = errors.New("")
+	res, err := t.matcher.Matches(func() { panic(17) })
 
+	ExpectFalse(res)
 	ExpectThat(err, Error(Equals("which panicked with: 17")))
+	ExpectFalse(isFatal(err))
 }
 
-func (t *PanicsTest) WrappedReturnsFalseWithError() {
-	t.wrappedResult = MATCH_FALSE
+func (t *PanicsTest) WrappedReturnsNonFatalErrorWithText() {
+	t.wrappedResult = false
 	t.wrappedError = errors.New("which blah")
-	_, err := t.matcher.Matches(func() { panic(17) })
+	res, err := t.matcher.Matches(func() { panic(17) })
 
+	ExpectFalse(res)
 	ExpectThat(err, Error(Equals("which panicked with: 17, which blah")))
+	ExpectFalse(isFatal(err))
 }
