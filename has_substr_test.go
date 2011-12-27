@@ -43,39 +43,43 @@ func (t *HasSubstrTest) CandidateIsNil() {
 	matcher := HasSubstr("")
 	res, err := matcher.Matches(nil)
 
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which is not a string")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *HasSubstrTest) CandidateIsInteger() {
 	matcher := HasSubstr("")
 	res, err := matcher.Matches(17)
 
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which is not a string")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *HasSubstrTest) CandidateIsByteSlice() {
 	matcher := HasSubstr("")
 	res, err := matcher.Matches([]byte{17})
 
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err, Error(Equals("which is not a string")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *HasSubstrTest) CandidateDoesntHaveSubstring() {
 	matcher := HasSubstr("taco")
 	res, err := matcher.Matches("tac")
 
-	ExpectThat(res, Equals(MATCH_FALSE))
-	ExpectThat(err, Equals(nil))
+	ExpectThat(res, Equals(false))
+	ExpectThat(err, Error(Equals("")))
+	ExpectFalse(isFatal(err))
 }
 
 func (t *HasSubstrTest) CandidateEqualsArg() {
 	matcher := HasSubstr("taco")
 	res, err := matcher.Matches("taco")
 
-	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(res, Equals(true))
 	ExpectThat(err, Equals(nil))
 }
 
@@ -83,7 +87,7 @@ func (t *HasSubstrTest) CandidateHasProperSubstring() {
 	matcher := HasSubstr("taco")
 	res, err := matcher.Matches("burritos and tacos")
 
-	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(res, Equals(true))
 	ExpectThat(err, Equals(nil))
 }
 
@@ -91,6 +95,6 @@ func (t *HasSubstrTest) EmptyStringIsAlwaysSubString() {
 	matcher := HasSubstr("")
 	res, err := matcher.Matches("asdf")
 
-	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(res, Equals(true))
 	ExpectThat(err, Equals(nil))
 }
