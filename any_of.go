@@ -25,19 +25,17 @@ import (
 // algorithm below when considering a candidate c:
 //
 //  1. If there exists a value m in S such that m implements the Matcher
-//     interface and m matches c, return MATCH_TRUE.
+//     interface and m matches c, return true.
 //
 //  2. Otherwise, if there exists a value v in S such that v does not implement
-//     the Matcher interface and the matcher Equals(v) matches c, return
-//     MATCH_TRUE.
+//     the Matcher interface and the matcher Equals(v) matches c, return true.
 //
 //  3. Otherwise, if there is a value m in S such that m implements the Matcher
-//     interface and m returns MATCH_UNDEFINED for c, return MATCH_UNDEFINED
-//     with that matcher's error message.
+//     interface and m returns a fatal error for c, return that fatal error.
 //
-//  4. Otherwise, return  MATCH_FALSE.
+//  4. Otherwise, return false.
 //
-// This is akin to a logical AND operation for matchers, with non-matchers x
+// This is akin to a logical OR operation for matchers, with non-matchers x
 // being treated as Equals(x).
 func AnyOf(vals ...interface{}) Matcher {
 	// Get ahold of a type variable for the Matcher interface.
@@ -71,23 +69,23 @@ func (m *anyOfMatcher) Description() string {
 	return fmt.Sprintf("or(%s)", strings.Join(wrappedDescs, ", "))
 }
 
-func (m *anyOfMatcher) Matches(c interface{}) (res MatchResult, err error) {
-	res = MATCH_FALSE
+func (m *anyOfMatcher) Matches(c interface{}) (res bool, err error) {
+	res = false
+	err = errors.New("")
 
 	// Try each matcher in turn.
 	for _, matcher := range m.wrapped {
 		wrappedRes, wrappedErr := matcher.Matches(c)
 
 		// Return immediately if there's a match.
-		if wrappedRes == MATCH_TRUE {
-			res = MATCH_TRUE
+		if wrappedRes {
+			res = true
 			err = nil
 			return
 		}
 
-		// Note the undefined error, if any.
-		if wrappedRes == MATCH_UNDEFINED {
-			res = MATCH_UNDEFINED
+		// Note the fatal error, if any.
+		if _, isFatal := wrappedErr.(*FatalError); isFatal {
 			err = wrappedErr
 		}
 	}
