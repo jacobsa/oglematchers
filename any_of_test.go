@@ -18,7 +18,7 @@ package oglematchers_test
 import (
 	"errors"
 	. "github.com/jacobsa/oglematchers"
-	"testing"
+	. "github.com/jacobsa/ogletest"
 )
 
 ////////////////////////////////////////////////////////////
@@ -27,147 +27,106 @@ import (
 
 type fakeAnyOfMatcher struct {
 	desc string
-	res  MatchResult
-	err  string
+	res  bool
+	err  error
 }
 
-func (m *fakeAnyOfMatcher) Matches(c interface{}) (MatchResult, error) {
-	return m.res, errors.New(m.err)
+func (m *fakeAnyOfMatcher) Matches(c interface{}) (bool, error) {
+	return m.res, m.err
 }
 
 func (m *fakeAnyOfMatcher) Description() string {
 	return m.desc
 }
 
-func expectEqErr(t *testing.T, expectedErr string, err error) {
-	actualError := ""
-	if err != nil {
-		actualError = err.Error()
-	}
-
-	if actualError != expectedErr {
-		t.Errorf("Expected %v, got %v", expectedErr, err)
-	}
+type AnyOfTest struct {
 }
+
+func init() { RegisterTestSuite(&AnyOfTest{}) }
 
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
 
-func TestEmptySet(t *testing.T) {
+func (t *AnyOfTest) EmptySet() {
 	matcher := AnyOf()
 
 	res, err := matcher.Matches(0)
-	expectedRes := MATCH_FALSE
-	expectedErr := ""
 
-	if res != expectedRes {
-		t.Errorf("Expected %v, got %v", expectedRes, res)
-	}
-
-	expectEqErr(t, expectedErr, err)
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("")))
 }
 
-func TestOneTrue(t *testing.T) {
+func (t *AnyOfTest) OneTrue() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", MATCH_UNDEFINED, "foo"},
+		&fakeAnyOfMatcher{"", false, NewFatalError("foo")},
 		17,
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
-		&fakeAnyOfMatcher{"", MATCH_TRUE, ""},
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", true, nil},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 	)
 
 	res, err := matcher.Matches(0)
-	expectedRes := MATCH_TRUE
-	expectedErr := ""
 
-	if res != expectedRes {
-		t.Errorf("Expected %v, got %v", expectedRes, res)
-	}
-
-	expectEqErr(t, expectedErr, err)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
 }
 
-func TestOneEqual(t *testing.T) {
+func (t *AnyOfTest) OneEqual() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", MATCH_UNDEFINED, "foo"},
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, NewFatalError("foo")},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 		13,
 		"taco",
 		19,
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 	)
 
 	res, err := matcher.Matches("taco")
-	expectedRes := MATCH_TRUE
-	expectedErr := ""
 
-	if res != expectedRes {
-		t.Errorf("Expected %v, got %v", expectedRes, res)
-	}
-
-	expectEqErr(t, expectedErr, err)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
 }
 
-func TestOneUndefined(t *testing.T) {
+func (t *AnyOfTest) OneFatal() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 		17,
-		&fakeAnyOfMatcher{"", MATCH_UNDEFINED, "taco"},
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, NewFatalError("taco")},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 	)
 
 	res, err := matcher.Matches(0)
-	expectedRes := MATCH_UNDEFINED
-	expectedErr := "taco"
 
-	if res != expectedRes {
-		t.Errorf("Expected %v, got %v", expectedRes, res)
-	}
-
-	expectEqErr(t, expectedErr, err)
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("taco")))
 }
 
-func TestAllFalseAndNotEqual(t *testing.T) {
+func (t *AnyOfTest) AllFalseAndNotEqual() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 		17,
-		&fakeAnyOfMatcher{"", MATCH_FALSE, "foo"},
+		&fakeAnyOfMatcher{"", false, errors.New("foo")},
 		19,
 	)
 
 	res, err := matcher.Matches(0)
-	expectedRes := MATCH_FALSE
-	expectedErr := ""
 
-	if res != expectedRes {
-		t.Errorf("Expected %v, got %v", expectedRes, res)
-	}
-
-	expectEqErr(t, expectedErr, err)
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("")))
 }
 
-func TestDescriptionForEmptySet(t *testing.T) {
+func (t *AnyOfTest) DescriptionForEmptySet() {
 	matcher := AnyOf()
-	desc := matcher.Description()
-	expected := "or()"
-
-	if desc != expected {
-		t.Errorf("Expected %v, got %v", expected, desc)
-	}
+	ExpectEq("or()", matcher.Description())
 }
 
-func TestDescriptionForNonEmptySet(t *testing.T) {
+func (t *AnyOfTest) DescriptionForNonEmptySet() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"taco", MATCH_TRUE, ""},
+		&fakeAnyOfMatcher{"taco", true, nil},
 		"burrito",
-		&fakeAnyOfMatcher{"enchilada", MATCH_TRUE, ""},
+		&fakeAnyOfMatcher{"enchilada", true, nil},
 	)
 
-	desc := matcher.Description()
-	expected := "or(taco, burrito, enchilada)"
-
-	if desc != expected {
-		t.Errorf("Expected %v, got %v", expected, desc)
-	}
+	ExpectEq("or(taco, burrito, enchilada)", matcher.Description())
 }
