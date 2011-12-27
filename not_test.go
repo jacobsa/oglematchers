@@ -27,11 +27,11 @@ import (
 ////////////////////////////////////////////////////////////
 
 type fakeMatcher struct {
-	matchFunc   func(interface{}) (MatchResult, error)
+	matchFunc   func(interface{}) (bool, error)
 	description string
 }
 
-func (m *fakeMatcher) Matches(c interface{}) (MatchResult, error) {
+func (m *fakeMatcher) Matches(c interface{}) (bool, error) {
 	return m.matchFunc(c)
 }
 
@@ -52,9 +52,9 @@ func TestOgletest(t *testing.T) { RunTests(t) }
 
 func (t *NotTest) CallsWrapped() {
 	var suppliedCandidate interface{}
-	matchFunc := func(c interface{}) (MatchResult, error) {
+	matchFunc := func(c interface{}) (bool, error) {
 		suppliedCandidate = c
-		return MATCH_TRUE, nil
+		return true, nil
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
@@ -64,41 +64,45 @@ func (t *NotTest) CallsWrapped() {
 	ExpectThat(suppliedCandidate, Equals(17))
 }
 
-func (t *NotTest) WrappedReturnsMatchTrue() {
-	matchFunc := func(c interface{}) (MatchResult, error) {
-		return MATCH_TRUE, nil
-	}
-
-	wrapped := &fakeMatcher{matchFunc, ""}
-	matcher := Not(wrapped)
-
-	res, _ := matcher.Matches(0)
-	ExpectThat(res, Equals(MATCH_FALSE))
-}
-
-func (t *NotTest) WrappedReturnsMatchFalse() {
-	matchFunc := func(c interface{}) (MatchResult, error) {
-		return MATCH_FALSE, errors.New("taco")
+func (t *NotTest) WrappedReturnsTrue() {
+	matchFunc := func(c interface{}) (bool, error) {
+		return true, nil
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Not(wrapped)
 
 	res, err := matcher.Matches(0)
-	ExpectThat(res, Equals(MATCH_TRUE))
-	ExpectThat(err, Equals(nil))
+
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("")))
 }
 
-func (t *NotTest) WrappedReturnsMatchUndefined() {
-	matchFunc := func(c interface{}) (MatchResult, error) {
-		return MATCH_UNDEFINED, errors.New("taco")
+func (t *NotTest) WrappedReturnsNonFatalError() {
+	matchFunc := func(c interface{}) (bool, error) {
+		return false, errors.New("taco")
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Not(wrapped)
 
 	res, err := matcher.Matches(0)
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+}
+
+func (t *NotTest) WrappedReturnsFatalError() {
+	matchFunc := func(c interface{}) (bool, error) {
+		return false, NewFatalError("taco")
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Not(wrapped)
+
+	res, err := matcher.Matches(0)
+
+	ExpectFalse(res)
 	ExpectThat(err, Error(Equals("taco")))
 }
 
@@ -106,5 +110,5 @@ func (t *NotTest) Description() {
 	wrapped := &fakeMatcher{nil, "taco"}
 	matcher := Not(wrapped)
 
-	ExpectThat(matcher.Description(), Equals("not(taco)"))
+	ExpectEq("not(taco)", matcher.Description())
 }
