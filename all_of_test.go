@@ -72,8 +72,7 @@ func (t *AllOfTest) EmptySet() {
 	res, err := m.Matches(17)
 
 	ExpectTrue(res)
-	ExpectFalse(isFatal(err))
-	ExpectThat(err, Error(Equals("")))
+	ExpectEq(nil, err)
 }
 
 func (t *AllOfTest) OneMatcherReturnsFatalErrorAndSomeOthersFail() {
@@ -99,7 +98,7 @@ func (t *AllOfTest) OneMatcherReturnsNonFatalAndOthersSayTrue() {
 	res, err := m.Matches(17)
 
 	ExpectFalse(res)
-	ExpectTrue(isFatal(err))
+	ExpectFalse(isFatal(err))
 	ExpectThat(err, Error(Equals("taco")))
 }
 
