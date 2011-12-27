@@ -101,6 +101,8 @@ func (t *PanicsTest) FunctionDoesntPanic() {
 
 func (t *PanicsTest) CallsWrappedMatcher() {
 	expectedErr := 17
+	t.wrappedResult = false
+	t.wrappedError = errors.New("")
 	t.matcher.Matches(func() { panic(expectedErr) })
 
 	ExpectThat(t.suppliedCandidate, Equals(expectedErr))

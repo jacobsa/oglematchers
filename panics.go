@@ -58,7 +58,7 @@ func (m *panicsMatcher) Matches(c interface{}) (res bool, err error) {
 			// Set a clearer error message if the matcher said no.
 			if !res {
 				wrappedClause := ""
-				if err != nil {
+				if err.Error() != "" {
 					wrappedClause = ", " + err.Error()
 				}
 
