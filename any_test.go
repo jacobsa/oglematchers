@@ -39,19 +39,19 @@ func (t *AnyTest) Description() {
 }
 
 func (t *AnyTest) Matches() {
-	var res MatchResult
+	var res bool
 	var err error
 	m := Any()
 
 	res, err = m.Matches(nil)
-	ExpectEq(MATCH_TRUE, res)
+	ExpectEq(true, res)
 	ExpectEq(nil, err)
 
 	res, err = m.Matches(17)
-	ExpectEq(MATCH_TRUE, res)
+	ExpectEq(true, res)
 	ExpectEq(nil, err)
 
 	res, err = m.Matches("taco")
-	ExpectEq(MATCH_TRUE, res)
+	ExpectEq(true, res)
 	ExpectEq(nil, err)
 }
