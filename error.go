@@ -15,10 +15,6 @@
 
 package oglematchers
 
-import (
-	"errors"
-)
-
 // Error returns a matcher that matches non-nil values implementing the
 // built-in error interface for whom the return value of Error() matches the
 // supplied matcher.
@@ -43,11 +39,11 @@ func (m *errorMatcher) Description() string {
 	return "error " + m.wrappedMatcher.Description()
 }
 
-func (m *errorMatcher) Matches(c interface{}) (MatchResult, error) {
+func (m *errorMatcher) Matches(c interface{}) (bool, error) {
 	// Make sure that c is an error.
 	e, ok := c.(error)
 	if !ok {
-		return MATCH_UNDEFINED, errors.New("which is not an error")
+		return false, NewFatalError("which is not an error")
 	}
 
 	// Pass on the error text to the wrapped matcher.
