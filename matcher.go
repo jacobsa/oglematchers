@@ -70,7 +70,7 @@ type Matcher interface {
 // sort of matcher is accidentally used. Instead, GreaterThan(17) can return a
 // fatal error, which will be propagated by Not().
 type FatalError struct {
-	errorText
+	errorText string
 }
 
 // NewFatalError creates a FatalError struct with the supplied error text.
