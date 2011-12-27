@@ -36,7 +36,7 @@ type PanicsTest struct {
 
 func init() { RegisterTestSuite(&PanicsTest{}) }
 
-func (t *PanicsTest) SetUp() {
+func (t *PanicsTest) SetUp(i *TestInfo) {
 	wrapped := &fakeMatcher{
 		func(c interface{}) (bool, error) {
 			t.matcherCalled = true
