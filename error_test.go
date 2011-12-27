@@ -28,7 +28,7 @@ import (
 type ErrorTest struct {
 	matcherCalled bool
 	suppliedCandidate interface{}
-	wrappedResult MatchResult
+	wrappedResult bool
 	wrappedError error
 
 	matcher Matcher
@@ -38,7 +38,7 @@ func init() { RegisterTestSuite(&ErrorTest{}) }
 
 func (t *ErrorTest) SetUp() {
 	wrapped := &fakeMatcher{
-		func(c interface{}) (MatchResult, error) {
+		func(c interface{}) (bool, error) {
 			t.matcherCalled = true
 			t.suppliedCandidate = c
 			return t.wrappedResult, t.wrappedError
@@ -47,6 +47,11 @@ func (t *ErrorTest) SetUp() {
 	}
 
 	t.matcher = Error(wrapped)
+}
+
+func isFatal(err error) bool {
+	_, isFatal := err.(*FatalError)
+	return isFatal
 }
 
 ////////////////////////////////////////////////////////////
@@ -61,16 +66,18 @@ func (t *ErrorTest) CandidateIsNil() {
 	res, err := t.matcher.Matches(nil)
 
 	ExpectThat(t.matcherCalled, Equals(false))
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err.Error(), Equals("which is not an error"))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *ErrorTest) CandidateIsString() {
 	res, err := t.matcher.Matches("taco")
 
 	ExpectThat(t.matcherCalled, Equals(false))
-	ExpectThat(res, Equals(MATCH_UNDEFINED))
+	ExpectThat(res, Equals(false))
 	ExpectThat(err.Error(), Equals("which is not an error"))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *ErrorTest) CallsWrappedMatcher() {
@@ -82,11 +89,11 @@ func (t *ErrorTest) CallsWrappedMatcher() {
 }
 
 func (t *ErrorTest) ReturnsWrappedMatcherResult() {
-	t.wrappedResult = MATCH_TRUE
+	t.wrappedResult = true
 	t.wrappedError = errors.New("burrito")
 
 	res, err := t.matcher.Matches(errors.New(""))
 
-	ExpectThat(res, Equals(MATCH_TRUE))
+	ExpectThat(res, Equals(true))
 	ExpectThat(err, Equals(t.wrappedError))
 }
