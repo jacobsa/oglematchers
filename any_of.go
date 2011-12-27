@@ -16,6 +16,7 @@
 package oglematchers
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"

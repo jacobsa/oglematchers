@@ -16,12 +16,13 @@
 package oglematchers
 
 import (
+	"errors"
 	"fmt"
 )
 
 // Not returns a matcher that inverts the set of values matched by the wrapped
 // matcher. It does not transform the result for values for which the wrapped
-// matcher returns MATCH_UNDEFINED.
+// matcher returns a fatal error.
 func Not(m Matcher) Matcher {
 	return &notMatcher{m}
 }
@@ -30,22 +31,21 @@ type notMatcher struct {
 	wrapped Matcher
 }
 
-func (m *notMatcher) Matches(c interface{}) (res MatchResult, err error) {
+func (m *notMatcher) Matches(c interface{}) (res bool, err error) {
 	res, err = m.wrapped.Matches(c)
 
-	switch res {
-	case MATCH_FALSE:
-		res = MATCH_TRUE
-		err = nil
-
-	case MATCH_TRUE:
-		res = MATCH_FALSE
-
-	case MATCH_UNDEFINED:
-		// Pass on the result.
+	// Did the wrapped matcher say yes?
+	if res {
+		return false, errors.New("")
 	}
 
-	return
+	// Did the wrapped matcher return a fatal error?
+	if _, isFatal := err.(*FatalError); isFatal {
+		return false, err
+	}
+
+	// The wrapped matcher returned a non-fatal error.
+	return true, nil
 }
 
 func (m *notMatcher) Description() string {
