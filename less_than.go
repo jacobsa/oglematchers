@@ -57,30 +57,36 @@ func (m *lessThanMatcher) Description() string {
 	return fmt.Sprintf("less than %v", m.limit.Interface())
 }
 
-func compareIntegers(v1, v2 reflect.Value) (res MatchResult, err error) {
-	res = MATCH_FALSE
+func compareIntegers(v1, v2 reflect.Value) (res bool, err error) {
+	res = false
+	err = errors.New("")
+
 	switch {
 	case isSignedInteger(v1) && isSignedInteger(v2):
 		if v1.Int() < v2.Int() {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 
 	case isSignedInteger(v1) && isUnsignedInteger(v2):
 		if v1.Int() < 0 || uint64(v1.Int()) < v2.Uint() {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 
 	case isUnsignedInteger(v1) && isSignedInteger(v2):
 		if v1.Uint() <= math.MaxInt64 && int64(v1.Uint()) < v2.Int() {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 
 	case isUnsignedInteger(v1) && isUnsignedInteger(v2):
 		if v1.Uint() < v2.Uint() {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 	}
@@ -103,16 +109,18 @@ func getFloat(v reflect.Value) float64 {
 	panic(fmt.Sprintf("getFloat: %v", v))
 }
 
-func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err error) {
+func (m *lessThanMatcher) Matches(c interface{}) (res bool, err error) {
 	v1 := reflect.ValueOf(c)
 	v2 := m.limit
 
-	res = MATCH_FALSE
+	res = false
+	err = errors.New("")
 
 	// Handle strings as a special case.
 	if v1.Kind() == reflect.String && v2.Kind() == reflect.String {
 		if v1.String() < v2.String() {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 	}
@@ -121,8 +129,8 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	v1Legal := isInteger(v1) || isFloat(v1)
 	v2Legal := isInteger(v2) || isFloat(v2)
 	if !v1Legal || !v2Legal {
-		res = MATCH_UNDEFINED
-		err = errors.New("which is not comparable")
+		res = false
+		err = NewFatalError("which is not comparable")
 		return
 	}
 
@@ -135,14 +143,16 @@ func (m *lessThanMatcher) Matches(c interface{}) (res MatchResult, err error) {
 	// At least one float32
 	case v1.Kind() == reflect.Float32 || v2.Kind() == reflect.Float32:
 		if float32(getFloat(v1)) < float32(getFloat(v2)) {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 
 	// At least one float64
 	case v1.Kind() == reflect.Float64 || v2.Kind() == reflect.Float64:
 		if getFloat(v1) < getFloat(v2) {
-			res = MATCH_TRUE
+			res = true
+			err = nil
 		}
 		return
 	}
