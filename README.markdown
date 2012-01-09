@@ -32,7 +32,7 @@ Installation
 ------------
 
 First, make sure you have installed a version of the Go tools at least as new as
-`weekly/weekly.2011-12-14`. See [here][golang-install] for instructions. Until
+`weekly/weekly.2011-12-22`. See [here][golang-install] for instructions. Until
 release `r61` comes out, this involes using the `weekly` tag.
 
 Use the following command to install `oglematchers` and keep it up to date:
