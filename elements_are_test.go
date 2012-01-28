@@ -51,7 +51,7 @@ func (t *ElementsAreTest) EmptySet() {
 	c = []interface{}{17}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 1"))
+	ExpectThat(err, Error(HasSubstr("length 1")))
 }
 
 func (t *ElementsAreTest) OneMatcher() {
@@ -66,7 +66,7 @@ func (t *ElementsAreTest) OneMatcher() {
 	c = []interface{}{}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 0"))
+	ExpectThat(err, Error(HasSubstr("length 0")))
 
 	// Matching candidate.
 	c = []interface{}{16}
@@ -84,7 +84,7 @@ func (t *ElementsAreTest) OneMatcher() {
 	c = []interface{}{17, 19}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 2"))
+	ExpectThat(err, Error(HasSubstr("length 2")))
 }
 
 func (t *ElementsAreTest) OneValue() {
@@ -99,7 +99,7 @@ func (t *ElementsAreTest) OneValue() {
 	c = []interface{}{}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 0"))
+	ExpectThat(err, Error(HasSubstr("length 0")))
 
 	// Matching int.
 	c = []interface{}{int(17)}
@@ -123,7 +123,7 @@ func (t *ElementsAreTest) OneValue() {
 	c = []interface{}{17, 19}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 2"))
+	ExpectThat(err, Error(HasSubstr("length 2")))
 }
 
 func (t *ElementsAreTest) MultipleElements() {
@@ -138,7 +138,7 @@ func (t *ElementsAreTest) MultipleElements() {
 	c = []interface{}{17}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 1"))
+	ExpectThat(err, Error(HasSubstr("length 1")))
 
 	// Both matching.
 	c = []interface{}{"taco", 16}
@@ -162,7 +162,7 @@ func (t *ElementsAreTest) MultipleElements() {
 	c = []interface{}{"taco", 17, 19}
 	res, err = m.Matches(c)
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 3"))
+	ExpectThat(err, Error(HasSubstr("length 3")))
 }
 
 func (t *ElementsAreTest) ArrayCandidates() {
@@ -174,7 +174,7 @@ func (t *ElementsAreTest) ArrayCandidates() {
 	// One candidate.
 	res, err = m.Matches([1]interface{}{"taco"})
 	ExpectFalse(res)
-	ExpectThat(err, HasSubstr("length 1"))
+	ExpectThat(err, Error(HasSubstr("length 1")))
 
 	// Both matching.
 	res, err = m.Matches([2]interface{}{"taco", 16})
@@ -197,22 +197,22 @@ func (t *ElementsAreTest) WrongTypeCandidate() {
 	res, err = m.Matches("taco")
 	ExpectFalse(res)
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, HasSubstr("array"))
-	ExpectThat(err, HasSubstr("slice"))
+	ExpectThat(err, Error(HasSubstr("array")))
+	ExpectThat(err, Error(HasSubstr("slice")))
 
 	// Map candidate.
 	res, err = m.Matches(map[string]string{})
 	ExpectFalse(res)
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, HasSubstr("array"))
-	ExpectThat(err, HasSubstr("slice"))
+	ExpectThat(err, Error(HasSubstr("array")))
+	ExpectThat(err, Error(HasSubstr("slice")))
 
 	// Nil candidate.
 	res, err = m.Matches(nil)
 	ExpectFalse(res)
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, HasSubstr("array"))
-	ExpectThat(err, HasSubstr("slice"))
+	ExpectThat(err, Error(HasSubstr("array")))
+	ExpectThat(err, Error(HasSubstr("slice")))
 }
 
 func (t *ElementsAreTest) PropagatesFatality() {
