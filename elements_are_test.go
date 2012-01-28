@@ -127,6 +127,42 @@ func (t *ElementsAreTest) OneValue() {
 }
 
 func (t *ElementsAreTest) MultipleElements() {
+	m := ElementsAre("taco", LessThan(17))
+	ExpectEq("elements are: [taco, less than 17]", m.Description())
+
+	var c []interface{}
+	var res bool
+	var err error
+
+	// One candidate.
+	c = []interface{}{17}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 1"))
+
+	// Both matching.
+	c = []interface{}{"taco", 16}
+	res, err = m.Matches(c)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+
+	// First non-matching.
+	c = []interface{}{"burrito", 16}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("whose element 0 doesn't match")))
+
+	// Second non-matching.
+	c = []interface{}{"taco", 17}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("whose element 1 doesn't match")))
+
+	// Three candidates.
+	c = []interface{}{"taco", 17, 19}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 3"))
 }
 
 func (t *ElementsAreTest) NonFatalError() {
