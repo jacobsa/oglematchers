@@ -32,7 +32,18 @@ import (
 //     Equals(M[i]).
 //
 func ElementsAre(M ...interface{}) Matcher {
-	return &elementsAreMatcher{[]Matcher{Equals("TODO")}}
+	// Copy over matchers, or convert to Equals(x) for non-matcher x.
+	subMatchers := make([]Matcher, len(M))
+	for i, x := range M {
+		if matcher, ok := x.(Matcher); ok {
+			subMatchers[i] = matcher
+			continue
+		}
+
+		subMatchers[i] = Equals(x)
+	}
+
+	return &elementsAreMatcher{subMatchers}
 }
 
 type elementsAreMatcher struct {
