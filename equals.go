@@ -30,7 +30,7 @@ func Equals(x interface{}) Matcher {
 
 	// The == operator is not defined for array or struct types.
 	if v.Kind() == reflect.Array || v.Kind() == reflect.Struct {
-		panic(fmt.Sprintf("oglematchers.Equals: unsupported type", v.Kind()))
+		panic(fmt.Sprintf("oglematchers.Equals: unsupported kind %v", v.Kind()))
 	}
 
 	// The == operator is not defined for non-nil slices.
