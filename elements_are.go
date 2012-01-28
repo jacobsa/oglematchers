@@ -18,6 +18,7 @@ package oglematchers
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -59,6 +60,32 @@ func (m *elementsAreMatcher) Description() string {
 	return fmt.Sprintf("elements are: [%s]", strings.Join(subDescs, ", "))
 }
 
-func (m *elementsAreMatcher) Matches(c interface{}) (bool, error) {
-	return false, errors.New("TODO")
+func (m *elementsAreMatcher) Matches(candidates interface{}) (bool, error) {
+	// The candidate must be a slice or an array.
+	v := reflect.ValueOf(candidates)
+	if v.Kind() != reflect.Slice && v.Kind() != reflect.Array {
+		return false, NewFatalError("which is not a slice or array")
+	}
+
+	// The length must be correct.
+	if v.Len() != len(m.subMatchers) {
+		return false, errors.New(fmt.Sprintf("which is of length %d", v.Len()))
+	}
+
+	// Check each element.
+	for i, subMatcher := range m.subMatchers {
+		c := v.Index(i)
+		if matches, matchErr := subMatcher.Matches(c.Interface()); !matches {
+			// Return an errors indicating which element doesn't match. If the
+			// matcher error was fatal, make this one fatal too.
+			err := errors.New(fmt.Sprintf("whose element %d doesn't match", i))
+			if _, isFatal := matchErr.(*FatalError); isFatal {
+				err = NewFatalError(err.Error())
+			}
+
+			return false, err
+		}
+	}
+
+	return true, nil
 }
