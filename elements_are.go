@@ -16,6 +16,9 @@
 package oglematchers
 
 import (
+	"errors"
+	"fmt"
+	"strings"
 )
 
 // Given a list of arguments M, ElementsAre returns a matcher that matches
@@ -29,5 +32,22 @@ import (
 //     Equals(M[i]).
 //
 func ElementsAre(M ...interface{}) Matcher {
-	return nil
+	return &elementsAreMatcher{[]Matcher{Equals("TODO")}}
+}
+
+type elementsAreMatcher struct {
+	subMatchers []Matcher
+}
+
+func (m *elementsAreMatcher) Description() string {
+	subDescs := make([]string, len(m.subMatchers))
+	for i, sm := range m.subMatchers {
+		subDescs[i] = sm.Description()
+	}
+
+	return fmt.Sprintf("elements are: [%s]", strings.Join(subDescs, ", "))
+}
+
+func (m *elementsAreMatcher) Matches(c interface{}) (bool, error) {
+	return false, errors.New("TODO")
 }
