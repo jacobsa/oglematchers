@@ -165,8 +165,25 @@ func (t *ElementsAreTest) MultipleElements() {
 	ExpectThat(err, HasSubstr("length 3"))
 }
 
-func (t *ElementsAreTest) NonFatalError() {
-}
+func (t *ElementsAreTest) PropagatesFatality() {
+	m := ElementsAre(LessThan(17))
+	ExpectEq("elements are: [less than 17]", m.Description())
 
-func (t *ElementsAreTest) FatalError() {
+	var c []interface{}
+	var err error
+	var isFatal bool
+
+	// Non-fatal error.
+	c = []interface{}{19}
+	_, err = m.Matches(c)
+	AssertNe(nil, err)
+	_, isFatal = err.(*FatalError)
+	ExpectFalse(isFatal)
+
+	// Fatal error.
+	c = []interface{}{"taco"}
+	_, err = m.Matches(c)
+	AssertNe(nil, err)
+	_, isFatal = err.(*FatalError)
+	ExpectTrue(isFatal)
 }
