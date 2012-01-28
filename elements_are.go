@@ -18,8 +18,8 @@ package oglematchers
 import (
 )
 
-// Given a slice M, ElementsAre returns a matcher that matches arrays and
-// slices A where all of the following hold:
+// Given a list of arguments M, ElementsAre returns a matcher that matches
+// arrays and slices A where all of the following hold:
 //
 //  *  A is the same length as M.
 //
@@ -28,6 +28,6 @@ import (
 //  *  For each i < len(A) where M[i] is not a matcher, A[i] matches
 //     Equals(M[i]).
 //
-func ElementsAre(M []interface{}) Matcher {
+func ElementsAre(M ...interface{}) Matcher {
 	return nil
 }

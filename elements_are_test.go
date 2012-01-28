@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 
@@ -32,5 +33,38 @@ func init()                     { RegisterTestSuite(&ElementsAreTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *ElementsAreTest) DoesFoo() {
+func (t *ElementsAreTest) EmptySet() {
+	m := ElementsAre()
+	ExpectEq("elements are: []", m.Description())
+
+	var c []interface{}
+	var res bool
+	var err error
+
+	// No candidates.
+	c = []interface{}{}
+	res, err = m.Matches(c)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+
+	// One candidate.
+	c = []interface{}{17}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 1"))
+}
+
+func (t *ElementsAreTest) OneMatcher() {
+}
+
+func (t *ElementsAreTest) OneValue() {
+}
+
+func (t *ElementsAreTest) MultipleElements() {
+}
+
+func (t *ElementsAreTest) NonFatalError() {
+}
+
+func (t *ElementsAreTest) FatalError() {
 }
