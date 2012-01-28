@@ -3621,16 +3621,20 @@ func (t *EqualsTest) String() {
 	matcher := Equals(expected)
 	ExpectEq("taco1", matcher.Description())
 
+	type stringAlias string
+
 	cases := []equalsTestCase{
-		// Correct type.
+		// Correct types.
 		equalsTestCase{"taco1", true, false, ""},
 		equalsTestCase{"taco" + "1", true, false, ""},
 		equalsTestCase{expected, true, false, ""},
+		equalsTestCase{stringAlias("taco1"), true, false, ""},
 
 		equalsTestCase{"", false, false, ""},
 		equalsTestCase{"taco", false, false, ""},
 		equalsTestCase{"taco1\x00", false, false, ""},
 		equalsTestCase{"taco2", false, false, ""},
+		equalsTestCase{stringAlias("taco2"), false, false, ""},
 
 		// Other types.
 		equalsTestCase{0, false, true, "which is not a string"},
@@ -3650,6 +3654,28 @@ func (t *EqualsTest) String() {
 		equalsTestCase{func() {}, false, true, "which is not a string"},
 		equalsTestCase{map[int]int{}, false, true, "which is not a string"},
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a string"},
+	}
+
+	t.checkTestCases(matcher, cases)
+}
+
+func (t *EqualsTest) StringAlias() {
+	type stringAlias string
+
+	matcher := Equals(stringAlias("taco"))
+	ExpectEq("taco", matcher.Description())
+
+	cases := []equalsTestCase{
+		// Correct types.
+		equalsTestCase{stringAlias("taco"), true, false, ""},
+		equalsTestCase{"taco", true, false, ""},
+
+		equalsTestCase{"burrito", false, false, ""},
+		equalsTestCase{stringAlias("burrito"), false, false, ""},
+
+		// Other types.
+		equalsTestCase{0, false, true, "which is not a string"},
+		equalsTestCase{bool(false), false, true, "which is not a string"},
 	}
 
 	t.checkTestCases(matcher, cases)
