@@ -55,6 +55,36 @@ func (t *ElementsAreTest) EmptySet() {
 }
 
 func (t *ElementsAreTest) OneMatcher() {
+	m := ElementsAre(LessThan(17))
+	ExpectEq("elements are: [less than 17]", m.Description())
+
+	var c []interface{}
+	var res bool
+	var err error
+
+	// No candidates.
+	c = []interface{}{}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 0"))
+
+	// Matching candidate.
+	c = []interface{}{16}
+	res, err = m.Matches(c)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+
+	// Non-matching candidate.
+	c = []interface{}{19}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectNe(nil, err)
+
+	// Two candidates.
+	c = []interface{}{17, 19}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 2"))
 }
 
 func (t *ElementsAreTest) OneValue() {
