@@ -188,7 +188,31 @@ func (t *ElementsAreTest) ArrayCandidates() {
 }
 
 func (t *ElementsAreTest) WrongTypeCandidate() {
-	ExpectTrue(false, "TODO")
+	m := ElementsAre("taco")
+
+	var res bool
+	var err error
+
+	// String candidate.
+	res, err = m.Matches("taco")
+	ExpectFalse(res)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, HasSubstr("array"))
+	ExpectThat(err, HasSubstr("slice"))
+
+	// Map candidate.
+	res, err = m.Matches(map[string]string{})
+	ExpectFalse(res)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, HasSubstr("array"))
+	ExpectThat(err, HasSubstr("slice"))
+
+	// Nil candidate.
+	res, err = m.Matches(nil)
+	ExpectFalse(res)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, HasSubstr("array"))
+	ExpectThat(err, HasSubstr("slice"))
 }
 
 func (t *ElementsAreTest) PropagatesFatality() {
