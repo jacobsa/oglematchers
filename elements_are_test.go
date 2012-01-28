@@ -165,8 +165,26 @@ func (t *ElementsAreTest) MultipleElements() {
 	ExpectThat(err, HasSubstr("length 3"))
 }
 
-func (t *ElementsAreTest) ArrayCandidate() {
-	ExpectTrue(false, "TODO")
+func (t *ElementsAreTest) ArrayCandidates() {
+	m := ElementsAre("taco", LessThan(17))
+
+	var res bool
+	var err error
+
+	// One candidate.
+	res, err = m.Matches([1]interface{}{"taco"})
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 1"))
+
+	// Both matching.
+	res, err = m.Matches([2]interface{}{"taco", 16})
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+
+	// First non-matching.
+	res, err = m.Matches([2]interface{}{"burrito", 16})
+	ExpectFalse(res)
+	ExpectThat(err, Error(Equals("whose element 0 doesn't match")))
 }
 
 func (t *ElementsAreTest) WrongTypeCandidate() {
