@@ -22,9 +22,19 @@ import (
 	"reflect"
 )
 
-// Equals returns a matcher that matches any value v such that v == x, with the
-// exception that if x is a numeric type, Equals(x) will match equivalent
-// numeric values of any type.
+// Equals(x) returns a matcher that matches values v such that any of the
+// following hold:
+//
+//  1. v and x are of the same type, and v == x.
+//
+//  2. v's type is an alias for x's type or vice versa, and when casted to the
+//     basic type v and x are equal.
+//
+//  3. v and x are both of numeric types, and their values are equivalent.
+//
+// If you want a stricter matcher that works just like the built-in == operator
+// (including rejecting even slightly different types), see StrictEquals
+// instead.
 func Equals(x interface{}) Matcher {
 	v := reflect.ValueOf(x)
 
@@ -464,7 +474,7 @@ func checkForNil(c reflect.Value) (res bool, err error) {
 	res = false
 	err = errors.New("")
 
-	// Make it is legal to call IsNil.
+	// Make sure it is legal to call IsNil.
 	switch c.Kind() {
 	case reflect.Invalid:
 	case reflect.Chan:
