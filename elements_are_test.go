@@ -88,6 +88,42 @@ func (t *ElementsAreTest) OneMatcher() {
 }
 
 func (t *ElementsAreTest) OneValue() {
+	m := ElementsAre(17)
+	ExpectEq("elements are: [17]", m.Description())
+
+	var c []interface{}
+	var res bool
+	var err error
+
+	// No candidates.
+	c = []interface{}{}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 0"))
+
+	// Matching int.
+	c = []interface{}{int(17)}
+	res, err = m.Matches(c)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+
+	// Matching float.
+	c = []interface{}{float32(17)}
+	res, err = m.Matches(c)
+	ExpectTrue(res)
+	ExpectEq(nil, err)
+
+	// Non-matching candidate.
+	c = []interface{}{19}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectNe(nil, err)
+
+	// Two candidates.
+	c = []interface{}{17, 19}
+	res, err = m.Matches(c)
+	ExpectFalse(res)
+	ExpectThat(err, HasSubstr("length 2"))
 }
 
 func (t *ElementsAreTest) MultipleElements() {
