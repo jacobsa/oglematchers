@@ -35,30 +35,23 @@ func init() { RegisterTestSuite(&IdenticalToTest{}) }
 
 func (t *IdenticalToTest) TypesNotIdentical() {
 	var m Matcher
-	var res bool
 	var err error
 
 	type intAlias int
 
 	// Type alias expected value
 	m = IdenticalTo(intAlias(17))
-	res, err = m.Matches(int(17))
-
-	ExpectFalse(res)
+	err = m.Matches(int(17))
 	ExpectThat(err, Error(Equals("which is of type int")))
 
 	// Type alias candidate
 	m = IdenticalTo(int(17))
-	res, err = m.Matches(intAlias(17))
-
-	ExpectFalse(res)
+	err = m.Matches(intAlias(17))
 	ExpectThat(err, Error(Equals("which is of type intAlias")))
 
 	// int and uint
 	m = IdenticalTo(int(17))
-	res, err = m.Matches(uint(17))
-
-	ExpectFalse(res)
+	err = m.Matches(uint(17))
 	ExpectThat(err, Error(Equals("which is of type uint")))
 }
 
