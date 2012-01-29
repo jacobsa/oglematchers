@@ -56,6 +56,27 @@ func (t *IdenticalToTest) TypesNotIdentical() {
 }
 
 func (t *IdenticalToTest) NilExpectedValue() {
+	m := IdenticalTo(nil)
+	var err error
+
+	// Nil candidate
+	err = m.Matches(nil)
+	ExpectEq(nil, err)
+
+	// Casted nil chan candidate
+	err = m.Matches((chan int)(nil))
+	ExpectEq(nil, err)
+
+	// Non-nil chan candidate
+	err = m.Matches(make(chan int))
+	ExpectThat(err, Error(Equals("which is of type chan int")))
+
+	// Integer candidate
+	err = m.Matches(17)
+	ExpectThat(err, Error(Equals("which is of type int")))
+}
+
+func (t *IdenticalToTest) CastedNilExpectedValue() {
 }
 
 func (t *IdenticalToTest) NilCandidate() {
