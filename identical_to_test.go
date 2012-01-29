@@ -76,6 +76,28 @@ func (t *IdenticalToTest) InvalidTypeCandidate() {
 }
 
 func (t *IdenticalToTest) Slices() {
+	var m Matcher
+	var err error
+
+	// Nil expected value
+	m = IdenticalTo(([]int)(nil))
+
+	err = m.Matches(([]int)(nil))
+	ExpectEq(nil, err)
+
+	err = m.Matches([]int{})
+	ExpectThat(err, Equals("which is not an identical reference"))
+
+	// Non-nil expected value
+	s1 := []int{}
+	s2 := []int{}
+	m = IdenticalTo(s1)
+
+	err = m.Matches(s1)
+	ExpectEq(nil, err)
+
+	err = m.Matches(s2)
+	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
 func (t *IdenticalToTest) Maps() {
