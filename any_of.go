@@ -70,17 +70,15 @@ func (m *anyOfMatcher) Description() string {
 	return fmt.Sprintf("or(%s)", strings.Join(wrappedDescs, ", "))
 }
 
-func (m *anyOfMatcher) Matches(c interface{}) (res bool, err error) {
-	res = false
+func (m *anyOfMatcher) Matches(c interface{}) (err error) {
 	err = errors.New("")
 
 	// Try each matcher in turn.
 	for _, matcher := range m.wrapped {
-		wrappedRes, wrappedErr := matcher.Matches(c)
+		wrappedErr := matcher.Matches(c)
 
 		// Return immediately if there's a match.
-		if wrappedRes {
-			res = true
+		if wrappedErr == nil {
 			err = nil
 			return
 		}
