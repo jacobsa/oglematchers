@@ -43,29 +43,25 @@ func (m *matchesRegexpMatcher) Description() string {
 	return fmt.Sprintf("matches regexp \"%s\"", m.re.String())
 }
 
-func (m *matchesRegexpMatcher) Matches(c interface{}) (res bool, err error) {
+func (m *matchesRegexpMatcher) Matches(c interface{}) (err error) {
 	v := reflect.ValueOf(c)
 	isString := v.Kind() == reflect.String
 	isByteSlice := v.Kind() == reflect.Slice && v.Elem().Kind() == reflect.Uint8
 
-	res = false
 	err = errors.New("")
 
 	switch {
 	case isString:
 		if m.re.MatchString(v.String()) {
-			res = true
 			err = nil
 		}
 
 	case isByteSlice:
 		if m.re.Match(v.Bytes()) {
-			res = true
 			err = nil
 		}
 
 	default:
-		res = false
 		err = NewFatalError("which is not a string or []byte")
 	}
 

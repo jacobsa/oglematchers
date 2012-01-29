@@ -31,21 +31,21 @@ type notMatcher struct {
 	wrapped Matcher
 }
 
-func (m *notMatcher) Matches(c interface{}) (res bool, err error) {
-	res, err = m.wrapped.Matches(c)
+func (m *notMatcher) Matches(c interface{}) (err error) {
+	err = m.wrapped.Matches(c)
 
 	// Did the wrapped matcher say yes?
-	if res {
-		return false, errors.New("")
+	if err == nil {
+		return errors.New("")
 	}
 
 	// Did the wrapped matcher return a fatal error?
 	if _, isFatal := err.(*FatalError); isFatal {
-		return false, err
+		return err
 	}
 
 	// The wrapped matcher returned a non-fatal error.
-	return true, nil
+	return nil
 }
 
 func (m *notMatcher) Description() string {

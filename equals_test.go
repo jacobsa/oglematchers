@@ -38,18 +38,18 @@ type equalsTestCase struct {
 
 func checkTestCases(t *testing.T, matcher Matcher, cases []equalsTestCase) {
 	for i, c := range cases {
-		result, err := matcher.Matches(c.candidate)
+		err := matcher.Matches(c.candidate)
 
-		if result != c.expectedResult {
+		if (err == nil) != c.expectedResult {
 			t.Errorf(
-				"Case %d (candidate %v): expected %v, got %v",
+				"Case %d (candidate %v): expected %v, got error: %v",
 				i,
 				c.candidate,
 				c.expectedResult,
-				result)
+				err)
 		}
 
-		if result {
+		if err == nil {
 			continue
 		}
 

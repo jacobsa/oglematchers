@@ -39,11 +39,11 @@ func (m *errorMatcher) Description() string {
 	return "error " + m.wrappedMatcher.Description()
 }
 
-func (m *errorMatcher) Matches(c interface{}) (bool, error) {
+func (m *errorMatcher) Matches(c interface{}) error {
 	// Make sure that c is an error.
 	e, ok := c.(error)
 	if !ok {
-		return false, NewFatalError("which is not an error")
+		return NewFatalError("which is not an error")
 	}
 
 	// Pass on the error text to the wrapped matcher.

@@ -53,14 +53,9 @@ func (m *allOfMatcher) Description() string {
 	return strings.Join(wrappedDescs, ", and ")
 }
 
-func (m *allOfMatcher) Matches(c interface{}) (res bool, err error) {
-	res = true
-
+func (m *allOfMatcher) Matches(c interface{}) (err error) {
 	for _, wrappedMatcher := range m.wrappedMatchers {
-		wrappedRes, wrappedErr := wrappedMatcher.Matches(c)
-
-		if !wrappedRes {
-			res = false
+		if wrappedErr := wrappedMatcher.Matches(c); wrappedErr != nil {
 			err = wrappedErr
 
 			// If the error is fatal, return immediately with this error.

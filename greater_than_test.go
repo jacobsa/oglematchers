@@ -39,17 +39,16 @@ type gtTestCase struct {
 
 func (t *GreaterThanTest) checkTestCases(matcher Matcher, cases []gtTestCase) {
 	for i, c := range cases {
-		result, err := matcher.Matches(c.candidate)
+		err := matcher.Matches(c.candidate)
 
 		ExpectThat(
-			result,
+			(err == nil),
 			Equals(c.expectedResult),
 			"Case %d (candidate %v)",
 			i,
 			c.candidate)
 
-		if result {
-			ExpectEq(nil, err)
+		if err == nil {
 			continue
 		}
 

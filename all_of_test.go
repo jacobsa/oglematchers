@@ -27,12 +27,11 @@ import (
 
 type allOfFakeMatcher struct {
 	desc string
-	res  bool
 	err  error
 }
 
-func (m *allOfFakeMatcher) Matches(c interface{}) (bool, error) {
-	return m.res, m.err
+func (m *allOfFakeMatcher) Matches(c interface{}) error {
+	return m.err
 }
 
 func (m *allOfFakeMatcher) Description() string {
@@ -54,62 +53,58 @@ func (t *AllOfTest) DescriptionWithEmptySet() {
 }
 
 func (t *AllOfTest) DescriptionWithOneMatcher() {
-	m := AllOf(&allOfFakeMatcher{"taco", false, errors.New("")})
+	m := AllOf(&allOfFakeMatcher{"taco", errors.New("")})
 	ExpectEq("taco", m.Description())
 }
 
 func (t *AllOfTest) DescriptionWithMultipleMatchers() {
 	m := AllOf(
-		&allOfFakeMatcher{"taco", false, errors.New("")},
-		&allOfFakeMatcher{"burrito", false, errors.New("")},
-		&allOfFakeMatcher{"enchilada", false, errors.New("")})
+		&allOfFakeMatcher{"taco", errors.New("")},
+		&allOfFakeMatcher{"burrito", errors.New("")},
+		&allOfFakeMatcher{"enchilada", errors.New("")})
 
 	ExpectEq("taco, and burrito, and enchilada", m.Description())
 }
 
 func (t *AllOfTest) EmptySet() {
 	m := AllOf()
-	res, err := m.Matches(17)
+	err := m.Matches(17)
 
-	ExpectTrue(res)
 	ExpectEq(nil, err)
 }
 
 func (t *AllOfTest) OneMatcherReturnsFatalErrorAndSomeOthersFail() {
 	m := AllOf(
-		&allOfFakeMatcher{"", false, errors.New("")},
-		&allOfFakeMatcher{"", false, NewFatalError("taco")},
-		&allOfFakeMatcher{"", false, errors.New("")},
-		&allOfFakeMatcher{"", true, nil})
+		&allOfFakeMatcher{"", errors.New("")},
+		&allOfFakeMatcher{"", NewFatalError("taco")},
+		&allOfFakeMatcher{"", errors.New("")},
+		&allOfFakeMatcher{"", nil})
 
-	res, err := m.Matches(17)
+	err := m.Matches(17)
 
-	ExpectFalse(res)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("taco")))
 }
 
 func (t *AllOfTest) OneMatcherReturnsNonFatalAndOthersSayTrue() {
 	m := AllOf(
-		&allOfFakeMatcher{"", true, nil},
-		&allOfFakeMatcher{"", false, errors.New("taco")},
-		&allOfFakeMatcher{"", true, nil})
+		&allOfFakeMatcher{"", nil},
+		&allOfFakeMatcher{"", errors.New("taco")},
+		&allOfFakeMatcher{"", nil})
 
-	res, err := m.Matches(17)
+	err := m.Matches(17)
 
-	ExpectFalse(res)
 	ExpectFalse(isFatal(err))
 	ExpectThat(err, Error(Equals("taco")))
 }
 
 func (t *AllOfTest) AllMatchersSayTrue() {
 	m := AllOf(
-		&allOfFakeMatcher{"", true, nil},
-		&allOfFakeMatcher{"", true, nil},
-		&allOfFakeMatcher{"", true, nil})
+		&allOfFakeMatcher{"", nil},
+		&allOfFakeMatcher{"", nil},
+		&allOfFakeMatcher{"", nil})
 
-	res, err := m.Matches(17)
+	err := m.Matches(17)
 
-	ExpectTrue(res)
 	ExpectEq(nil, err)
 }

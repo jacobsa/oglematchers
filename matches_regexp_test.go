@@ -46,57 +46,47 @@ func (t *MatchesRegexpTest) InvalidRegexp() {
 
 func (t *MatchesRegexpTest) CandidateIsNil() {
 	m := MatchesRegexp("")
-	res, err := m.Matches(nil)
+	err := m.Matches(nil)
 
-	ExpectEq(false, res)
 	ExpectThat(err, Error(Equals("which is not a string or []byte")))
 	ExpectTrue(isFatal(err))
 }
 
 func (t *MatchesRegexpTest) CandidateIsInteger() {
 	m := MatchesRegexp("")
-	res, err := m.Matches(17)
+	err := m.Matches(17)
 
-	ExpectEq(false, res)
 	ExpectThat(err, Error(Equals("which is not a string or []byte")))
 	ExpectTrue(isFatal(err))
 }
 
 func (t *MatchesRegexpTest) NonMatchingCandidates() {
 	m := MatchesRegexp("fo[op]\\s+x")
-	var res bool
 	var err error
 
-	res, err = m.Matches("fon x")
-	ExpectFalse(res)
+	err = m.Matches("fon x")
 	ExpectThat(err, Error(Equals("")))
 	ExpectFalse(isFatal(err))
 
-	res, err = m.Matches("fopx")
-	ExpectFalse(res)
+	err = m.Matches("fopx")
 	ExpectThat(err, Error(Equals("")))
 	ExpectFalse(isFatal(err))
 
-	res, err = m.Matches("fop   ")
-	ExpectFalse(res)
+	err = m.Matches("fop   ")
 	ExpectThat(err, Error(Equals("")))
 	ExpectFalse(isFatal(err))
 }
 
 func (t *MatchesRegexpTest) MatchingCandidates() {
 	m := MatchesRegexp("fo[op]\\s+x")
-	var res bool
 	var err error
 
-	res, err = m.Matches("foo x")
-	ExpectTrue(res)
+	err = m.Matches("foo x")
 	ExpectEq(nil, err)
 
-	res, err = m.Matches("fop     x")
-	ExpectTrue(res)
+	err = m.Matches("fop     x")
 	ExpectEq(nil, err)
 
-	res, err = m.Matches("blah blah foo x blah blah")
-	ExpectTrue(res)
+	err = m.Matches("blah blah foo x blah blah")
 	ExpectEq(nil, err)
 }

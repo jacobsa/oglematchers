@@ -27,12 +27,11 @@ import (
 
 type fakeAnyOfMatcher struct {
 	desc string
-	res  bool
 	err  error
 }
 
-func (m *fakeAnyOfMatcher) Matches(c interface{}) (bool, error) {
-	return m.res, m.err
+func (m *fakeAnyOfMatcher) Matches(c interface{}) error {
+	return m.err
 }
 
 func (m *fakeAnyOfMatcher) Description() string {
@@ -51,68 +50,58 @@ func init() { RegisterTestSuite(&AnyOfTest{}) }
 func (t *AnyOfTest) EmptySet() {
 	matcher := AnyOf()
 
-	res, err := matcher.Matches(0)
-
-	ExpectFalse(res)
+	err := matcher.Matches(0)
 	ExpectThat(err, Error(Equals("")))
 }
 
 func (t *AnyOfTest) OneTrue() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", false, NewFatalError("foo")},
+		&fakeAnyOfMatcher{"", NewFatalError("foo")},
 		17,
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
-		&fakeAnyOfMatcher{"", true, nil},
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
+		&fakeAnyOfMatcher{"", nil},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 	)
 
-	res, err := matcher.Matches(0)
-
-	ExpectTrue(res)
+	err := matcher.Matches(0)
 	ExpectEq(nil, err)
 }
 
 func (t *AnyOfTest) OneEqual() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", false, NewFatalError("foo")},
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", NewFatalError("foo")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 		13,
 		"taco",
 		19,
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 	)
 
-	res, err := matcher.Matches("taco")
-
-	ExpectTrue(res)
+	err := matcher.Matches("taco")
 	ExpectEq(nil, err)
 }
 
 func (t *AnyOfTest) OneFatal() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 		17,
-		&fakeAnyOfMatcher{"", false, NewFatalError("taco")},
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", NewFatalError("taco")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 	)
 
-	res, err := matcher.Matches(0)
-
-	ExpectFalse(res)
+	err := matcher.Matches(0)
 	ExpectThat(err, Error(Equals("taco")))
 }
 
 func (t *AnyOfTest) AllFalseAndNotEqual() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 		17,
-		&fakeAnyOfMatcher{"", false, errors.New("foo")},
+		&fakeAnyOfMatcher{"", errors.New("foo")},
 		19,
 	)
 
-	res, err := matcher.Matches(0)
-
-	ExpectFalse(res)
+	err := matcher.Matches(0)
 	ExpectThat(err, Error(Equals("")))
 }
 
@@ -123,9 +112,9 @@ func (t *AnyOfTest) DescriptionForEmptySet() {
 
 func (t *AnyOfTest) DescriptionForNonEmptySet() {
 	matcher := AnyOf(
-		&fakeAnyOfMatcher{"taco", true, nil},
+		&fakeAnyOfMatcher{"taco", nil},
 		"burrito",
-		&fakeAnyOfMatcher{"enchilada", true, nil},
+		&fakeAnyOfMatcher{"enchilada", nil},
 	)
 
 	ExpectEq("or(taco, burrito, enchilada)", matcher.Description())
