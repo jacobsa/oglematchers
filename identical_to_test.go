@@ -89,14 +89,14 @@ func (t *IdenticalToTest) Slices() {
 	ExpectThat(err, Equals("which is not an identical reference"))
 
 	// Non-nil expected value
-	s1 := []int{}
-	s2 := []int{}
-	m = IdenticalTo(s1)
+	o1 := []int{}
+	o2 := []int{}
+	m = IdenticalTo(o1)
 
-	err = m.Matches(s1)
+	err = m.Matches(o1)
 	ExpectEq(nil, err)
 
-	err = m.Matches(s2)
+	err = m.Matches(o2)
 	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
@@ -114,18 +114,40 @@ func (t *IdenticalToTest) Maps() {
 	ExpectThat(err, Equals("which is not an identical reference"))
 
 	// Non-nil expected value
-	m1 := map[int]int{}
-	m2 := map[int]int{}
-	m = IdenticalTo(m1)
+	o1 := map[int]int{}
+	o2 := map[int]int{}
+	m = IdenticalTo(o1)
 
-	err = m.Matches(m1)
+	err = m.Matches(o1)
 	ExpectEq(nil, err)
 
-	err = m.Matches(m2)
+	err = m.Matches(o2)
 	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
 func (t *IdenticalToTest) Functions() {
+	var m Matcher
+	var err error
+
+	// Nil expected value
+	m = IdenticalTo((func())(nil))
+
+	err = m.Matches((func())(nil))
+	ExpectEq(nil, err)
+
+	err = m.Matches(func(){})
+	ExpectThat(err, Equals("which is not an identical reference"))
+
+	// Non-nil expected value
+	o1 := func() {}
+	o2 := func() {}
+	m = IdenticalTo(o1)
+
+	err = m.Matches(o1)
+	ExpectEq(nil, err)
+
+	err = m.Matches(o2)
+	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
 func (t *IdenticalToTest) Channels() {
