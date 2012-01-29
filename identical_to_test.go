@@ -118,3 +118,6 @@ func (t *IdenticalToTest) NonComparableStructs() {
 
 func (t *IdenticalToTest) UnsafePointers() {
 }
+
+func (t *IdenticalToTest) IntAlias() {
+}
