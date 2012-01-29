@@ -52,9 +52,9 @@ func TestOgletest(t *testing.T) { RunTests(t) }
 
 func (t *NotTest) CallsWrapped() {
 	var suppliedCandidate interface{}
-	matchFunc := func(c interface{}) (bool, error) {
+	matchFunc := func(c interface{}) error {
 		suppliedCandidate = c
-		return true, nil
+		return nil
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
@@ -65,44 +65,38 @@ func (t *NotTest) CallsWrapped() {
 }
 
 func (t *NotTest) WrappedReturnsTrue() {
-	matchFunc := func(c interface{}) (bool, error) {
-		return true, nil
+	matchFunc := func(c interface{}) error {
+		return nil
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Not(wrapped)
 
-	res, err := matcher.Matches(0)
-
-	ExpectFalse(res)
+	err := matcher.Matches(0)
 	ExpectThat(err, Error(Equals("")))
 }
 
 func (t *NotTest) WrappedReturnsNonFatalError() {
-	matchFunc := func(c interface{}) (bool, error) {
-		return false, errors.New("taco")
+	matchFunc := func(c interface{}) error {
+		return errors.New("taco")
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Not(wrapped)
 
-	res, err := matcher.Matches(0)
-
-	ExpectTrue(res)
+	err := matcher.Matches(0)
 	ExpectEq(nil, err)
 }
 
 func (t *NotTest) WrappedReturnsFatalError() {
-	matchFunc := func(c interface{}) (bool, error) {
-		return false, NewFatalError("taco")
+	matchFunc := func(c interface{}) error {
+		return NewFatalError("taco")
 	}
 
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Not(wrapped)
 
-	res, err := matcher.Matches(0)
-
-	ExpectFalse(res)
+	err := matcher.Matches(0)
 	ExpectThat(err, Error(Equals("taco")))
 }
 
