@@ -23,8 +23,8 @@ import (
 //
 //  *  v and x have identical types.
 //
-//  *  If v and x are of a reference type (slice, map, function), then they are
-//     either both nil or are references to the same object.
+//  *  If v and x are of a reference type (slice, map, function, channel), then
+//     they are either both nil or are references to the same object.
 //
 //  *  If v and x are not of a reference type, then it is legal to compare them
 //     using the == operator, and v == x.

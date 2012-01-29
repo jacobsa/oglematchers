@@ -32,5 +32,89 @@ func init() { RegisterTestSuite(&IdenticalToTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *IdenticalToTest) DoesFoo() {
+func (t *IdenticalToTest) TypesNotIdentical() {
+}
+
+func (t *IdenticalToTest) Slices() {
+}
+
+func (t *IdenticalToTest) Maps() {
+}
+
+func (t *IdenticalToTest) Functions() {
+}
+
+func (t *IdenticalToTest) Channels() {
+}
+
+func (t *IdenticalToTest) Bools() {
+}
+
+func (t *IdenticalToTest) Ints() {
+}
+
+func (t *IdenticalToTest) Int8s() {
+}
+
+func (t *IdenticalToTest) Int16s() {
+}
+
+func (t *IdenticalToTest) Int32s() {
+}
+
+func (t *IdenticalToTest) Int64s() {
+}
+
+func (t *IdenticalToTest) Uints() {
+}
+
+func (t *IdenticalToTest) Uint8s() {
+}
+
+func (t *IdenticalToTest) Uint16s() {
+}
+
+func (t *IdenticalToTest) Uint32s() {
+}
+
+func (t *IdenticalToTest) Uint64s() {
+}
+
+func (t *IdenticalToTest) Float32s() {
+}
+
+func (t *IdenticalToTest) Float64s() {
+}
+
+func (t *IdenticalToTest) Complex64s() {
+}
+
+func (t *IdenticalToTest) Complex128s() {
+}
+
+func (t *IdenticalToTest) ComparableArrays() {
+}
+
+func (t *IdenticalToTest) NonComparableArrays() {
+}
+
+func (t *IdenticalToTest) ComparableInterfaces() {
+}
+
+func (t *IdenticalToTest) NonComparableInterfaces() {
+}
+
+func (t *IdenticalToTest) Pointers() {
+}
+
+func (t *IdenticalToTest) Strings() {
+}
+
+func (t *IdenticalToTest) ComparableStructs() {
+}
+
+func (t *IdenticalToTest) NonComparableStructs() {
+}
+
+func (t *IdenticalToTest) UnsafePointers() {
 }
