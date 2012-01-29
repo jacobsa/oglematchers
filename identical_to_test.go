@@ -151,6 +151,28 @@ func (t *IdenticalToTest) Functions() {
 }
 
 func (t *IdenticalToTest) Channels() {
+	var m Matcher
+	var err error
+
+	// Nil expected value
+	m = IdenticalTo((chan int)(nil))
+
+	err = m.Matches((chan int)(nil))
+	ExpectEq(nil, err)
+
+	err = m.Matches(make(chan int))
+	ExpectThat(err, Equals("which is not an identical reference"))
+
+	// Non-nil expected value
+	o1 := make(chan int)
+	o2 := make(chan int)
+	m = IdenticalTo(o1)
+
+	err = m.Matches(o1)
+	ExpectEq(nil, err)
+
+	err = m.Matches(o2)
+	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
 func (t *IdenticalToTest) Bools() {
