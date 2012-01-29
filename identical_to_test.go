@@ -101,6 +101,28 @@ func (t *IdenticalToTest) Slices() {
 }
 
 func (t *IdenticalToTest) Maps() {
+	var m Matcher
+	var err error
+
+	// Nil expected value
+	m = IdenticalTo((map[int]int)(nil))
+
+	err = m.Matches((map[int]int)(nil))
+	ExpectEq(nil, err)
+
+	err = m.Matches(map[int]int{})
+	ExpectThat(err, Equals("which is not an identical reference"))
+
+	// Non-nil expected value
+	m1 := map[int]int{}
+	m2 := map[int]int{}
+	m = IdenticalTo(m1)
+
+	err = m.Matches(m1)
+	ExpectEq(nil, err)
+
+	err = m.Matches(m2)
+	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
 func (t *IdenticalToTest) Functions() {
