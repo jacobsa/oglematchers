@@ -27,14 +27,13 @@ package oglematchers
 // than 17, and HasSubstr("taco") matches all strings with the substring
 // "taco".
 type Matcher interface {
-	// Matches returns a bool indicating whether the supplied value belongs to
-	// the set defined by the matcher.
+	// Check whether the supplied value belongs to the the set defined by the
+	// matcher. Return a non-nil error if and only if it does not.
 	//
-	// If the result is false, it returns an error describing why the value
-	// doesn't match. The error text is a relative clause that is suitable for
-	// being placed after the value. For example, a predicate that matches
-	// strings with a particular substring may, when presented with a numerical
-	// value, return the following error text:
+	// The error describes why the value doesn't match. The error text is a
+	// relative clause that is suitable for being placed after the value. For
+	// example, a predicate that matches strings with a particular substring may,
+	// when presented with a numerical value, return the following error text:
 	//
 	//     "which is not a string"
 	//
@@ -44,14 +43,14 @@ type Matcher interface {
 	//     Actual:   17, which is not a string
 	//
 	// If the error is self-apparent based on the description of the matcher, the
-	// error text may be empty. For example:
+	// error text may be empty (but the error still non-nil). For example:
 	//
 	//     Expected: 17
 	//     Actual:   19
 	//
 	// If you are implementing a new matcher, see also the documentation on
 	// FatalError.
-	Matches(candidate interface{}) (bool, error)
+	Matches(candidate interface{}) error
 
 	// Description returns a string describing the property that values matching
 	// this matcher have, as a verb phrase where the subject is the value. For
