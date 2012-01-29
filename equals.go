@@ -22,19 +22,33 @@ import (
 	"reflect"
 )
 
-// Equals(x) returns a matcher that matches values v such that any of the
-// following hold:
+// Equals(x) returns a matcher that matches values v such that v and x are
+// equivalent. This includes the case when the comparison v == x using Go's
+// built-in comparison operator is legal, but for convenience the following
+// rules also apply:
 //
-//  1. v and x are of the same type, and v == x.
+//  *  Type checking is done based on underlying types rather than actual
+//     types, so that e.g. two aliases for string can be compared:
 //
-//  2. v's type is an alias for x's type or vice versa, and when casted to the
-//     basic type v and x are equal.
+//         type stringAlias1 string
+//         type stringAlias2 string
 //
-//  3. v and x are both of numeric types, and their values are equivalent.
+//         a := "taco"
+//         b := stringAlias1("taco")
+//         c := stringAlias2("taco")
 //
-// If you want a stricter matcher that works just like the built-in == operator
-// (including rejecting even slightly different types), see StrictEquals
-// instead.
+//         ExpectTrue(a == b)  // Legal, passes
+//         ExpectTrue(b == c)  // Illegal, doesn't compile
+//
+//         ExpectThat(a, Equals(b))  // Passes
+//         ExpectThat(b, Equals(c))  // Passes
+//
+//  *  Values of numeric type are treated as if they were abstract numbers, and
+//     compared accordingly. Therefore Equals(17) will match int(17),
+//     int16(17), uint(17), float32(17), complex64(17), and so on.
+//
+// If you want a stricter matcher that contains no such cleverness, see
+// IdenticalTo instead.
 func Equals(x interface{}) Matcher {
 	v := reflect.ValueOf(x)
 

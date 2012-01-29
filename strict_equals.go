@@ -35,5 +35,5 @@ import (
 //
 func StrictEquals(x interface{}) Matcher {
 	// TODO
-	return &hasSubstrMatcher{s}
+	return &hasSubstrMatcher{"asd"}
 }
