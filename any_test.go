@@ -43,15 +43,12 @@ func (t *AnyTest) Matches() {
 	var err error
 	m := Any()
 
-	res, err = m.Matches(nil)
-	ExpectEq(true, res)
+	err = m.Matches(nil)
 	ExpectEq(nil, err)
 
-	res, err = m.Matches(17)
-	ExpectEq(true, res)
+	err = m.Matches(17)
 	ExpectEq(nil, err)
 
-	res, err = m.Matches("taco")
-	ExpectEq(true, res)
+	err = m.Matches("taco")
 	ExpectEq(nil, err)
 }
