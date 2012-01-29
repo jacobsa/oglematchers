@@ -55,31 +55,24 @@ func (t *IdenticalToTest) TypesNotIdentical() {
 	ExpectThat(err, Error(Equals("which is of type uint")))
 }
 
-func (t *IdenticalToTest) NilExpectedValue() {
-	m := IdenticalTo(nil)
+func (t *IdenticalToTest) InvalidTypeExpectedValue() {
+	f := func() { IdenticalTo(nil) }
+	ExpectThat(f, Panics(AllOf(HasSubstr("IdenticalTo"), HasSubstr("invalid"))))
+}
+
+func (t *IdenticalToTest) InvalidTypeCandidate() {
+	var m Matcher
 	var err error
 
-	// Nil candidate
+	// Nil chan expected value
+	m = IdenticalTo((chan int)(nil))
 	err = m.Matches(nil)
-	ExpectEq(nil, err)
+	ExpectThat(err, Error(Equals("which is of type <nil>")))
 
-	// Casted nil chan candidate
-	err = m.Matches((chan int)(nil))
-	ExpectEq(nil, err)
-
-	// Non-nil chan candidate
-	err = m.Matches(make(chan int))
-	ExpectThat(err, Error(Equals("which is of type chan int")))
-
-	// Integer candidate
-	err = m.Matches(17)
-	ExpectThat(err, Error(Equals("which is of type int")))
-}
-
-func (t *IdenticalToTest) CastedNilExpectedValue() {
-}
-
-func (t *IdenticalToTest) NilCandidate() {
+	// Non-nil chan expected value
+	m = IdenticalTo(make(chan int))
+	err = m.Matches(nil)
+	ExpectThat(err, Error(Equals("which is of type <nil>")))
 }
 
 func (t *IdenticalToTest) Slices() {
