@@ -18,22 +18,18 @@ package oglematchers
 import (
 )
 
-// StrictEquals(x) returns a matcher that matches values v such that v == x.
-// The matcher follows the same strict rules about types that the built-in ==
-// operator does, and does not do any type folding like Equals does.
+// IdenticalTo(x) returns a matcher that matches values v such that all of the
+// following hold:
 //
-// For example:
+//  *  v and x have identical types.
 //
-//     type stringAlias string
+//  *  If v and x are of a reference type (slice, map, function), then they are
+//     either both nil or are references to the same object.
 //
-//     ExpectThat("taco", Equals(stringAlias("taco")))        // Passes
-//     ExpectThat("taco", StrictEquals(stringAlias("taco")))  // Fails
-//     ExpectThat(stringAlias("taco"), StrictEquals("taco"))  // Fails
+//  *  If v and x are not of a reference type, then it is legal to compare them
+//     using the == operator, and v == x.
 //
-//     ExpectThat(int(17), Equals(int8(17)))                  // Passes
-//     ExpectThat(int(17), StrictEquals(int8(17)))            // Fails
-//
-func StrictEquals(x interface{}) Matcher {
+func IdenticalTo(x interface{}) Matcher {
 	// TODO
 	return &hasSubstrMatcher{"asd"}
 }

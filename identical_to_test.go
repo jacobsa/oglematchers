@@ -23,14 +23,14 @@ import (
 // Helpers
 ////////////////////////////////////////////////////////////
 
-type StrictEqualsTest struct {
+type IdenticalToTest struct {
 }
 
-func init() { RegisterTestSuite(&StrictEqualsTest{}) }
+func init() { RegisterTestSuite(&IdenticalToTest{}) }
 
 ////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////
 
-func (t *StrictEqualsTest) DoesFoo() {
+func (t *IdenticalToTest) DoesFoo() {
 }
