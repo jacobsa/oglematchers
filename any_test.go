@@ -39,7 +39,6 @@ func (t *AnyTest) Description() {
 }
 
 func (t *AnyTest) Matches() {
-	var res bool
 	var err error
 	m := Any()
 
