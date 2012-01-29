@@ -27,11 +27,11 @@ import (
 ////////////////////////////////////////////////////////////
 
 type fakeMatcher struct {
-	matchFunc   func(interface{}) (bool, error)
+	matchFunc   func(interface{}) error
 	description string
 }
 
-func (m *fakeMatcher) Matches(c interface{}) (bool, error) {
+func (m *fakeMatcher) Matches(c interface{}) error {
 	return m.matchFunc(c)
 }
 
