@@ -36,17 +36,17 @@ func (m *hasSubstrMatcher) Description() string {
 	return fmt.Sprintf("has substring \"%s\"", m.needle)
 }
 
-func (m *hasSubstrMatcher) Matches(c interface{}) (bool, error) {
+func (m *hasSubstrMatcher) Matches(c interface{}) error {
 	v := reflect.ValueOf(c)
 	if v.Kind() != reflect.String {
-		return false, NewFatalError("which is not a string")
+		return NewFatalError("which is not a string")
 	}
 
 	// Perform the substring search.
 	haystack := v.String()
 	if strings.Contains(haystack, m.needle) {
-		return true, nil
+		return nil
 	}
 
-	return false, errors.New("")
+	return errors.New("")
 }

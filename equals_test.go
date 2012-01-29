@@ -43,10 +43,10 @@ type equalsTestCase struct {
 
 func (t *EqualsTest) checkTestCases(matcher Matcher, cases []equalsTestCase) {
 	for i, c := range cases {
-		result, err := matcher.Matches(c.candidate)
-		ExpectEq(c.expectedResult, result, "Result for case %d: %v", i, c)
+		err := matcher.Matches(c.candidate)
+		ExpectEq(c.expectedResult, (err == nil), "Result for case %d: %v", i, c)
 
-		if result {
+		if err == nil {
 			continue
 		}
 

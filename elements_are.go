@@ -60,22 +60,22 @@ func (m *elementsAreMatcher) Description() string {
 	return fmt.Sprintf("elements are: [%s]", strings.Join(subDescs, ", "))
 }
 
-func (m *elementsAreMatcher) Matches(candidates interface{}) (bool, error) {
+func (m *elementsAreMatcher) Matches(candidates interface{}) error {
 	// The candidate must be a slice or an array.
 	v := reflect.ValueOf(candidates)
 	if v.Kind() != reflect.Slice && v.Kind() != reflect.Array {
-		return false, NewFatalError("which is not a slice or array")
+		return NewFatalError("which is not a slice or array")
 	}
 
 	// The length must be correct.
 	if v.Len() != len(m.subMatchers) {
-		return false, errors.New(fmt.Sprintf("which is of length %d", v.Len()))
+		return errors.New(fmt.Sprintf("which is of length %d", v.Len()))
 	}
 
 	// Check each element.
 	for i, subMatcher := range m.subMatchers {
 		c := v.Index(i)
-		if matches, matchErr := subMatcher.Matches(c.Interface()); !matches {
+		if matchErr := subMatcher.Matches(c.Interface()); matchErr != nil {
 			// Return an errors indicating which element doesn't match. If the
 			// matcher error was fatal, make this one fatal too.
 			err := errors.New(fmt.Sprintf("whose element %d doesn't match", i))
@@ -83,9 +83,9 @@ func (m *elementsAreMatcher) Matches(candidates interface{}) (bool, error) {
 				err = NewFatalError(err.Error())
 			}
 
-			return false, err
+			return err
 		}
 	}
 
-	return true, nil
+	return nil
 }
