@@ -421,7 +421,24 @@ func (t *IdenticalToTest) Uint64s() {
 }
 
 func (t *IdenticalToTest) Uintptrs() {
-	ExpectTrue(false, "TODO")
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(uintptr(17))
+	ExpectEq("identical to <uintptr> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(uintptr(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType uintptr
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Float32s() {
