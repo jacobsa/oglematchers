@@ -17,6 +17,7 @@ package oglematchers
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 )
 
@@ -66,6 +67,18 @@ func IdenticalTo(x interface{}) Matcher {
 		panic("IdenticalTo: " + err.Error())
 	}
 
-	// TODO
-	return &hasSubstrMatcher{"asd"}
+	return &identicalToMatcher{x}
+}
+
+type identicalToMatcher struct {
+	x interface{}
+}
+
+func (m *identicalToMatcher) Description() string {
+	t := reflect.TypeOf(m.x)
+	return fmt.Sprintf("identical to <%v> %v", t, m.x)
+}
+
+func (m *identicalToMatcher) Matches(c interface{}) error {
+	return errors.New("TODO")
 }
