@@ -29,6 +29,8 @@ import (
 //  *  If v and x are not of a reference type, then it is legal to compare them
 //     using the == operator, and v == x.
 //
+// It is illegal for x to be of struct type, or of a container type that uses
+// structs as keys or elements.
 func IdenticalTo(x interface{}) Matcher {
 	// TODO
 	return &hasSubstrMatcher{"asd"}
