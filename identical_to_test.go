@@ -492,7 +492,7 @@ func (t *IdenticalToTest) Complex64s() {
 	var err error
 
 	m = IdenticalTo(complex64(17))
-	ExpectEq("identical to <complex64> 17", m.Description())
+	ExpectEq("identical to <complex64> 17+0i", m.Description())
 
 	// Identical value
 	err = m.Matches(complex64(17))
@@ -513,7 +513,7 @@ func (t *IdenticalToTest) Complex128s() {
 	var err error
 
 	m = IdenticalTo(complex128(17))
-	ExpectEq("identical to <complex128> 17", m.Description())
+	ExpectEq("identical to <complex128> 17+0i", m.Description())
 
 	// Identical value
 	err = m.Matches(complex128(17))
