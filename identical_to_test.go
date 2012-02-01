@@ -767,4 +767,23 @@ func (t *IdenticalToTest) NonNilUnsafePointer() {
 }
 
 func (t *IdenticalToTest) IntAlias() {
+	var m Matcher
+	var err error
+
+	type intAlias int
+
+	m = IdenticalTo(intAlias(17))
+	ExpectEq("identical to <intAlias> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(intAlias(17))
+	ExpectEq(nil, err)
+
+	// Int
+	err = m.Matches(int(17))
+	ExpectThat(err, Error(Equals("which is of type int")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
