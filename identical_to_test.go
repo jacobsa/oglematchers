@@ -18,6 +18,7 @@ package oglematchers_test
 import (
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
+	"fmt"
 )
 
 ////////////////////////////////////////////////////////////
@@ -81,6 +82,7 @@ func (t *IdenticalToTest) Slices() {
 
 	// Nil expected value
 	m = IdenticalTo(([]int)(nil))
+	ExpectEq("identical to <[]int> nil", m.Description())
 
 	err = m.Matches(([]int)(nil))
 	ExpectEq(nil, err)
@@ -92,6 +94,7 @@ func (t *IdenticalToTest) Slices() {
 	o1 := []int{}
 	o2 := []int{}
 	m = IdenticalTo(o1)
+	ExpectEq(fmt.Sprintf("identical to <[]int> %v", o1), m.Description())
 
 	err = m.Matches(o1)
 	ExpectEq(nil, err)
@@ -106,6 +109,7 @@ func (t *IdenticalToTest) Maps() {
 
 	// Nil expected value
 	m = IdenticalTo((map[int]int)(nil))
+	ExpectEq("identical to <map[int]int> nil", m.Description())
 
 	err = m.Matches((map[int]int)(nil))
 	ExpectEq(nil, err)
@@ -117,6 +121,7 @@ func (t *IdenticalToTest) Maps() {
 	o1 := map[int]int{}
 	o2 := map[int]int{}
 	m = IdenticalTo(o1)
+	ExpectEq(fmt.Sprintf("identical to <map[int]int> %v", o1), m.Description())
 
 	err = m.Matches(o1)
 	ExpectEq(nil, err)
@@ -131,6 +136,7 @@ func (t *IdenticalToTest) Functions() {
 
 	// Nil expected value
 	m = IdenticalTo((func())(nil))
+	ExpectEq("identical to <func()> nil", m.Description())
 
 	err = m.Matches((func())(nil))
 	ExpectEq(nil, err)
@@ -142,6 +148,7 @@ func (t *IdenticalToTest) Functions() {
 	o1 := func() {}
 	o2 := func() {}
 	m = IdenticalTo(o1)
+	ExpectEq(fmt.Sprintf("identical to <func()> %v", o1), m.Description())
 
 	err = m.Matches(o1)
 	ExpectEq(nil, err)
@@ -156,6 +163,7 @@ func (t *IdenticalToTest) Channels() {
 
 	// Nil expected value
 	m = IdenticalTo((chan int)(nil))
+	ExpectEq("identical to <chan int> nil", m.Description())
 
 	err = m.Matches((chan int)(nil))
 	ExpectEq(nil, err)
@@ -167,6 +175,7 @@ func (t *IdenticalToTest) Channels() {
 	o1 := make(chan int)
 	o2 := make(chan int)
 	m = IdenticalTo(o1)
+	ExpectEq(fmt.Sprintf("identical to <chan int> %v", o1), m.Description())
 
 	err = m.Matches(o1)
 	ExpectEq(nil, err)
@@ -181,6 +190,7 @@ func (t *IdenticalToTest) Bools() {
 
 	// false
 	m = IdenticalTo(false)
+	ExpectEq("identical to <bool> false", m.Description())
 
 	err = m.Matches(false)
 	ExpectEq(nil, err)
@@ -190,6 +200,7 @@ func (t *IdenticalToTest) Bools() {
 
 	// true
 	m = IdenticalTo(true)
+	ExpectEq("identical to <bool> true", m.Description())
 
 	err = m.Matches(false)
 	ExpectThat(err, Error(Equals("")))
