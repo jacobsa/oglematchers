@@ -565,6 +565,39 @@ func (t *IdenticalToTest) NonEmptyComparableArrays() {
 	ExpectThat(err, Error(Equals("which is of type [2]int32")))
 }
 
+func (t *IdenticalToTest) NonEmptyArraysOfComparableArrays() {
+	var m Matcher
+	var err error
+
+	x := [2][2]int{
+		[2]int{17, 19},
+		[2]int{23, 29},
+	}
+	m = IdenticalTo(x)
+	ExpectEq("identical to <[2][2]int> [[17 19] [23 29]]", m.Description())
+
+	// Identical value
+	err = m.Matches([2][2]int{[2]int{17, 19}, [2]int{23, 29}})
+	ExpectEq(nil, err)
+
+	// Outer length too short
+	err = m.Matches([1][2]int{[2]int{17, 19}})
+	ExpectThat(err, Error(Equals("")))
+
+	// Inner length too short
+	err = m.Matches([2][1]int{[1]int{17}, [1]int{23}})
+	ExpectThat(err, Error(Equals("")))
+
+	// First element different
+	err = m.Matches([2][2]int{[2]int{13, 19}, [2]int{23, 29}})
+	ExpectThat(err, Error(Equals("")))
+
+	// Element type alias
+	type myType int
+	err = m.Matches([2][2]myType{[2]myType{17, 19}, [2]myType{23, 29}})
+	ExpectThat(err, Error(Equals("which is of type [2][2]myType")))
+}
+
 func (t *IdenticalToTest) NonComparableArrays() {
 	x := [0]func(){}
 	f := func() { IdenticalTo(x) }
