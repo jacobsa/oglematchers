@@ -44,16 +44,19 @@ func (t *IdenticalToTest) TypesNotIdentical() {
 	// Type alias expected value
 	m = IdenticalTo(intAlias(17))
 	err = m.Matches(int(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int")))
 
 	// Type alias candidate
 	m = IdenticalTo(int(17))
 	err = m.Matches(intAlias(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type intAlias")))
 
 	// int and uint
 	m = IdenticalTo(int(17))
 	err = m.Matches(uint(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type uint")))
 }
 
@@ -69,11 +72,13 @@ func (t *IdenticalToTest) InvalidTypeCandidate() {
 	// Nil chan expected value
 	m = IdenticalTo((chan int)(nil))
 	err = m.Matches(nil)
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type <nil>")))
 
 	// Non-nil chan expected value
 	m = IdenticalTo(make(chan int))
 	err = m.Matches(nil)
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type <nil>")))
 }
 
@@ -228,10 +233,12 @@ func (t *IdenticalToTest) Ints() {
 	// Type alias
 	type myType int
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -249,10 +256,12 @@ func (t *IdenticalToTest) Int8s() {
 	// Type alias
 	type myType int8
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -270,10 +279,12 @@ func (t *IdenticalToTest) Int16s() {
 	// Type alias
 	type myType int16
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -291,10 +302,12 @@ func (t *IdenticalToTest) Int32s() {
 	// Type alias
 	type myType int32
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int16(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -312,10 +325,12 @@ func (t *IdenticalToTest) Int64s() {
 	// Type alias
 	type myType int64
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -333,10 +348,12 @@ func (t *IdenticalToTest) Uints() {
 	// Type alias
 	type myType uint
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -354,10 +371,12 @@ func (t *IdenticalToTest) Uint8s() {
 	// Type alias
 	type myType uint8
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -375,10 +394,12 @@ func (t *IdenticalToTest) Uint16s() {
 	// Type alias
 	type myType uint16
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -396,10 +417,12 @@ func (t *IdenticalToTest) Uint32s() {
 	// Type alias
 	type myType uint32
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -417,10 +440,12 @@ func (t *IdenticalToTest) Uint64s() {
 	// Type alias
 	type myType uint64
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -438,10 +463,12 @@ func (t *IdenticalToTest) Uintptrs() {
 	// Type alias
 	type myType uintptr
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -459,10 +486,12 @@ func (t *IdenticalToTest) Float32s() {
 	// Type alias
 	type myType float32
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(float32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type float32")))
 }
 
@@ -480,10 +509,12 @@ func (t *IdenticalToTest) Float64s() {
 	// Type alias
 	type myType float64
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(float64(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type float64")))
 }
 
@@ -501,10 +532,12 @@ func (t *IdenticalToTest) Complex64s() {
 	// Type alias
 	type myType complex64
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(complex64(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type complex64")))
 }
 
@@ -522,10 +555,12 @@ func (t *IdenticalToTest) Complex128s() {
 	// Type alias
 	type myType complex128
 	err = m.Matches(myType(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(complex128(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type complex128")))
 }
 
@@ -547,10 +582,12 @@ func (t *IdenticalToTest) EmptyComparableArrays() {
 	// Element type alias
 	type myType int
 	err = m.Matches([0]myType{})
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type [0]myType")))
 
 	// Completely wrong element type
 	err = m.Matches([0]int32{})
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type [0]int32")))
 }
 
@@ -584,10 +621,12 @@ func (t *IdenticalToTest) NonEmptyComparableArrays() {
 	// Element type alias
 	type myType int
 	err = m.Matches([2]myType{17, 19})
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type [2]myType")))
 
 	// Completely wrong element type
 	err = m.Matches([2]int32{17, 19})
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type [2]int32")))
 }
 
@@ -621,6 +660,7 @@ func (t *IdenticalToTest) NonEmptyArraysOfComparableArrays() {
 	// Element type alias
 	type myType int
 	err = m.Matches([2][2]myType{[2]myType{17, 19}, [2]myType{23, 29}})
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type [2][2]myType")))
 }
 
@@ -650,10 +690,12 @@ func (t *IdenticalToTest) Strings() {
 	// Type alias
 	type myType string
 	err = m.Matches(myType("taco"))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -689,10 +731,12 @@ func (t *IdenticalToTest) ComparableStructs() {
 	// Type alias
 	type myType myStruct
 	err = m.Matches(myType{17, subStruct{19}})
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -731,10 +775,12 @@ func (t *IdenticalToTest) NilUnsafePointer() {
 	// Type alias
 	type myType unsafe.Pointer
 	err = m.Matches(myType(unsafe.Pointer(nil)))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -763,10 +809,12 @@ func (t *IdenticalToTest) NonNilUnsafePointer() {
 	// Type alias
 	type myType unsafe.Pointer
 	err = m.Matches(myType(unsafe.Pointer(&i)))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
@@ -785,9 +833,11 @@ func (t *IdenticalToTest) IntAlias() {
 
 	// Int
 	err = m.Matches(int(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
+	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
