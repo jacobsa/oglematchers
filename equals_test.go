@@ -18,8 +18,8 @@ package oglematchers_test
 import (
 	"fmt"
 	. "github.com/jacobsa/oglematchers"
+	. "github.com/jacobsa/ogletest"
 	"math"
-	"testing"
 	"unsafe"
 )
 
@@ -29,6 +29,11 @@ var someInt int = -17
 // Helpers
 ////////////////////////////////////////////////////////////
 
+type EqualsTest struct {
+}
+
+func init() { RegisterTestSuite(&EqualsTest{}) }
+
 type equalsTestCase struct {
 	candidate      interface{}
 	expectedResult bool
@@ -36,35 +41,19 @@ type equalsTestCase struct {
 	expectedError  string
 }
 
-func checkTestCases(t *testing.T, matcher Matcher, cases []equalsTestCase) {
+func (t *EqualsTest) checkTestCases(matcher Matcher, cases []equalsTestCase) {
 	for i, c := range cases {
 		err := matcher.Matches(c.candidate)
-
-		if (err == nil) != c.expectedResult {
-			t.Errorf(
-				"Case %d (candidate %v): expected %v, got error: %v",
-				i,
-				c.candidate,
-				c.expectedResult,
-				err)
-		}
+		ExpectEq(c.expectedResult, (err == nil), "Result for case %d: %v", i, c)
 
 		if err == nil {
 			continue
 		}
 
-		if _, isFatal := err.(*FatalError); isFatal != c.shouldBeFatal {
-			t.Errorf(
-				"Case %d (candidate %v): expected fatal %v, got fatal %v",
-				i,
-				c.candidate,
-				c.shouldBeFatal,
-				isFatal)
-		}
+		_, isFatal := err.(*FatalError)
+		ExpectEq(c.shouldBeFatal, isFatal, "Fatality for case %d: %v", i, c)
 
-		if err.Error() != c.expectedError {
-			t.Errorf("Case %d: expected error %v, got %v", i, c.expectedError, err.Error())
-		}
+		ExpectThat(err, Error(Equals(c.expectedError)), "Case %d: %v", i, c)
 	}
 }
 
@@ -72,14 +61,9 @@ func checkTestCases(t *testing.T, matcher Matcher, cases []equalsTestCase) {
 // nil
 ////////////////////////////////////////////////////////////
 
-func TestEqualsNil(t *testing.T) {
+func (t *EqualsTest) EqualsNil() {
 	matcher := Equals(nil)
-	desc := matcher.Description()
-	expectedDesc := "is nil"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("is nil", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Legal types
@@ -107,22 +91,17 @@ func TestEqualsNil(t *testing.T) {
 		equalsTestCase{unsafe.Pointer(&someInt), false, true, "which cannot be compared to nil"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // Integer literals
 ////////////////////////////////////////////////////////////
 
-func TestNegativeIntegerLiteral(t *testing.T) {
+func (t *EqualsTest) NegativeIntegerLiteral() {
 	// -2^30
 	matcher := Equals(-1073741824)
-	desc := matcher.Description()
-	expectedDesc := "-1073741824"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1073741824", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -1073741824.
@@ -167,18 +146,13 @@ func TestNegativeIntegerLiteral(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveIntegerLiteral(t *testing.T) {
+func (t *EqualsTest) PositiveIntegerLiteral() {
 	// 2^30
 	matcher := Equals(1073741824)
-	desc := matcher.Description()
-	expectedDesc := "1073741824"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1073741824", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 1073741824.
@@ -220,22 +194,17 @@ func TestPositiveIntegerLiteral(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // Floating point literals
 ////////////////////////////////////////////////////////////
 
-func TestNegativeIntegralFloatingPointLiteral(t *testing.T) {
+func (t *EqualsTest) NegativeIntegralFloatingPointLiteral() {
 	// -2^30
 	matcher := Equals(-1073741824.0)
-	desc := matcher.Description()
-	expectedDesc := "-1.073741824e+09"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1.073741824e+09", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -1073741824.
@@ -281,18 +250,13 @@ func TestNegativeIntegralFloatingPointLiteral(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveIntegralFloatingPointLiteral(t *testing.T) {
+func (t *EqualsTest) PositiveIntegralFloatingPointLiteral() {
 	// 2^30
 	matcher := Equals(1073741824.0)
-	desc := matcher.Description()
-	expectedDesc := "1.073741824e+09"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1.073741824e+09", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 1073741824.
@@ -342,17 +306,12 @@ func TestPositiveIntegralFloatingPointLiteral(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonIntegralFloatingPointLiteral(t *testing.T) {
+func (t *EqualsTest) NonIntegralFloatingPointLiteral() {
 	matcher := Equals(17.1)
-	desc := matcher.Description()
-	expectedDesc := "17.1"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17.1", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 17.1.
@@ -390,21 +349,16 @@ func TestNonIntegralFloatingPointLiteral(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // bool
 ////////////////////////////////////////////////////////////
 
-func TestFalse(t *testing.T) {
+func (t *EqualsTest) False() {
 	matcher := Equals(false)
-	desc := matcher.Description()
-	expectedDesc := "false"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("false", matcher.Description())
 
 	cases := []equalsTestCase{
 		// bools
@@ -436,17 +390,12 @@ func TestFalse(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a bool"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestTrue(t *testing.T) {
+func (t *EqualsTest) True() {
 	matcher := Equals(true)
-	desc := matcher.Description()
-	expectedDesc := "true"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("true", matcher.Description())
 
 	cases := []equalsTestCase{
 		// bools
@@ -478,22 +427,17 @@ func TestTrue(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a bool"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // int
 ////////////////////////////////////////////////////////////
 
-func TestNegativeInt(t *testing.T) {
+func (t *EqualsTest) NegativeInt() {
 	// -2^30
 	matcher := Equals(int(-1073741824))
-	desc := matcher.Description()
-	expectedDesc := "-1073741824"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1073741824", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -1073741824.
@@ -538,18 +482,13 @@ func TestNegativeInt(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveInt(t *testing.T) {
+func (t *EqualsTest) PositiveInt() {
 	// 2^30
 	matcher := Equals(int(1073741824))
-	desc := matcher.Description()
-	expectedDesc := "1073741824"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1073741824", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 1073741824.
@@ -591,21 +530,16 @@ func TestPositiveInt(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // int8
 ////////////////////////////////////////////////////////////
 
-func TestNegativeInt8(t *testing.T) {
+func (t *EqualsTest) NegativeInt8() {
 	matcher := Equals(int8(-17))
-	desc := matcher.Description()
-	expectedDesc := "-17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -17.
@@ -656,17 +590,12 @@ func TestNegativeInt8(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestZeroInt8(t *testing.T) {
+func (t *EqualsTest) ZeroInt8() {
 	matcher := Equals(int8(0))
-	desc := matcher.Description()
-	expectedDesc := "0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 0.
@@ -713,17 +642,12 @@ func TestZeroInt8(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveInt8(t *testing.T) {
+func (t *EqualsTest) PositiveInt8() {
 	matcher := Equals(int8(17))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 17.
@@ -770,21 +694,16 @@ func TestPositiveInt8(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // int16
 ////////////////////////////////////////////////////////////
 
-func TestNegativeInt16(t *testing.T) {
+func (t *EqualsTest) NegativeInt16() {
 	matcher := Equals(int16(-32766))
-	desc := matcher.Description()
-	expectedDesc := "-32766"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-32766", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -32766.
@@ -833,17 +752,12 @@ func TestNegativeInt16(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestZeroInt16(t *testing.T) {
+func (t *EqualsTest) ZeroInt16() {
 	matcher := Equals(int16(0))
-	desc := matcher.Description()
-	expectedDesc := "0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 0.
@@ -890,17 +804,12 @@ func TestZeroInt16(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveInt16(t *testing.T) {
+func (t *EqualsTest) PositiveInt16() {
 	matcher := Equals(int16(32765))
-	desc := matcher.Description()
-	expectedDesc := "32765"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("32765", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 32765.
@@ -944,22 +853,17 @@ func TestPositiveInt16(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // int32
 ////////////////////////////////////////////////////////////
 
-func TestNegativeInt32(t *testing.T) {
+func (t *EqualsTest) NegativeInt32() {
 	// -2^30
 	matcher := Equals(int32(-1073741824))
-	desc := matcher.Description()
-	expectedDesc := "-1073741824"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1073741824", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -1073741824.
@@ -1004,18 +908,13 @@ func TestNegativeInt32(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveInt32(t *testing.T) {
+func (t *EqualsTest) PositiveInt32() {
 	// 2^30
 	matcher := Equals(int32(1073741824))
-	desc := matcher.Description()
-	expectedDesc := "1073741824"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1073741824", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 1073741824.
@@ -1057,22 +956,17 @@ func TestPositiveInt32(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // int64
 ////////////////////////////////////////////////////////////
 
-func TestNegativeInt64(t *testing.T) {
+func (t *EqualsTest) NegativeInt64() {
 	// -2^40
 	matcher := Equals(int64(-1099511627776))
-	desc := matcher.Description()
-	expectedDesc := "-1099511627776"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1099511627776", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -1099511627776.
@@ -1110,18 +1004,13 @@ func TestNegativeInt64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveInt64(t *testing.T) {
+func (t *EqualsTest) PositiveInt64() {
 	// 2^40
 	matcher := Equals(int64(1099511627776))
-	desc := matcher.Description()
-	expectedDesc := "1099511627776"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1099511627776", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 1099511627776.
@@ -1157,21 +1046,16 @@ func TestPositiveInt64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
+func (t *EqualsTest) Int64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(int64(kTwoTo25 + 1))
-	desc := matcher.Description()
-	expectedDesc := "33554433"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("33554433", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -1208,21 +1092,16 @@ func TestInt64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo25 + 2), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
+func (t *EqualsTest) Int64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
 	matcher := Equals(int64(kTwoTo54 + 1))
-	desc := matcher.Description()
-	expectedDesc := "18014398509481985"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("18014398509481985", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -1250,22 +1129,17 @@ func TestInt64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo54 + 3), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // uint
 ////////////////////////////////////////////////////////////
 
-func TestSmallUint(t *testing.T) {
+func (t *EqualsTest) SmallUint() {
 	const kExpected = 17
 	matcher := Equals(uint(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1319,18 +1193,13 @@ func TestSmallUint(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeUint(t *testing.T) {
+func (t *EqualsTest) LargeUint() {
 	const kExpected = (1 << 16) + 17
 	matcher := Equals(uint(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "65553"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("65553", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1358,21 +1227,16 @@ func TestLargeUint(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 1), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestUintNotExactlyRepresentableBySinglePrecision(t *testing.T) {
+func (t *EqualsTest) UintNotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(uint(kTwoTo25 + 1))
-	desc := matcher.Description()
-	expectedDesc := "33554433"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("33554433", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -1409,22 +1273,17 @@ func TestUintNotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo25 + 2), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // uint8
 ////////////////////////////////////////////////////////////
 
-func TestSmallUint8(t *testing.T) {
+func (t *EqualsTest) SmallUint8() {
 	const kExpected = 17
 	matcher := Equals(uint8(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1478,22 +1337,17 @@ func TestSmallUint8(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // uint16
 ////////////////////////////////////////////////////////////
 
-func TestSmallUint16(t *testing.T) {
+func (t *EqualsTest) SmallUint16() {
 	const kExpected = 17
 	matcher := Equals(uint16(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1547,18 +1401,13 @@ func TestSmallUint16(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeUint16(t *testing.T) {
+func (t *EqualsTest) LargeUint16() {
 	const kExpected = (1 << 8) + 17
 	matcher := Equals(uint16(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "273"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("273", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1590,22 +1439,17 @@ func TestLargeUint16(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 1), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // uint32
 ////////////////////////////////////////////////////////////
 
-func TestSmallUint32(t *testing.T) {
+func (t *EqualsTest) SmallUint32() {
 	const kExpected = 17
 	matcher := Equals(uint32(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1659,18 +1503,13 @@ func TestSmallUint32(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeUint32(t *testing.T) {
+func (t *EqualsTest) LargeUint32() {
 	const kExpected = (1 << 16) + 17
 	matcher := Equals(uint32(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "65553"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("65553", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1698,21 +1537,16 @@ func TestLargeUint32(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 1), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestUint32NotExactlyRepresentableBySinglePrecision(t *testing.T) {
+func (t *EqualsTest) Uint32NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(uint32(kTwoTo25 + 1))
-	desc := matcher.Description()
-	expectedDesc := "33554433"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("33554433", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -1749,22 +1583,17 @@ func TestUint32NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo25 + 2), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // uint64
 ////////////////////////////////////////////////////////////
 
-func TestSmallUint64(t *testing.T) {
+func (t *EqualsTest) SmallUint64() {
 	const kExpected = 17
 	matcher := Equals(uint64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1818,18 +1647,13 @@ func TestSmallUint64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeUint64(t *testing.T) {
+func (t *EqualsTest) LargeUint64() {
 	const kExpected = (1 << 32) + 17
 	matcher := Equals(uint64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "4294967313"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("4294967313", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -1854,21 +1678,16 @@ func TestLargeUint64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 1), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestUint64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
+func (t *EqualsTest) Uint64NotExactlyRepresentableBySinglePrecision() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(uint64(kTwoTo25 + 1))
-	desc := matcher.Description()
-	expectedDesc := "33554433"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("33554433", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -1905,21 +1724,16 @@ func TestUint64NotExactlyRepresentableBySinglePrecision(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo25 + 2), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
+func (t *EqualsTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
 	matcher := Equals(uint64(kTwoTo54 + 1))
-	desc := matcher.Description()
-	expectedDesc := "18014398509481985"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("18014398509481985", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -1947,24 +1761,19 @@ func TestUint64NotExactlyRepresentableByDoublePrecision(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo54 + 3), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // uintptr
 ////////////////////////////////////////////////////////////
 
-func TestNilUintptr(t *testing.T) {
+func (t *EqualsTest) NilUintptr() {
 	var ptr1 uintptr
 	var ptr2 uintptr
 
 	matcher := Equals(ptr1)
-	desc := matcher.Description()
-	expectedDesc := "0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// uintptrs
@@ -1997,17 +1806,12 @@ func TestNilUintptr(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a uintptr"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonNilUintptr(t *testing.T) {
+func (t *EqualsTest) NonNilUintptr() {
 	matcher := Equals(uintptr(17))
-	desc := matcher.Description()
-	expectedDesc := "17"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
 		// uintptrs
@@ -2039,21 +1843,16 @@ func TestNonNilUintptr(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a uintptr"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // float32
 ////////////////////////////////////////////////////////////
 
-func TestNegativeIntegralFloat32(t *testing.T) {
+func (t *EqualsTest) NegativeIntegralFloat32() {
 	matcher := Equals(float32(-32769))
-	desc := matcher.Description()
-	expectedDesc := "-32769"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-32769", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -32769.
@@ -2093,17 +1892,12 @@ func TestNegativeIntegralFloat32(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNegativeNonIntegralFloat32(t *testing.T) {
+func (t *EqualsTest) NegativeNonIntegralFloat32() {
 	matcher := Equals(float32(-32769.1))
-	desc := matcher.Description()
-	expectedDesc := "-32769.1"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-32769.1", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of -32769.1.
@@ -2125,18 +1919,13 @@ func TestNegativeNonIntegralFloat32(t *testing.T) {
 		equalsTestCase{complex128(-32769.1 + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeNegativeFloat32(t *testing.T) {
+func (t *EqualsTest) LargeNegativeFloat32() {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(float32(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "-3.689349e+19"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-3.689349e+19", matcher.Description())
 
 	floatExpected := float32(kExpected)
 	castedInt := int64(floatExpected)
@@ -2159,17 +1948,12 @@ func TestLargeNegativeFloat32(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestZeroFloat32(t *testing.T) {
+func (t *EqualsTest) ZeroFloat32() {
 	matcher := Equals(float32(0))
-	desc := matcher.Description()
-	expectedDesc := "0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of zero.
@@ -2211,17 +1995,12 @@ func TestZeroFloat32(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveIntegralFloat32(t *testing.T) {
+func (t *EqualsTest) PositiveIntegralFloat32() {
 	matcher := Equals(float32(32769))
-	desc := matcher.Description()
-	expectedDesc := "32769"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("32769", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 32769.
@@ -2262,17 +2041,12 @@ func TestPositiveIntegralFloat32(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveNonIntegralFloat32(t *testing.T) {
+func (t *EqualsTest) PositiveNonIntegralFloat32() {
 	matcher := Equals(float32(32769.1))
-	desc := matcher.Description()
-	expectedDesc := "32769.1"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("32769.1", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 32769.1.
@@ -2294,18 +2068,13 @@ func TestPositiveNonIntegralFloat32(t *testing.T) {
 		equalsTestCase{complex128(32769.1 + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargePositiveFloat32(t *testing.T) {
+func (t *EqualsTest) LargePositiveFloat32() {
 	const kExpected = 1 << 65
 	matcher := Equals(float32(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "3.689349e+19"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("3.689349e+19", matcher.Description())
 
 	floatExpected := float32(kExpected)
 	castedInt := uint64(floatExpected)
@@ -2330,21 +2099,16 @@ func TestLargePositiveFloat32(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestFloat32AboveExactIntegerRange(t *testing.T) {
+func (t *EqualsTest) Float32AboveExactIntegerRange() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(float32(kTwoTo25 + 1))
-	desc := matcher.Description()
-	expectedDesc := "3.3554432e+07"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("3.3554432e+07", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -2393,22 +2157,17 @@ func TestFloat32AboveExactIntegerRange(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo25 + 3), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // float64
 ////////////////////////////////////////////////////////////
 
-func TestNegativeIntegralFloat64(t *testing.T) {
+func (t *EqualsTest) NegativeIntegralFloat64() {
 	const kExpected = -(1 << 50)
 	matcher := Equals(float64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "-1.125899906842624e+15"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1.125899906842624e+15", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -2446,20 +2205,15 @@ func TestNegativeIntegralFloat64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNegativeNonIntegralFloat64(t *testing.T) {
+func (t *EqualsTest) NegativeNonIntegralFloat64() {
 	const kTwoTo50 = 1 << 50
 	const kExpected = -kTwoTo50 - 0.25
 
 	matcher := Equals(float64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "-1.1258999068426242e+15"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-1.1258999068426242e+15", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -2479,18 +2233,13 @@ func TestNegativeNonIntegralFloat64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeNegativeFloat64(t *testing.T) {
+func (t *EqualsTest) LargeNegativeFloat64() {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(float64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "-3.6893488147419103e+19"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("-3.6893488147419103e+19", matcher.Description())
 
 	floatExpected := float64(kExpected)
 	castedInt := int64(floatExpected)
@@ -2513,17 +2262,12 @@ func TestLargeNegativeFloat64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestZeroFloat64(t *testing.T) {
+func (t *EqualsTest) ZeroFloat64() {
 	matcher := Equals(float64(0))
-	desc := matcher.Description()
-	expectedDesc := "0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of zero.
@@ -2565,18 +2309,13 @@ func TestZeroFloat64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveIntegralFloat64(t *testing.T) {
+func (t *EqualsTest) PositiveIntegralFloat64() {
 	const kExpected = 1 << 50
 	matcher := Equals(float64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "1.125899906842624e+15"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1.125899906842624e+15", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 32769.
@@ -2613,19 +2352,14 @@ func TestPositiveIntegralFloat64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveNonIntegralFloat64(t *testing.T) {
+func (t *EqualsTest) PositiveNonIntegralFloat64() {
 	const kTwoTo50 = 1 << 50
 	const kExpected = kTwoTo50 + 0.25
 	matcher := Equals(float64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "1.1258999068426242e+15"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1.1258999068426242e+15", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -2644,18 +2378,13 @@ func TestPositiveNonIntegralFloat64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargePositiveFloat64(t *testing.T) {
+func (t *EqualsTest) LargePositiveFloat64() {
 	const kExpected = 1 << 65
 	matcher := Equals(float64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "3.6893488147419103e+19"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("3.6893488147419103e+19", matcher.Description())
 
 	floatExpected := float64(kExpected)
 	castedInt := uint64(floatExpected)
@@ -2680,21 +2409,16 @@ func TestLargePositiveFloat64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestFloat64AboveExactIntegerRange(t *testing.T) {
+func (t *EqualsTest) Float64AboveExactIntegerRange() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
 	matcher := Equals(float64(kTwoTo54 + 1))
-	desc := matcher.Description()
-	expectedDesc := "1.8014398509481984e+16"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("1.8014398509481984e+16", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -2728,22 +2452,17 @@ func TestFloat64AboveExactIntegerRange(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo54 + 3), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // complex64
 ////////////////////////////////////////////////////////////
 
-func TestNegativeIntegralComplex64(t *testing.T) {
+func (t *EqualsTest) NegativeIntegralComplex64() {
 	const kExpected = -32769
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(-32769+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(-32769+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -2786,20 +2505,15 @@ func TestNegativeIntegralComplex64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNegativeNonIntegralComplex64(t *testing.T) {
+func (t *EqualsTest) NegativeNonIntegralComplex64() {
 	const kTwoTo20 = 1 << 20
 	const kExpected = -kTwoTo20 - 0.25
 
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(-1.0485762e+06+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(-1.0485762e+06+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -2826,18 +2540,13 @@ func TestNegativeNonIntegralComplex64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeNegativeComplex64(t *testing.T) {
+func (t *EqualsTest) LargeNegativeComplex64() {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(-3.689349e+19+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(-3.689349e+19+0i)", matcher.Description())
 
 	floatExpected := float64(kExpected)
 	castedInt := int64(floatExpected)
@@ -2861,17 +2570,12 @@ func TestLargeNegativeComplex64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestZeroComplex64(t *testing.T) {
+func (t *EqualsTest) ZeroComplex64() {
 	matcher := Equals(complex64(0))
-	desc := matcher.Description()
-	expectedDesc := "(0+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(0+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of zero.
@@ -2916,18 +2620,13 @@ func TestZeroComplex64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveIntegralComplex64(t *testing.T) {
+func (t *EqualsTest) PositiveIntegralComplex64() {
 	const kExpected = 1 << 20
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(1.048576e+06+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(1.048576e+06+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 32769.
@@ -2972,19 +2671,14 @@ func TestPositiveIntegralComplex64(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveNonIntegralComplex64(t *testing.T) {
+func (t *EqualsTest) PositiveNonIntegralComplex64() {
 	const kTwoTo20 = 1 << 20
 	const kExpected = kTwoTo20 + 0.25
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(1.0485762e+06+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(1.0485762e+06+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -3010,18 +2704,13 @@ func TestPositiveNonIntegralComplex64(t *testing.T) {
 		equalsTestCase{complex128(kExpected - 1i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargePositiveComplex64(t *testing.T) {
+func (t *EqualsTest) LargePositiveComplex64() {
 	const kExpected = 1 << 65
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(3.689349e+19+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(3.689349e+19+0i)", matcher.Description())
 
 	floatExpected := float64(kExpected)
 	castedInt := uint64(floatExpected)
@@ -3046,21 +2735,16 @@ func TestLargePositiveComplex64(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestComplex64AboveExactIntegerRange(t *testing.T) {
+func (t *EqualsTest) Complex64AboveExactIntegerRange() {
 	// Single-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^25-1, 2^25+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo25 = 1 << 25
 	matcher := Equals(complex64(kTwoTo25 + 1))
-	desc := matcher.Description()
-	expectedDesc := "(3.3554432e+07+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(3.3554432e+07+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -3109,20 +2793,15 @@ func TestComplex64AboveExactIntegerRange(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo25 + 3), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestComplex64WithNonZeroImaginaryPart(t *testing.T) {
+func (t *EqualsTest) Complex64WithNonZeroImaginaryPart() {
 	const kRealPart = 17
 	const kImagPart = 0.25i
 	const kExpected = kRealPart + kImagPart
 	matcher := Equals(complex64(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(17+0.25i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(17+0.25i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -3152,22 +2831,17 @@ func TestComplex64WithNonZeroImaginaryPart(t *testing.T) {
 		equalsTestCase{complex128(kRealPart + kImagPart + 0.5i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // complex128
 ////////////////////////////////////////////////////////////
 
-func TestNegativeIntegralComplex128(t *testing.T) {
+func (t *EqualsTest) NegativeIntegralComplex128() {
 	const kExpected = -32769
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(-32769+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(-32769+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -3210,20 +2884,15 @@ func TestNegativeIntegralComplex128(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNegativeNonIntegralComplex128(t *testing.T) {
+func (t *EqualsTest) NegativeNonIntegralComplex128() {
 	const kTwoTo20 = 1 << 20
 	const kExpected = -kTwoTo20 - 0.25
 
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(-1.04857625e+06+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(-1.04857625e+06+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -3250,18 +2919,13 @@ func TestNegativeNonIntegralComplex128(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargeNegativeComplex128(t *testing.T) {
+func (t *EqualsTest) LargeNegativeComplex128() {
 	const kExpected = -1 * (1 << 65)
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(-3.6893488147419103e+19+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(-3.6893488147419103e+19+0i)", matcher.Description())
 
 	floatExpected := float64(kExpected)
 	castedInt := int64(floatExpected)
@@ -3285,17 +2949,12 @@ func TestLargeNegativeComplex128(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestZeroComplex128(t *testing.T) {
+func (t *EqualsTest) ZeroComplex128() {
 	matcher := Equals(complex128(0))
-	desc := matcher.Description()
-	expectedDesc := "(0+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(0+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of zero.
@@ -3340,18 +2999,13 @@ func TestZeroComplex128(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveIntegralComplex128(t *testing.T) {
+func (t *EqualsTest) PositiveIntegralComplex128() {
 	const kExpected = 1 << 20
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(1.048576e+06+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(1.048576e+06+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of 32769.
@@ -3396,19 +3050,14 @@ func TestPositiveIntegralComplex128(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestPositiveNonIntegralComplex128(t *testing.T) {
+func (t *EqualsTest) PositiveNonIntegralComplex128() {
 	const kTwoTo20 = 1 << 20
 	const kExpected = kTwoTo20 + 0.25
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(1.04857625e+06+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(1.04857625e+06+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -3434,18 +3083,13 @@ func TestPositiveNonIntegralComplex128(t *testing.T) {
 		equalsTestCase{complex128(kExpected - 1i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestLargePositiveComplex128(t *testing.T) {
+func (t *EqualsTest) LargePositiveComplex128() {
 	const kExpected = 1 << 65
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(3.6893488147419103e+19+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(3.6893488147419103e+19+0i)", matcher.Description())
 
 	floatExpected := float64(kExpected)
 	castedInt := uint64(floatExpected)
@@ -3470,21 +3114,16 @@ func TestLargePositiveComplex128(t *testing.T) {
 		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestComplex128AboveExactIntegerRange(t *testing.T) {
+func (t *EqualsTest) Complex128AboveExactIntegerRange() {
 	// Double-precision floats don't have enough bits to represent the integers
 	// near this one distinctly, so [2^54-1, 2^54+2] all receive the same value
 	// and should be treated as equivalent when floats are in the mix.
 	const kTwoTo54 = 1 << 54
 	matcher := Equals(complex128(kTwoTo54 + 1))
-	desc := matcher.Description()
-	expectedDesc := "(1.8014398509481984e+16+0i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(1.8014398509481984e+16+0i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Integers.
@@ -3518,20 +3157,15 @@ func TestComplex128AboveExactIntegerRange(t *testing.T) {
 		equalsTestCase{complex128(kTwoTo54 + 3), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestComplex128WithNonZeroImaginaryPart(t *testing.T) {
+func (t *EqualsTest) Complex128WithNonZeroImaginaryPart() {
 	const kRealPart = 17
 	const kImagPart = 0.25i
 	const kExpected = kRealPart + kImagPart
 	matcher := Equals(complex128(kExpected))
-	desc := matcher.Description()
-	expectedDesc := "(17+0.25i)"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("(17+0.25i)", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Various types of the expected value.
@@ -3561,37 +3195,24 @@ func TestComplex128WithNonZeroImaginaryPart(t *testing.T) {
 		equalsTestCase{complex128(kRealPart + kImagPart + 0.5i), false, false, ""},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // array
 ////////////////////////////////////////////////////////////
 
-func TestArray(t *testing.T) {
-	panicked := false
-
-	defer func() {
-		if !panicked {
-			t.Errorf("Expected panic; got none.")
-		}
-	}()
-
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-		}
-	}()
-
+func (t *EqualsTest) Array() {
 	var someArray [3]int
-	Equals(someArray)
+	f := func() { Equals(someArray) }
+	ExpectThat(f, Panics(HasSubstr("unsupported kind array")))
 }
 
 ////////////////////////////////////////////////////////////
 // chan
 ////////////////////////////////////////////////////////////
 
-func TestNilChan(t *testing.T) {
+func (t *EqualsTest) NilChan() {
 	var nilChan1 chan int
 	var nilChan2 chan int
 	var nilChan3 chan uint
@@ -3599,12 +3220,7 @@ func TestNilChan(t *testing.T) {
 	var nonNilChan2 chan uint = make(chan uint)
 
 	matcher := Equals(nilChan1)
-	desc := matcher.Description()
-	expectedDesc := "0x0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0x0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// int channels
@@ -3639,10 +3255,10 @@ func TestNilChan(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a chan int"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonNilChan(t *testing.T) {
+func (t *EqualsTest) NonNilChan() {
 	var nilChan1 chan int
 	var nilChan2 chan uint
 	var nonNilChan1 chan int = make(chan int)
@@ -3650,12 +3266,7 @@ func TestNonNilChan(t *testing.T) {
 	var nonNilChan3 chan uint = make(chan uint)
 
 	matcher := Equals(nonNilChan1)
-	desc := matcher.Description()
-	expectedDesc := fmt.Sprintf("%v", nonNilChan1)
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq(fmt.Sprintf("%v", nonNilChan1), matcher.Description())
 
 	cases := []equalsTestCase{
 		// int channels
@@ -3690,21 +3301,16 @@ func TestNonNilChan(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a chan int"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestChanDirection(t *testing.T) {
+func (t *EqualsTest) ChanDirection() {
 	var chan1 chan<- int
 	var chan2 <-chan int
 	var chan3 chan int
 
 	matcher := Equals(chan1)
-	desc := matcher.Description()
-	expectedDesc := fmt.Sprintf("%v", chan1)
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq(fmt.Sprintf("%v", chan1), matcher.Description())
 
 	cases := []equalsTestCase{
 		equalsTestCase{chan1, true, false, ""},
@@ -3712,25 +3318,20 @@ func TestChanDirection(t *testing.T) {
 		equalsTestCase{chan3, false, true, "which is not a chan<- int"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // func
 ////////////////////////////////////////////////////////////
 
-func TestFunctions(t *testing.T) {
+func (t *EqualsTest) Functions() {
 	func1 := func() {}
 	func2 := func() {}
 	func3 := func(x int) {}
 
 	matcher := Equals(func1)
-	desc := matcher.Description()
-	expectedDesc := fmt.Sprintf("%v", func1)
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq(fmt.Sprintf("%v", func1), matcher.Description())
 
 	cases := []equalsTestCase{
 		// Functions.
@@ -3760,14 +3361,14 @@ func TestFunctions(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a function"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // map
 ////////////////////////////////////////////////////////////
 
-func TestNilMap(t *testing.T) {
+func (t *EqualsTest) NilMap() {
 	var nilMap1 map[int]int
 	var nilMap2 map[int]int
 	var nilMap3 map[int]uint
@@ -3775,12 +3376,7 @@ func TestNilMap(t *testing.T) {
 	var nonNilMap2 map[int]uint = make(map[int]uint)
 
 	matcher := Equals(nilMap1)
-	desc := matcher.Description()
-	expectedDesc := "map[]"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("map[]", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -3812,10 +3408,10 @@ func TestNilMap(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a map"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonNilMap(t *testing.T) {
+func (t *EqualsTest) NonNilMap() {
 	var nilMap1 map[int]int
 	var nilMap2 map[int]uint
 	var nonNilMap1 map[int]int = make(map[int]int)
@@ -3823,12 +3419,7 @@ func TestNonNilMap(t *testing.T) {
 	var nonNilMap3 map[int]uint = make(map[int]uint)
 
 	matcher := Equals(nonNilMap1)
-	desc := matcher.Description()
-	expectedDesc := "map[]"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("map[]", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -3860,14 +3451,14 @@ func TestNonNilMap(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a map"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // Pointers
 ////////////////////////////////////////////////////////////
 
-func TestNilPointer(t *testing.T) {
+func (t *EqualsTest) NilPointer() {
 	var someInt int = 17
 	var someUint uint = 17
 
@@ -3878,12 +3469,7 @@ func TestNilPointer(t *testing.T) {
 	var nonNilUint *uint = &someUint
 
 	matcher := Equals(nilInt1)
-	desc := matcher.Description()
-	expectedDesc := "<nil>"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("<nil>", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -3917,10 +3503,10 @@ func TestNilPointer(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a *int"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonNilPointer(t *testing.T) {
+func (t *EqualsTest) NonNilPointer() {
 	var someInt int = 17
 	var someOtherInt int = 17
 	var someUint uint = 17
@@ -3932,12 +3518,7 @@ func TestNonNilPointer(t *testing.T) {
 	var nonNilUint *uint = &someUint
 
 	matcher := Equals(nonNilInt1)
-	desc := matcher.Description()
-	expectedDesc := fmt.Sprintf("%v", nonNilInt1)
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq(fmt.Sprintf("%v", nonNilInt1), matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -3971,14 +3552,14 @@ func TestNonNilPointer(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a *int"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // Slices
 ////////////////////////////////////////////////////////////
 
-func TestNilSlice(t *testing.T) {
+func (t *EqualsTest) NilSlice() {
 	var nilInt1 []int
 	var nilInt2 []int
 	var nilUint []uint
@@ -3987,12 +3568,7 @@ func TestNilSlice(t *testing.T) {
 	var nonNilUint []uint = make([]uint, 0)
 
 	matcher := Equals(nilInt1)
-	desc := matcher.Description()
-	expectedDesc := "[]"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("[]", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -4025,54 +3601,40 @@ func TestNilSlice(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a []int"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonNilSlice(t *testing.T) {
-	panicked := false
-
-	defer func() {
-		if !panicked {
-			t.Errorf("Expected panic; got none.")
-		}
-	}()
-
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-		}
-	}()
-
+func (t *EqualsTest) NonNilSlice() {
 	nonNil := make([]int, 0)
-	Equals(nonNil)
+	f := func() { Equals(nonNil) }
+	ExpectThat(f, Panics(HasSubstr("non-nil slice")))
 }
 
 ////////////////////////////////////////////////////////////
 // string
 ////////////////////////////////////////////////////////////
 
-func TestString(t *testing.T) {
+func (t *EqualsTest) String() {
 	partial := "taco"
 	expected := fmt.Sprintf("%s%d", partial, 1)
 
 	matcher := Equals(expected)
-	desc := matcher.Description()
-	expectedDesc := "taco1"
+	ExpectEq("taco1", matcher.Description())
 
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	type stringAlias string
 
 	cases := []equalsTestCase{
-		// Correct type.
+		// Correct types.
 		equalsTestCase{"taco1", true, false, ""},
 		equalsTestCase{"taco" + "1", true, false, ""},
 		equalsTestCase{expected, true, false, ""},
+		equalsTestCase{stringAlias("taco1"), true, false, ""},
 
 		equalsTestCase{"", false, false, ""},
 		equalsTestCase{"taco", false, false, ""},
 		equalsTestCase{"taco1\x00", false, false, ""},
 		equalsTestCase{"taco2", false, false, ""},
+		equalsTestCase{stringAlias("taco2"), false, false, ""},
 
 		// Other types.
 		equalsTestCase{0, false, true, "which is not a string"},
@@ -4094,37 +3656,46 @@ func TestString(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a string"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
+}
+
+func (t *EqualsTest) StringAlias() {
+	type stringAlias string
+
+	matcher := Equals(stringAlias("taco"))
+	ExpectEq("taco", matcher.Description())
+
+	cases := []equalsTestCase{
+		// Correct types.
+		equalsTestCase{stringAlias("taco"), true, false, ""},
+		equalsTestCase{"taco", true, false, ""},
+
+		equalsTestCase{"burrito", false, false, ""},
+		equalsTestCase{stringAlias("burrito"), false, false, ""},
+
+		// Other types.
+		equalsTestCase{0, false, true, "which is not a string"},
+		equalsTestCase{bool(false), false, true, "which is not a string"},
+	}
+
+	t.checkTestCases(matcher, cases)
 }
 
 ////////////////////////////////////////////////////////////
 // struct
 ////////////////////////////////////////////////////////////
 
-func TestStruct(t *testing.T) {
+func (t *EqualsTest) Struct() {
 	type someStruct struct{ foo uint }
-	panicked := false
-
-	defer func() {
-		if !panicked {
-			t.Errorf("Expected panic; got none.")
-		}
-	}()
-
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-		}
-	}()
-
-	Equals(someStruct{17})
+	f := func() { Equals(someStruct{17}) }
+	ExpectThat(f, Panics(HasSubstr("unsupported kind struct")))
 }
 
 ////////////////////////////////////////////////////////////
 // unsafe.Pointer
 ////////////////////////////////////////////////////////////
 
-func TestNilUnsafePointer(t *testing.T) {
+func (t *EqualsTest) NilUnsafePointer() {
 	someInt := int(17)
 
 	var nilPtr1 unsafe.Pointer
@@ -4132,12 +3703,7 @@ func TestNilUnsafePointer(t *testing.T) {
 	var nonNilPtr unsafe.Pointer = unsafe.Pointer(&someInt)
 
 	matcher := Equals(nilPtr1)
-	desc := matcher.Description()
-	expectedDesc := "0x0"
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq("0x0", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -4170,10 +3736,10 @@ func TestNilUnsafePointer(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a unsafe.Pointer"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }
 
-func TestNonNilUnsafePointer(t *testing.T) {
+func (t *EqualsTest) NonNilUnsafePointer() {
 	someInt := int(17)
 	someOtherInt := int(17)
 
@@ -4182,12 +3748,7 @@ func TestNonNilUnsafePointer(t *testing.T) {
 	var nonNilPtr2 unsafe.Pointer = unsafe.Pointer(&someOtherInt)
 
 	matcher := Equals(nonNilPtr1)
-	desc := matcher.Description()
-	expectedDesc := fmt.Sprintf("%v", nonNilPtr1)
-
-	if desc != expectedDesc {
-		t.Errorf("Expected description \"%s\", got \"%s\".", expectedDesc, desc)
-	}
+	ExpectEq(fmt.Sprintf("%v", nonNilPtr1), matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.
@@ -4220,5 +3781,5 @@ func TestNonNilUnsafePointer(t *testing.T) {
 		equalsTestCase{equalsTestCase{}, false, true, "which is not a unsafe.Pointer"},
 	}
 
-	checkTestCases(t, matcher, cases)
+	t.checkTestCases(matcher, cases)
 }

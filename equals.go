@@ -22,15 +22,39 @@ import (
 	"reflect"
 )
 
-// Equals returns a matcher that matches any value v such that v == x, with the
-// exception that if x is a numeric type, Equals(x) will match equivalent
-// numeric values of any type.
+// Equals(x) returns a matcher that matches values v such that v and x are
+// equivalent. This includes the case when the comparison v == x using Go's
+// built-in comparison operator is legal, but for convenience the following
+// rules also apply:
+//
+//  *  Type checking is done based on underlying types rather than actual
+//     types, so that e.g. two aliases for string can be compared:
+//
+//         type stringAlias1 string
+//         type stringAlias2 string
+//
+//         a := "taco"
+//         b := stringAlias1("taco")
+//         c := stringAlias2("taco")
+//
+//         ExpectTrue(a == b)  // Legal, passes
+//         ExpectTrue(b == c)  // Illegal, doesn't compile
+//
+//         ExpectThat(a, Equals(b))  // Passes
+//         ExpectThat(b, Equals(c))  // Passes
+//
+//  *  Values of numeric type are treated as if they were abstract numbers, and
+//     compared accordingly. Therefore Equals(17) will match int(17),
+//     int16(17), uint(17), float32(17), complex64(17), and so on.
+//
+// If you want a stricter matcher that contains no such cleverness, see
+// IdenticalTo instead.
 func Equals(x interface{}) Matcher {
 	v := reflect.ValueOf(x)
 
 	// The == operator is not defined for array or struct types.
 	if v.Kind() == reflect.Array || v.Kind() == reflect.Struct {
-		panic(fmt.Sprintf("oglematchers.Equals: unsupported type", v.Kind()))
+		panic(fmt.Sprintf("oglematchers.Equals: unsupported kind %v", v.Kind()))
 	}
 
 	// The == operator is not defined for non-nil slices.
@@ -410,7 +434,7 @@ func checkAgainstUnsafePointer(e reflect.Value, c reflect.Value) (err error) {
 func checkForNil(c reflect.Value) (err error) {
 	err = errors.New("")
 
-	// Make it is legal to call IsNil.
+	// Make sure it is legal to call IsNil.
 	switch c.Kind() {
 	case reflect.Invalid:
 	case reflect.Chan:
