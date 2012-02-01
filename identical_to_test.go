@@ -210,6 +210,24 @@ func (t *IdenticalToTest) Bools() {
 }
 
 func (t *IdenticalToTest) Ints() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(int(17))
+	ExpectEq("identical to <int> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(int(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType int
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Int8s() {
