@@ -611,6 +611,24 @@ func (t *IdenticalToTest) ArraysOfNonComparableArrays() {
 }
 
 func (t *IdenticalToTest) Strings() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo("taco")
+	ExpectEq("identical to <string> taco", m.Description())
+
+	// Identical value
+	err = m.Matches("ta" + "co")
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType string
+	err = m.Matches(myType("taco"))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) ComparableStructs() {
