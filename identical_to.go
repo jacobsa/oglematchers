@@ -80,5 +80,11 @@ func (m *identicalToMatcher) Description() string {
 }
 
 func (m *identicalToMatcher) Matches(c interface{}) error {
+	// Make sure the candidate's type is correct.
+	t := reflect.TypeOf(m.x)
+	if ct := reflect.TypeOf(c); t != ct {
+		return NewFatalError(fmt.Sprintf("which is of type %v", ct))
+	}
+
 	return errors.New("TODO")
 }
