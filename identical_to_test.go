@@ -104,7 +104,7 @@ func (t *IdenticalToTest) Slices() {
 	ExpectThat(err, Equals("which is not an identical reference"))
 }
 
-func (t *IdenticalToTest) Maps() {
+func (t *IdenticalToTest) MapWithComparableKeys() {
 	var m Matcher
 	var err error
 
@@ -129,6 +129,10 @@ func (t *IdenticalToTest) Maps() {
 
 	err = m.Matches(o2)
 	ExpectThat(err, Equals("which is not an identical reference"))
+}
+
+func (t *IdenticalToTest) MapWithNonComparableKeys() {
+	ExpectTrue(false, "TODO")
 }
 
 func (t *IdenticalToTest) Functions() {

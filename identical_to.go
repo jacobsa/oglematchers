@@ -20,9 +20,30 @@ import (
 	"reflect"
 )
 
+// Is the type comparable according to the definition here?
+//
+//     http://weekly.golang.org/doc/go_spec.html#Comparison_operators
+//
+func isComparable(t reflect.Type) bool {
+	switch t.Kind() {
+	case reflect.Array:
+		return isComparable(t.Elem())
+
+	case reflect.Slice, reflect.Map, reflect.Func:
+		return false
+	}
+
+	return true
+}
+
 // Should the supplied type be allowed as an argument to IdenticalTo?
 func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
-	return false, errors.New("TODO")
+	// Reject containers with non-comparable elements.
+	if t.Kind() == reflect.Array && !isComparable(t.Elem()) {
+		return false, errors.New("TODO")
+	}
+
+	return true, nil
 }
 
 // IdenticalTo(x) returns a matcher that matches values v such that all of the
