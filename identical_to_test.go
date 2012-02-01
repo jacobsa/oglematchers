@@ -486,9 +486,9 @@ func (t *IdenticalToTest) Float32s() {
 	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
-	err = m.Matches(float32(17))
+	err = m.Matches(int32(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type float32")))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Float64s() {
@@ -509,9 +509,9 @@ func (t *IdenticalToTest) Float64s() {
 	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
-	err = m.Matches(float64(17))
+	err = m.Matches(int32(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type float64")))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Complex64s() {
@@ -532,9 +532,9 @@ func (t *IdenticalToTest) Complex64s() {
 	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
-	err = m.Matches(complex64(17))
+	err = m.Matches(int32(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type complex64")))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Complex128s() {
@@ -555,9 +555,9 @@ func (t *IdenticalToTest) Complex128s() {
 	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
-	err = m.Matches(complex128(17))
+	err = m.Matches(int32(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type complex128")))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) EmptyComparableArrays() {
