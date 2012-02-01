@@ -48,6 +48,11 @@ func isComparable(t reflect.Type) bool {
 
 // Should the supplied type be allowed as an argument to IdenticalTo?
 func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
+	// Don't allow the zero type.
+	if t == nil {
+		return false, errors.New("invalid type")
+	}
+
 	// Reference types are always okay; we compare pointers.
 	switch t.Kind() {
 	case reflect.Slice, reflect.Map, reflect.Func, reflect.Chan:
