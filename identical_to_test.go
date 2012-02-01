@@ -504,7 +504,28 @@ func (t *IdenticalToTest) Complex128s() {
 }
 
 func (t *IdenticalToTest) EmptyComparableArrays() {
-	ExpectTrue(false, "TODO")
+	var m Matcher
+	var err error
+
+	m = IdenticalTo([0]int{})
+	ExpectEq("identical to <[0]int> []", m.Description())
+
+	// Identical value
+	err = m.Matches([0]int{})
+	ExpectEq(nil, err)
+
+	// Length too long
+	err = m.Matches([1]int{17})
+	ExpectThat(err, Error(Equals("")))
+
+	// Element type alias
+	type myType int
+	err = m.Matches([0]myType{})
+	ExpectThat(err, Error(Equals("which is of type [0]myType")))
+
+	// Completely wrong element type
+	err = m.Matches([0]int32{})
+	ExpectThat(err, Error(Equals("which is of type [0]int32")))
 }
 
 func (t *IdenticalToTest) NonEmptyComparableArrays() {
@@ -520,11 +541,11 @@ func (t *IdenticalToTest) NonEmptyComparableArrays() {
 
 	// Length too short
 	err = m.Matches([1]int{17})
-	ExpectEq(nil, err)
+	ExpectThat(err, Error(Equals("")))
 
 	// Length too long
 	err = m.Matches([3]int{17, 19, 23})
-	ExpectEq(nil, err)
+	ExpectThat(err, Error(Equals("")))
 
 	// First element different
 	err = m.Matches([2]int{13, 19})
