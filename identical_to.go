@@ -41,7 +41,7 @@ func isComparable(t reflect.Type) bool {
 func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
 	// Reject containers with non-comparable elements.
 	if t.Kind() == reflect.Array && !isComparable(t.Elem()) {
-		return false, errors.New("TODO")
+		return false, errors.New(fmt.Sprintf("%v is not comparable", t))
 	}
 
 	return true, nil
