@@ -315,18 +315,108 @@ func (t *IdenticalToTest) Int64s() {
 }
 
 func (t *IdenticalToTest) Uints() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(uint(17))
+	ExpectEq("identical to <uint> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(uint(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType uint
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Uint8s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(uint8(17))
+	ExpectEq("identical to <uint8> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(uint8(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType uint8
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Uint16s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(uint16(17))
+	ExpectEq("identical to <uint16> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(uint16(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType uint16
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Uint32s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(uint32(17))
+	ExpectEq("identical to <uint32> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(uint32(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType uint32
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Uint64s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(uint64(17))
+	ExpectEq("identical to <uint64> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(uint64(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType uint64
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) Float32s() {
