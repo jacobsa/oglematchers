@@ -420,15 +420,87 @@ func (t *IdenticalToTest) Uint64s() {
 }
 
 func (t *IdenticalToTest) Float32s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(float32(17))
+	ExpectEq("identical to <float32> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(float32(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType float32
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(float32(17))
+	ExpectThat(err, Error(Equals("which is of type float32")))
 }
 
 func (t *IdenticalToTest) Float64s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(float64(17))
+	ExpectEq("identical to <float64> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(float64(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType float64
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(float64(17))
+	ExpectThat(err, Error(Equals("which is of type float64")))
 }
 
 func (t *IdenticalToTest) Complex64s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(complex64(17))
+	ExpectEq("identical to <complex64> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(complex64(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType complex64
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(complex64(17))
+	ExpectThat(err, Error(Equals("which is of type complex64")))
 }
 
 func (t *IdenticalToTest) Complex128s() {
+	var m Matcher
+	var err error
+
+	m = IdenticalTo(complex128(17))
+	ExpectEq("identical to <complex128> 17", m.Description())
+
+	// Identical value
+	err = m.Matches(complex128(17))
+	ExpectEq(nil, err)
+
+	// Type alias
+	type myType complex128
+	err = m.Matches(myType(17))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(complex128(17))
+	ExpectThat(err, Error(Equals("which is of type complex128")))
 }
 
 func (t *IdenticalToTest) ComparableArrays() {
