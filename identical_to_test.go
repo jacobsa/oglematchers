@@ -583,7 +583,7 @@ func (t *IdenticalToTest) EmptyComparableArrays() {
 	type myType int
 	err = m.Matches([0]myType{})
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type [0]myType")))
+	ExpectThat(err, Error(Equals("which is of type [0]oglematchers_test.myType")))
 
 	// Completely wrong element type
 	err = m.Matches([0]int32{})
@@ -622,7 +622,7 @@ func (t *IdenticalToTest) NonEmptyComparableArrays() {
 	type myType int
 	err = m.Matches([2]myType{17, 19})
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type [2]myType")))
+	ExpectThat(err, Error(Equals("which is of type [2]oglematchers_test.myType")))
 
 	// Completely wrong element type
 	err = m.Matches([2]int32{17, 19})
@@ -647,11 +647,11 @@ func (t *IdenticalToTest) NonEmptyArraysOfComparableArrays() {
 
 	// Outer length too short
 	err = m.Matches([1][2]int{[2]int{17, 19}})
-	ExpectThat(err, Error(Equals("")))
+	ExpectThat(err, Error(Equals("which is of type [1][2]int")))
 
 	// Inner length too short
 	err = m.Matches([2][1]int{[1]int{17}, [1]int{23}})
-	ExpectThat(err, Error(Equals("")))
+	ExpectThat(err, Error(Equals("which is of type [2][1]int")))
 
 	// First element different
 	err = m.Matches([2][2]int{[2]int{13, 19}, [2]int{23, 29}})
@@ -661,7 +661,7 @@ func (t *IdenticalToTest) NonEmptyArraysOfComparableArrays() {
 	type myType int
 	err = m.Matches([2][2]myType{[2]myType{17, 19}, [2]myType{23, 29}})
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type [2][2]myType")))
+	ExpectThat(err, Error(Equals("which is of type [2][2]oglematchers_test.myType")))
 }
 
 func (t *IdenticalToTest) NonComparableArrays() {
