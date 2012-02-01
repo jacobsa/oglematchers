@@ -176,6 +176,26 @@ func (t *IdenticalToTest) Channels() {
 }
 
 func (t *IdenticalToTest) Bools() {
+	var m Matcher
+	var err error
+
+	// false
+	m = IdenticalTo(false)
+
+	err = m.Matches(false)
+	ExpectEq(nil, err)
+
+	err = m.Matches(true)
+	ExpectThat(err, Error(Equals("")))
+
+	// true
+	m = IdenticalTo(true)
+
+	err = m.Matches(false)
+	ExpectThat(err, Error(Equals("")))
+
+	err = m.Matches(true)
+	ExpectEq(nil, err)
 }
 
 func (t *IdenticalToTest) Ints() {
