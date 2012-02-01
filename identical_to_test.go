@@ -88,7 +88,7 @@ func (t *IdenticalToTest) Slices() {
 
 	// Nil expected value
 	m = IdenticalTo(([]int)(nil))
-	ExpectEq("identical to <[]int> nil", m.Description())
+	ExpectEq("identical to <[]int> []", m.Description())
 
 	err = m.Matches(([]int)(nil))
 	ExpectEq(nil, err)
@@ -115,7 +115,7 @@ func (t *IdenticalToTest) MapWithComparableKeys() {
 
 	// Nil expected value
 	m = IdenticalTo((map[int]int)(nil))
-	ExpectEq("identical to <map[int]int> nil", m.Description())
+	ExpectEq("identical to <map[int]int> map[]", m.Description())
 
 	err = m.Matches((map[int]int)(nil))
 	ExpectEq(nil, err)
@@ -146,7 +146,7 @@ func (t *IdenticalToTest) Functions() {
 
 	// Nil expected value
 	m = IdenticalTo((func())(nil))
-	ExpectEq("identical to <func()> nil", m.Description())
+	ExpectEq("identical to <func()> 0x0", m.Description())
 
 	err = m.Matches((func())(nil))
 	ExpectEq(nil, err)
@@ -173,7 +173,7 @@ func (t *IdenticalToTest) Channels() {
 
 	// Nil expected value
 	m = IdenticalTo((chan int)(nil))
-	ExpectEq("identical to <chan int> nil", m.Description())
+	ExpectEq("identical to <chan int> 0x0", m.Description())
 
 	err = m.Matches((chan int)(nil))
 	ExpectEq(nil, err)
