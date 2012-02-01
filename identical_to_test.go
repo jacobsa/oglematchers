@@ -610,15 +610,6 @@ func (t *IdenticalToTest) ArraysOfNonComparableArrays() {
 	ExpectThat(f, Panics(HasSubstr("is not comparable")))
 }
 
-func (t *IdenticalToTest) InterfaceWithNilDynamicValue() {
-}
-
-func (t *IdenticalToTest) InterfaceWithComparableDynamicValue() {
-}
-
-func (t *IdenticalToTest) InterfaceWithNonComparableDynamicValue() {
-}
-
 func (t *IdenticalToTest) Strings() {
 }
 
