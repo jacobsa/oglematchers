@@ -671,6 +671,18 @@ func (t *IdenticalToTest) ComparableStructs() {
 }
 
 func (t *IdenticalToTest) NonComparableStructs() {
+	type subStruct struct {
+		s []int
+	}
+
+	type myStruct struct {
+		u uint
+		s subStruct
+	}
+
+	x := myStruct{17, subStruct{[]int{19}}}
+	f := func() { IdenticalTo(x) }
+	ExpectThat(f, Panics(AllOf(HasSubstr("IdenticalTo"), HasSubstr("comparable"))))
 }
 
 func (t *IdenticalToTest) UnsafePointers() {
