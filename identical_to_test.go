@@ -51,7 +51,7 @@ func (t *IdenticalToTest) TypesNotIdentical() {
 	m = IdenticalTo(int(17))
 	err = m.Matches(intAlias(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type intAlias")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.intAlias")))
 
 	// int and uint
 	m = IdenticalTo(int(17))
@@ -304,7 +304,7 @@ func (t *IdenticalToTest) Int32s() {
 	// Completely wrong type
 	err = m.Matches(int16(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type int32")))
+	ExpectThat(err, Error(Equals("which is of type int16")))
 }
 
 func (t *IdenticalToTest) Int64s() {
@@ -519,7 +519,7 @@ func (t *IdenticalToTest) Complex64s() {
 	var err error
 
 	m = IdenticalTo(complex64(17))
-	ExpectEq("identical to <complex64> 17+0i", m.Description())
+	ExpectEq("identical to <complex64> (17+0i)", m.Description())
 
 	// Identical value
 	err = m.Matches(complex64(17))
@@ -542,7 +542,7 @@ func (t *IdenticalToTest) Complex128s() {
 	var err error
 
 	m = IdenticalTo(complex128(17))
-	ExpectEq("identical to <complex128> 17+0i", m.Description())
+	ExpectEq("identical to <complex128> (17+0i)", m.Description())
 
 	// Identical value
 	err = m.Matches(complex128(17))
@@ -600,11 +600,11 @@ func (t *IdenticalToTest) NonEmptyComparableArrays() {
 
 	// Length too short
 	err = m.Matches([1]int{17})
-	ExpectThat(err, Error(Equals("")))
+	ExpectThat(err, Error(Equals("which is of type [1]int")))
 
 	// Length too long
 	err = m.Matches([3]int{17, 19, 23})
-	ExpectThat(err, Error(Equals("")))
+	ExpectThat(err, Error(Equals("which is of type [3]int")))
 
 	// First element different
 	err = m.Matches([2]int{13, 19})
@@ -710,7 +710,7 @@ func (t *IdenticalToTest) ComparableStructs() {
 
 	x := myStruct{17, subStruct{19}}
 	m = IdenticalTo(x)
-	ExpectEq("identical to <myStruct> {17 {19}}", m.Description())
+	ExpectEq("identical to <oglematchers_test.myStruct> {17 {19}}", m.Description())
 
 	// Identical value
 	err = m.Matches(myStruct{17, subStruct{19}})
@@ -821,7 +821,7 @@ func (t *IdenticalToTest) IntAlias() {
 	type intAlias int
 
 	m = IdenticalTo(intAlias(17))
-	ExpectEq("identical to <intAlias> 17", m.Description())
+	ExpectEq("identical to <oglematchers_test.intAlias> 17", m.Description())
 
 	// Identical value
 	err = m.Matches(intAlias(17))
