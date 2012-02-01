@@ -566,6 +566,15 @@ func (t *IdenticalToTest) NonEmptyComparableArrays() {
 }
 
 func (t *IdenticalToTest) NonComparableArrays() {
+	x := [0]func(){}
+	f := func() { IdenticalTo(x) }
+	ExpectThat(f, Panics(HasSubstr("is not comparable")))
+}
+
+func (t *IdenticalToTest) ArraysOfNonComparableArrays() {
+	x := [0][0]func(){}
+	f := func() { IdenticalTo(x) }
+	ExpectThat(f, Panics(HasSubstr("is not comparable")))
 }
 
 func (t *IdenticalToTest) ComparableInterfaces() {
