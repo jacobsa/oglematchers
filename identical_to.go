@@ -30,6 +30,15 @@ func isComparable(t reflect.Type) bool {
 	case reflect.Array:
 		return isComparable(t.Elem())
 
+	case reflect.Struct:
+		for i := 0; i < t.NumField(); i++ {
+			if !isComparable(t.Field(i).Type) {
+				return false
+			}
+		}
+
+		return true
+
 	case reflect.Slice, reflect.Map, reflect.Func:
 		return false
 	}
@@ -39,8 +48,14 @@ func isComparable(t reflect.Type) bool {
 
 // Should the supplied type be allowed as an argument to IdenticalTo?
 func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
-	// Reject containers with non-comparable elements.
-	if t.Kind() == reflect.Array && !isComparable(t.Elem()) {
+	// Reference types are always okay; we compare pointers.
+	switch t.Kind() {
+	case reflect.Slice, reflect.Map, reflect.Func, reflect.Chan:
+		return true, nil
+	}
+
+	// Reject other non-comparable types.
+	if !isComparable(t) {
 		return false, errors.New(fmt.Sprintf("%v is not comparable", t))
 	}
 
