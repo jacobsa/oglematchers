@@ -234,7 +234,7 @@ func (t *IdenticalToTest) Ints() {
 	type myType int
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -257,7 +257,7 @@ func (t *IdenticalToTest) Int8s() {
 	type myType int8
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -280,7 +280,7 @@ func (t *IdenticalToTest) Int16s() {
 	type myType int16
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -303,7 +303,7 @@ func (t *IdenticalToTest) Int32s() {
 	type myType int32
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int16(17))
@@ -326,7 +326,7 @@ func (t *IdenticalToTest) Int64s() {
 	type myType int64
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -349,7 +349,7 @@ func (t *IdenticalToTest) Uints() {
 	type myType uint
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -372,7 +372,7 @@ func (t *IdenticalToTest) Uint8s() {
 	type myType uint8
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -395,7 +395,7 @@ func (t *IdenticalToTest) Uint16s() {
 	type myType uint16
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -418,7 +418,7 @@ func (t *IdenticalToTest) Uint32s() {
 	type myType uint32
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -441,7 +441,7 @@ func (t *IdenticalToTest) Uint64s() {
 	type myType uint64
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -464,7 +464,7 @@ func (t *IdenticalToTest) Uintptrs() {
 	type myType uintptr
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -487,7 +487,7 @@ func (t *IdenticalToTest) Float32s() {
 	type myType float32
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(float32(17))
@@ -510,7 +510,7 @@ func (t *IdenticalToTest) Float64s() {
 	type myType float64
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(float64(17))
@@ -533,7 +533,7 @@ func (t *IdenticalToTest) Complex64s() {
 	type myType complex64
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(complex64(17))
@@ -556,7 +556,7 @@ func (t *IdenticalToTest) Complex128s() {
 	type myType complex128
 	err = m.Matches(myType(17))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(complex128(17))
@@ -691,7 +691,7 @@ func (t *IdenticalToTest) Strings() {
 	type myType string
 	err = m.Matches(myType("taco"))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -732,7 +732,7 @@ func (t *IdenticalToTest) ComparableStructs() {
 	type myType myStruct
 	err = m.Matches(myType{17, subStruct{19}})
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -776,7 +776,7 @@ func (t *IdenticalToTest) NilUnsafePointer() {
 	type myType unsafe.Pointer
 	err = m.Matches(myType(unsafe.Pointer(nil)))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
@@ -810,7 +810,7 @@ func (t *IdenticalToTest) NonNilUnsafePointer() {
 	type myType unsafe.Pointer
 	err = m.Matches(myType(unsafe.Pointer(&i)))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type myType")))
+	ExpectThat(err, Error(Equals("which is of type oglematchers_test.myType")))
 
 	// Completely wrong type
 	err = m.Matches(int32(17))
