@@ -16,7 +16,14 @@
 package oglematchers
 
 import (
+	"errors"
+	"reflect"
 )
+
+// Should the supplied type be allowed as an argument to IdenticalTo?
+func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
+	return false, errors.New("TODO")
+}
 
 // IdenticalTo(x) returns a matcher that matches values v such that all of the
 // following hold:
@@ -31,6 +38,13 @@ import (
 // This function will panic if x is of a value type that is not comparable. For
 // example, x cannot be an array of functions.
 func IdenticalTo(x interface{}) Matcher {
+	t := reflect.TypeOf(x)
+
+	// Reject illegal arguments.
+	if ok, err := isLegalForIdenticalTo(t); !ok {
+		panic("IdenticalTo: " + err.Error())
+	}
+
 	// TODO
 	return &hasSubstrMatcher{"asd"}
 }
