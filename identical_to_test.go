@@ -632,6 +632,42 @@ func (t *IdenticalToTest) Strings() {
 }
 
 func (t *IdenticalToTest) ComparableStructs() {
+	var m Matcher
+	var err error
+
+	type subStruct struct {
+		i int
+	}
+
+	type myStruct struct {
+		u uint
+		s subStruct
+	}
+
+	x := myStruct{17, subStruct{19}}
+	m = IdenticalTo(x)
+	ExpectEq("identical to <myStruct> {17 {19}}", m.Description())
+
+	// Identical value
+	err = m.Matches(myStruct{17, subStruct{19}})
+	ExpectEq(nil, err)
+
+	// Wrong outer field
+	err = m.Matches(myStruct{13, subStruct{19}})
+	ExpectThat(err, Error(Equals("")))
+
+	// Wrong inner field
+	err = m.Matches(myStruct{17, subStruct{23}})
+	ExpectThat(err, Error(Equals("")))
+
+	// Type alias
+	type myType myStruct
+	err = m.Matches(myType{17, subStruct{19}})
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) NonComparableStructs() {
