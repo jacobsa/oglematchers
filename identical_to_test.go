@@ -94,7 +94,7 @@ func (t *IdenticalToTest) Slices() {
 	ExpectEq(nil, err)
 
 	err = m.Matches([]int{})
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 
 	// Non-nil expected value
 	o1 := []int{}
@@ -106,7 +106,7 @@ func (t *IdenticalToTest) Slices() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(o2)
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 }
 
 func (t *IdenticalToTest) MapWithComparableKeys() {
@@ -121,7 +121,7 @@ func (t *IdenticalToTest) MapWithComparableKeys() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(map[int]int{})
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 
 	// Non-nil expected value
 	o1 := map[int]int{}
@@ -133,7 +133,7 @@ func (t *IdenticalToTest) MapWithComparableKeys() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(o2)
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 }
 
 func (t *IdenticalToTest) MapWithNonComparableKeys() {
@@ -152,7 +152,7 @@ func (t *IdenticalToTest) Functions() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(func(){})
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 
 	// Non-nil expected value
 	o1 := func() {}
@@ -164,7 +164,7 @@ func (t *IdenticalToTest) Functions() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(o2)
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 }
 
 func (t *IdenticalToTest) Channels() {
@@ -179,7 +179,7 @@ func (t *IdenticalToTest) Channels() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(make(chan int))
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 
 	// Non-nil expected value
 	o1 := make(chan int)
@@ -191,7 +191,7 @@ func (t *IdenticalToTest) Channels() {
 	ExpectEq(nil, err)
 
 	err = m.Matches(o2)
-	ExpectThat(err, Equals("which is not an identical reference"))
+	ExpectThat(err, Error(Equals("which is not an identical reference")))
 }
 
 func (t *IdenticalToTest) Bools() {
