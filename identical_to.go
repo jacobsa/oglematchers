@@ -98,5 +98,10 @@ func (m *identicalToMatcher) Matches(c interface{}) error {
 		return errors.New("which is not an identical reference")
 	}
 
-	return errors.New("TODO")
+	// Are the values equal?
+	if m.x == c {
+		return nil
+	}
+
+	return errors.New("")
 }
