@@ -26,11 +26,10 @@ import (
 //  *  If v and x are of a reference type (slice, map, function, channel), then
 //     they are either both nil or are references to the same object.
 //
-//  *  If v and x are not of a reference type, then it is legal to compare them
-//     using the == operator, and v == x.
+//  *  If v and x are not of a reference type, then v == x.
 //
-// It is illegal for x to be of struct type, or of a container type that uses
-// structs as keys or elements.
+// This function will panic if x is of a value type that is not comparable. For
+// example, x cannot be an array of functions.
 func IdenticalTo(x interface{}) Matcher {
 	// TODO
 	return &hasSubstrMatcher{"asd"}
