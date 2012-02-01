@@ -573,7 +573,7 @@ func (t *IdenticalToTest) EmptyComparableArrays() {
 
 	// Length too long
 	err = m.Matches([1]int{17})
-	ExpectThat(err, Error(Equals("")))
+	ExpectThat(err, Error(Equals("which is of type [1]int")))
 
 	// Element type alias
 	type myType int
