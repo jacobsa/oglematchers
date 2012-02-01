@@ -86,5 +86,17 @@ func (m *identicalToMatcher) Matches(c interface{}) error {
 		return NewFatalError(fmt.Sprintf("which is of type %v", ct))
 	}
 
+	// Handle reference types.
+	switch t.Kind() {
+	case reflect.Slice, reflect.Map, reflect.Func, reflect.Chan:
+		xv := reflect.ValueOf(m.x)
+		cv := reflect.ValueOf(c)
+		if xv.Pointer() == cv.Pointer() {
+			return nil
+		}
+
+		return errors.New("which is not an identical reference")
+	}
+
 	return errors.New("TODO")
 }
