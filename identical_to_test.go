@@ -708,7 +708,30 @@ func (t *IdenticalToTest) NonComparableStructs() {
 }
 
 func (t *IdenticalToTest) NilUnsafePointer() {
-	ExpectTrue(false, "TODO")
+	var m Matcher
+	var err error
+
+	x := unsafe.Pointer(nil)
+	m = IdenticalTo(x)
+	ExpectEq(fmt.Sprintf("identical to <unsafe.Pointer> %v", x), m.Description())
+
+	// Identical value
+	err = m.Matches(unsafe.Pointer(nil))
+	ExpectEq(nil, err)
+
+	// Wrong value
+	j := 17
+	err = m.Matches(unsafe.Pointer(&j))
+	ExpectThat(err, Error(Equals("")))
+
+	// Type alias
+	type myType unsafe.Pointer
+	err = m.Matches(myType(unsafe.Pointer(nil)))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) NonNilUnsafePointer() {
