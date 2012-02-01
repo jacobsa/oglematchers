@@ -19,6 +19,7 @@ import (
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 	"fmt"
+	"unsafe"
 )
 
 ////////////////////////////////////////////////////////////
@@ -419,6 +420,10 @@ func (t *IdenticalToTest) Uint64s() {
 	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
+func (t *IdenticalToTest) Uintptrs() {
+	ExpectTrue(false, "TODO")
+}
+
 func (t *IdenticalToTest) Float32s() {
 	var m Matcher
 	var err error
@@ -685,7 +690,40 @@ func (t *IdenticalToTest) NonComparableStructs() {
 	ExpectThat(f, Panics(AllOf(HasSubstr("IdenticalTo"), HasSubstr("comparable"))))
 }
 
-func (t *IdenticalToTest) UnsafePointers() {
+func (t *IdenticalToTest) NilUnsafePointer() {
+	ExpectTrue(false, "TODO")
+}
+
+func (t *IdenticalToTest) NonNilUnsafePointer() {
+	var m Matcher
+	var err error
+
+	i := 17
+	x := unsafe.Pointer(&i)
+	m = IdenticalTo(x)
+	ExpectEq(fmt.Sprintf("identical to <unsafe.Pointer> %v", x), m.Description())
+
+	// Identical value
+	err = m.Matches(unsafe.Pointer(&i))
+	ExpectEq(nil, err)
+
+	// Nil value
+	err = m.Matches(unsafe.Pointer(nil))
+	ExpectThat(err, Error(Equals("")))
+
+	// Wrong value
+	j := 17
+	err = m.Matches(unsafe.Pointer(&j))
+	ExpectThat(err, Error(Equals("")))
+
+	// Type alias
+	type myType unsafe.Pointer
+	err = m.Matches(myType(unsafe.Pointer(&i)))
+	ExpectThat(err, Error(Equals("which is of type myType")))
+
+	// Completely wrong type
+	err = m.Matches(int32(17))
+	ExpectThat(err, Error(Equals("which is of type int32")))
 }
 
 func (t *IdenticalToTest) IntAlias() {
