@@ -19,6 +19,7 @@ import (
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 	"fmt"
+	"io"
 	"unsafe"
 )
 
@@ -60,26 +61,35 @@ func (t *IdenticalToTest) TypesNotIdentical() {
 	ExpectThat(err, Error(Equals("which is of type uint")))
 }
 
-func (t *IdenticalToTest) InvalidTypeExpectedValue() {
-	f := func() { IdenticalTo(nil) }
-	ExpectThat(f, Panics(AllOf(HasSubstr("IdenticalTo"), HasSubstr("invalid"))))
-}
-
-func (t *IdenticalToTest) InvalidTypeCandidate() {
+func (t *IdenticalToTest) PredeclaredNilIdentifier() {
 	var m Matcher
 	var err error
 
-	// Nil chan expected value
-	m = IdenticalTo((chan int)(nil))
+	// Nil literal
+	m = IdenticalTo(nil)
 	err = m.Matches(nil)
-	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type <nil>")))
+	ExpectEq(nil, err)
 
-	// Non-nil chan expected value
-	m = IdenticalTo(make(chan int))
-	err = m.Matches(nil)
+	// Zero interface var (which is the same as above since IdenticalTo takes an
+	// interface{} as an arg)
+	var nilReader io.Reader
+	var nilWriter io.Writer
+
+	m = IdenticalTo(nilReader)
+	err = m.Matches(nilWriter)
+	ExpectEq(nil, err)
+
+	// Typed nil value.
+	m = IdenticalTo(nil)
+	err = m.Matches((chan int)(nil))
 	ExpectTrue(isFatal(err))
-	ExpectThat(err, Error(Equals("which is of type <nil>")))
+	ExpectThat(err, Error(Equals("which is of type chan int")))
+
+	// Non-nil value.
+	m = IdenticalTo(nil)
+	err = m.Matches("taco")
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(Equals("which is of type string")))
 }
 
 func (t *IdenticalToTest) Slices() {

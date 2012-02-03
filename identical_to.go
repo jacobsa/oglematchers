@@ -48,9 +48,9 @@ func isComparable(t reflect.Type) bool {
 
 // Should the supplied type be allowed as an argument to IdenticalTo?
 func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
-	// Don't allow the zero type.
+	// Allow the zero type.
 	if t == nil {
-		return false, errors.New("invalid type")
+		return true, nil
 	}
 
 	// Reference types are always okay; we compare pointers.
@@ -71,6 +71,9 @@ func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
 // following hold:
 //
 //  *  v and x have identical types.
+//
+//  *  v and x are both the invalid type (which results from the predeclared
+//     nil value, or from nil interface variables).
 //
 //  *  If v and x are of a reference type (slice, map, function, channel), then
 //     they are either both nil or are references to the same object.
@@ -104,6 +107,11 @@ func (m *identicalToMatcher) Matches(c interface{}) error {
 	t := reflect.TypeOf(m.x)
 	if ct := reflect.TypeOf(c); t != ct {
 		return NewFatalError(fmt.Sprintf("which is of type %v", ct))
+	}
+
+	// Special case: two values of the invalid type are always identical.
+	if t == nil {
+		return nil
 	}
 
 	// Handle reference types.
