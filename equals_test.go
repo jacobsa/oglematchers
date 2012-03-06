@@ -3220,7 +3220,7 @@ func (t *EqualsTest) NilChan() {
 	var nonNilChan2 chan uint = make(chan uint)
 
 	matcher := Equals(nilChan1)
-	ExpectEq("0x0", matcher.Description())
+	ExpectEq("<nil>", matcher.Description())
 
 	cases := []equalsTestCase{
 		// int channels
@@ -3703,7 +3703,7 @@ func (t *EqualsTest) NilUnsafePointer() {
 	var nonNilPtr unsafe.Pointer = unsafe.Pointer(&someInt)
 
 	matcher := Equals(nilPtr1)
-	ExpectEq("0x0", matcher.Description())
+	ExpectEq("<nil>", matcher.Description())
 
 	cases := []equalsTestCase{
 		// Correct type.

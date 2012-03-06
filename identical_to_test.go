@@ -152,7 +152,7 @@ func (t *IdenticalToTest) Functions() {
 
 	// Nil expected value
 	m = IdenticalTo((func())(nil))
-	ExpectEq("identical to <func()> 0x0", m.Description())
+	ExpectEq("identical to <func()> <nil>", m.Description())
 
 	err = m.Matches((func())(nil))
 	ExpectEq(nil, err)
@@ -179,7 +179,7 @@ func (t *IdenticalToTest) Channels() {
 
 	// Nil expected value
 	m = IdenticalTo((chan int)(nil))
-	ExpectEq("identical to <chan int> 0x0", m.Description())
+	ExpectEq("identical to <chan int> <nil>", m.Description())
 
 	err = m.Matches((chan int)(nil))
 	ExpectEq(nil, err)
