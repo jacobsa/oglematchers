@@ -67,18 +67,17 @@ func isLegalForIdenticalTo(t reflect.Type) (bool, error) {
 	return true, nil
 }
 
-// IdenticalTo(x) returns a matcher that matches values v such that all of the
-// following hold:
+// IdenticalTo(x) returns a matcher that matches values v with type identical
+// to x such that:
 //
-//  *  v and x have identical types.
-//
-//  *  v and x are both the invalid type (which results from the predeclared
-//     nil value, or from nil interface variables).
-//
-//  *  If v and x are of a reference type (slice, map, function, channel), then
+//  1. If v and x are of a reference type (slice, map, function, channel), then
 //     they are either both nil or are references to the same object.
 //
-//  *  If v and x are not of a reference type, then v == x.
+//  2. Otherwise, if v and x are not of a reference type but have a valid type,
+//     then v == x.
+//
+// If v and x are both the invalid type (which results from the predeclared nil
+// value, or from nil interface variables), then the matcher is satisfied.
 //
 // This function will panic if x is of a value type that is not comparable. For
 // example, x cannot be an array of functions.
