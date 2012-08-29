@@ -31,26 +31,25 @@ your own simply by implementing the `oglematchers.Matcher` interface.
 Installation
 ------------
 
-First, make sure you have installed a version of the Go tools at least as new as
-`weekly/weekly.2011-12-22`. See [here][golang-install] for instructions. Until
-release `r61` comes out, this involes using the `weekly` tag.
+First, make sure you have installed Go 1.0.2 or newer. See
+[here][golang-install] for instructions.
 
 Use the following command to install `oglematchers` and keep it up to date:
 
-    goinstall -u github.com/jacobsa/oglematchers
+    go get -u github.com/jacobsa/oglematchers
 
 
 Documentation
 -------------
 
 See [here][reference] for documentation hosted on GoPkgDoc. Alternatively, you
-can install the package and then use `godoc`:
+can install the package and then use `go doc`:
 
-    godoc github.com/jacobsa/oglematchers
+    go doc github.com/jacobsa/oglematchers
 
 
 [reference]: http://gopkgdoc.appspot.com/pkg/github.com/jacobsa/oglematchers
-[golang-install]: http://golang.org/doc/install.html#releases
+[golang-install]: http://golang.org/doc/install.html
 [googletest]: http://code.google.com/p/googletest/
 [google-js-test]: http://code.google.com/p/google-js-test/
 [ogletest]: http://github.com/jacobsa/ogletest
