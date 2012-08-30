@@ -219,6 +219,11 @@ func (t *DeepEqualsTest) ByteSliceValue() {
 	err = m.Matches(c)
 	ExpectEq(nil, err)
 
+	// Nil slice.
+	c = []byte(nil)
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("which is nil")))
+
 	// Prefix.
 	AssertGt(len(x), 1)
 	c = make([]byte, len(x)-1)
@@ -250,6 +255,11 @@ func (t *DeepEqualsTest) OtherSliceValue() {
 	err = m.Matches(c)
 	ExpectEq(nil, err)
 
+	// Nil slice.
+	c = []uint16(nil)
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("which is nil")))
+
 	// Prefix.
 	AssertGt(len(x), 1)
 	c = make([]uint16, len(x)-1)
@@ -269,7 +279,7 @@ func (t *DeepEqualsTest) OtherSliceValue() {
 func (t *DeepEqualsTest) NilByteSliceValue() {
 	x := []byte(nil)
 	m := DeepEquals(x)
-	ExpectEq("deep equals: []", m.Description())
+	ExpectEq("deep equals: <nil slice>", m.Description())
 
 	var c []byte
 	var err error
@@ -288,7 +298,7 @@ func (t *DeepEqualsTest) NilByteSliceValue() {
 func (t *DeepEqualsTest) NilOtherSliceValue() {
 	x := []uint16(nil)
 	m := DeepEquals(x)
-	ExpectEq("deep equals: []", m.Description())
+	ExpectEq("deep equals: <nil slice>", m.Description())
 
 	var c []uint16
 	var err error

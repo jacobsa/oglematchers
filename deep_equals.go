@@ -33,7 +33,17 @@ type deepEqualsMatcher struct {
 }
 
 func (m *deepEqualsMatcher) Description() string {
-	return fmt.Sprintf("deep equals: %v", m.x)
+	xDesc := fmt.Sprintf("%v", m.x)
+	xValue := reflect.ValueOf(m.x)
+
+	// Special case: fmt.Sprintf presents nil slices as "[]", but
+	// reflect.DeepEqual makes a distinction between nil and empty slices. Make
+	// this less confusing.
+	if xValue.Kind() == reflect.Slice && xValue.IsNil() {
+		xDesc = "<nil slice>"
+	}
+
+	return fmt.Sprintf("deep equals: %s", xDesc)
 }
 
 func (m *deepEqualsMatcher) Matches(c interface{}) error {
@@ -48,6 +58,13 @@ func (m *deepEqualsMatcher) Matches(c interface{}) error {
 	// Defer to the reflect package.
 	if reflect.DeepEqual(m.x, c) {
 		return nil
+	}
+
+	// Special case: if the comparison failed because c is the nil slice, given
+	// an indication of this (since its value is printed as "[]").
+	cValue := reflect.ValueOf(c)
+	if cValue.Kind() == reflect.Slice && cValue.IsNil() {
+		return errors.New("which is nil")
 	}
 
 	return errors.New("")
