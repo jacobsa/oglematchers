@@ -33,7 +33,7 @@ type deepEqualsMatcher struct {
 }
 
 func (m *deepEqualsMatcher) Description() string {
-	return fmt.Sprintf("deep equals %v", m.x)
+	return fmt.Sprintf("deep equals: %v", m.x)
 }
 
 func (m *deepEqualsMatcher) Matches(c interface{}) error {

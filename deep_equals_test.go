@@ -124,7 +124,7 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithNilLiteralValue() {
 
 func (t *DeepEqualsTest) NilLiteralValue() {
 	m := DeepEquals(nil)
-	ExpectEq("deep equals: nil", m.Description())
+	ExpectEq("deep equals: <nil>", m.Description())
 
 	var c interface{}
 	var err error
@@ -185,9 +185,9 @@ func (t *DeepEqualsTest) SliceValue() {
 }
 
 func (t *DeepEqualsTest) NilSliceValue() {
-	var x []uint8
+	x := []uint8(nil)
 	m := DeepEquals(x)
-	ExpectEq("deep equals: <nil>", m.Description())
+	ExpectEq("deep equals: []", m.Description())
 
 	var c []uint8
 	var err error
