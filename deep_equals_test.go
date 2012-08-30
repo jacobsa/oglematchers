@@ -60,11 +60,11 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 	ExpectThat(err, Error(HasSubstr("string")))
 
 	// Slice candidate.
-	err = m.Matches([]byte{})
+	err = m.Matches([]uint8{})
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
-	ExpectThat(err, Error(HasSubstr("[]byte")))
+	ExpectThat(err, Error(HasSubstr("[]uint8")))
 
 	// Unsigned int candidate.
 	err = m.Matches(uint(17))
@@ -75,7 +75,7 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 }
 
 func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
-	x := []byte{}
+	x := []uint8{}
 	m := DeepEquals(x)
 
 	var err error
@@ -95,11 +95,11 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
 	ExpectThat(err, Error(HasSubstr("string")))
 
 	// Slice candidate with wrong value type.
-	err = m.Matches([]uint8{})
+	err = m.Matches([]uint16{})
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
-	ExpectThat(err, Error(HasSubstr("[]uint8")))
+	ExpectThat(err, Error(HasSubstr("[]uint16")))
 }
 
 func (t *DeepEqualsTest) WrongTypeCandidateWithNilLiteralValue() {
@@ -154,15 +154,15 @@ func (t *DeepEqualsTest) IntValue() {
 }
 
 func (t *DeepEqualsTest) SliceValue() {
-	x := []byte{17, 19}
+	x := []uint8{17, 19}
 	m := DeepEquals(x)
 	ExpectEq("deep equals: [17 19]", m.Description())
 
-	var c []byte
+	var c []uint8
 	var err error
 
 	// Matching.
-	c = make([]byte, len(x))
+	c = make([]uint8, len(x))
 	AssertEq(len(x), copy(c, x))
 
 	err = m.Matches(c)
@@ -170,14 +170,14 @@ func (t *DeepEqualsTest) SliceValue() {
 
 	// Prefix.
 	AssertGt(len(x), 1)
-	c = make([]byte, len(x)-1)
+	c = make([]uint8, len(x)-1)
 	AssertEq(len(x)-1, copy(c, x))
 
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
 
 	// Suffix.
-	c = make([]byte, len(x)+1)
+	c = make([]uint8, len(x)+1)
 	AssertEq(len(x), copy(c, x))
 
 	err = m.Matches(c)
@@ -185,20 +185,20 @@ func (t *DeepEqualsTest) SliceValue() {
 }
 
 func (t *DeepEqualsTest) NilSliceValue() {
-	var x []byte
+	var x []uint8
 	m := DeepEquals(x)
 	ExpectEq("deep equals: <nil>", m.Description())
 
-	var c []byte
+	var c []uint8
 	var err error
 
 	// Nil slice.
-	c = []byte(nil)
+	c = []uint8(nil)
 	err = m.Matches(c)
 	ExpectEq(nil, err)
 
 	// Non-nil slice.
-	c = []byte{}
+	c = []uint8{}
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
 }
