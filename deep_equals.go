@@ -16,11 +16,30 @@
 package oglematchers
 
 import (
+	"errors"
+	"fmt"
+	"reflect"
 )
 
 // DeepEquals returns a matcher that matches based on 'deep equality', as
 // defined by the reflect package. This matcher requires that values have
 // identical types to x.
 func DeepEquals(x interface{}) Matcher {
-	panic("TODO")
+	return &deepEqualsMatcher{x}
+}
+
+type deepEqualsMatcher struct {
+	x interface{}
+}
+
+func (m *deepEqualsMatcher) Description() string {
+	return fmt.Sprintf("deep equals %v", m.x)
+}
+
+func (m *deepEqualsMatcher) Matches(c interface{}) error {
+	if reflect.DeepEqual(m.x, c) {
+		return nil
+	}
+
+	return errors.New("")
 }
