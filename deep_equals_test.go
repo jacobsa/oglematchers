@@ -18,6 +18,8 @@ package oglematchers_test
 import (
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
+	"bytes"
+	"testing"
 )
 
 ////////////////////////////////////////////////////////////////////////
@@ -201,4 +203,32 @@ func (t *DeepEqualsTest) NilSliceValue() {
 	c = []uint8{}
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
+}
+
+////////////////////////////////////////////////////////////////////////
+// Benchmarks
+////////////////////////////////////////////////////////////////////////
+
+func benchmarkWithSize(b *testing.B, size int) {
+	b.StopTimer()
+	buf := bytes.Repeat([]byte{0x01}, size)
+	bufCopy := make([]byte, size)
+	copy(bufCopy, buf)
+
+	matcher := DeepEquals(buf)
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		matcher.Matches(bufCopy)
+	}
+
+	b.SetBytes(int64(size))
+}
+
+func BenchmarkShortByteSlice(b *testing.B) {
+	benchmarkWithSize(b, 256)
+}
+
+func BenchmarkLongByteSlice(b *testing.B) {
+	benchmarkWithSize(b, 1<<24)
 }
