@@ -16,10 +16,13 @@
 package oglematchers
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"reflect"
 )
+
+var byteSliceType reflect.Type = reflect.TypeOf([]byte{})
 
 // DeepEquals returns a matcher that matches based on 'deep equality', as
 // defined by the reflect package. This matcher requires that values have
@@ -55,6 +58,21 @@ func (m *deepEqualsMatcher) Matches(c interface{}) error {
 		return NewFatalError(fmt.Sprintf("which is of type %v", ct))
 	}
 
+	// Special case: handle byte slices more efficiently.
+	cValue := reflect.ValueOf(c)
+	xValue := reflect.ValueOf(m.x)
+
+	if ct == byteSliceType && !cValue.IsNil() && !xValue.IsNil() {
+		xBytes := m.x.([]byte)
+		cBytes := c.([]byte)
+
+		if bytes.Equal(cBytes, xBytes) {
+			return nil
+		}
+
+		return errors.New("")
+	}
+
 	// Defer to the reflect package.
 	if reflect.DeepEqual(m.x, c) {
 		return nil
@@ -62,7 +80,6 @@ func (m *deepEqualsMatcher) Matches(c interface{}) error {
 
 	// Special case: if the comparison failed because c is the nil slice, given
 	// an indication of this (since its value is printed as "[]").
-	cValue := reflect.ValueOf(c)
 	if cValue.Kind() == reflect.Slice && cValue.IsNil() {
 		return errors.New("which is nil")
 	}
