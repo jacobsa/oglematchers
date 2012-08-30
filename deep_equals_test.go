@@ -30,5 +30,30 @@ func init() { RegisterTestSuite(&DeepEqualsTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////////////////
 
-func (t *DeepEqualsTest) DoesFoo() {
+func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) NilValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) IntValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) IntAliasValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) SliceValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) DoubleSliceValue() {
+	ExpectEq("TODO", "")
 }
