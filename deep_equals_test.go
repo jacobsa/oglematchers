@@ -58,7 +58,7 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
-	ExpectThat(err, Error(HasSubstr("[]byte{}")))
+	ExpectThat(err, Error(HasSubstr("[]byte")))
 	ExpectThat(err, Error(HasSubstr("int")))
 
 	// Unsigned int candidate.
@@ -71,7 +71,34 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 }
 
 func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
-	ExpectEq("TODO", "")
+	x := []byte{}
+	m := DeepEquals(x)
+
+	var err error
+
+	// Nil candidate.
+	err = m.Matches(nil)
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("TODO")))
+	ExpectThat(err, Error(HasSubstr("[]byte")))
+
+	// String candidate.
+	err = m.Matches("taco")
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("string")))
+	ExpectThat(err, Error(HasSubstr("[]byte")))
+
+	// Slice candidate with wrong value type.
+	err = m.Matches([]uint8{})
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]uint8")))
+	ExpectThat(err, Error(HasSubstr("[]byte")))
 }
 
 func (t *DeepEqualsTest) NilValue() {
