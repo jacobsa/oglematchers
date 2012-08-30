@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 
@@ -31,7 +32,42 @@ func init() { RegisterTestSuite(&DeepEqualsTest{}) }
 ////////////////////////////////////////////////////////////////////////
 
 func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
-	ExpectEq("TODO", "")
+	var x int = 17
+	m := DeepEquals(x)
+
+	var err error
+
+	// Nil candidate.
+	err = m.Matches(nil)
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("TODO")))
+	ExpectThat(err, Error(HasSubstr("int")))
+
+	// String candidate.
+	err = m.Matches("taco")
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("string")))
+	ExpectThat(err, Error(HasSubstr("int")))
+
+	// Slice candidate.
+	err = m.Matches([]byte{})
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]byte{}")))
+	ExpectThat(err, Error(HasSubstr("int")))
+
+	// Unsigned int candidate.
+	err = m.Matches(uint(17))
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("uint")))
+	ExpectThat(err, Error(HasSubstr("int")))
 }
 
 func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
