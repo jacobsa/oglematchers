@@ -195,7 +195,22 @@ func (t *DeepEqualsTest) SliceValue() {
 }
 
 func (t *DeepEqualsTest) NilSliceValue() {
-	ExpectEq("TODO", "")
+	var x []byte
+	m := DeepEquals(x)
+	ExpectEq("deep equals: TODO", m.Description())
+
+	var c []byte
+	var err error
+
+	// Nil slice.
+	c = []byte(nil)
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Non-nil slice.
+	c = []byte{}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
 }
 
 func (t *DeepEqualsTest) DoubleSliceValue() {
