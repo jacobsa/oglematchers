@@ -101,12 +101,57 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
 	ExpectThat(err, Error(HasSubstr("[]byte")))
 }
 
-func (t *DeepEqualsTest) NilValue() {
-	ExpectEq("TODO", "")
+func (t *DeepEqualsTest) WrongTypeCandidateWithNilLiteralValue() {
+	m := DeepEquals(nil)
+
+	var err error
+
+	// String candidate.
+	err = m.Matches("taco")
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("string")))
+	ExpectThat(err, Error(HasSubstr("TODO")))
+
+	// Nil slice candidate.
+	err = m.Matches([]byte(nil))
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]byte")))
+	ExpectThat(err, Error(HasSubstr("TODO")))
+}
+
+func (t *DeepEqualsTest) NilLiteralValue() {
+	m := DeepEquals(nil)
+	ExpectEq("deep equals: nil", m.Description())
+
+	var c interface{}
+	var err error
+
+	// Nil literal candidate.
+	c = nil
+	err = m.Matches(c)
+	ExpectEq(nil, err)
 }
 
 func (t *DeepEqualsTest) IntValue() {
-	ExpectEq("TODO", "")
+	m := DeepEquals(int(17))
+	ExpectEq("deep equals: 17", m.Description())
+
+	var c interface{}
+	var err error
+
+	// Matching int.
+	c = int(17)
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Non-matching int.
+	c = int(18)
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
 }
 
 func (t *DeepEqualsTest) IntAliasValue() {
@@ -114,6 +159,10 @@ func (t *DeepEqualsTest) IntAliasValue() {
 }
 
 func (t *DeepEqualsTest) SliceValue() {
+	ExpectEq("TODO", "")
+}
+
+func (t *DeepEqualsTest) NilSliceValue() {
 	ExpectEq("TODO", "")
 }
 
