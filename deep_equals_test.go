@@ -212,7 +212,3 @@ func (t *DeepEqualsTest) NilSliceValue() {
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
 }
-
-func (t *DeepEqualsTest) DoubleSliceValue() {
-	ExpectEq("TODO", "")
-}
