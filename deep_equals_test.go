@@ -61,12 +61,19 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 	ExpectThat(err, Error(HasSubstr("type")))
 	ExpectThat(err, Error(HasSubstr("string")))
 
-	// Slice candidate.
-	err = m.Matches([]uint8{})
+	// Byte slice candidate.
+	err = m.Matches([]byte{})
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
 	ExpectThat(err, Error(HasSubstr("[]uint8")))
+
+	// Other slice candidate.
+	err = m.Matches([]uint16{})
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]uint16")))
 
 	// Unsigned int candidate.
 	err = m.Matches(uint(17))
@@ -76,8 +83,8 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 	ExpectThat(err, Error(HasSubstr("uint")))
 }
 
-func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
-	x := []uint8{}
+func (t *DeepEqualsTest) WrongTypeCandidateWithByteSliceValue() {
+	x := []byte{}
 	m := DeepEquals(x)
 
 	var err error
@@ -104,6 +111,41 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
 	ExpectThat(err, Error(HasSubstr("[]uint16")))
 }
 
+func (t *DeepEqualsTest) WrongTypeCandidateWithOtherSliceValue() {
+	x := []uint16{}
+	m := DeepEquals(x)
+
+	var err error
+
+	// Nil candidate.
+	err = m.Matches(nil)
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("<nil>")))
+
+	// String candidate.
+	err = m.Matches("taco")
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("string")))
+
+	// Byte slice candidate with wrong value type.
+	err = m.Matches([]byte{})
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]uint8")))
+
+	// Other slice candidate with wrong value type.
+	err = m.Matches([]uint32{})
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]uint32")))
+}
+
 func (t *DeepEqualsTest) WrongTypeCandidateWithNilLiteralValue() {
 	m := DeepEquals(nil)
 
@@ -116,12 +158,19 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithNilLiteralValue() {
 	ExpectThat(err, Error(HasSubstr("type")))
 	ExpectThat(err, Error(HasSubstr("string")))
 
-	// Nil slice candidate.
-	err = m.Matches([]uint8(nil))
+	// Nil byte slice candidate.
+	err = m.Matches([]byte(nil))
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
 	ExpectThat(err, Error(HasSubstr("[]uint8")))
+
+	// Nil other slice candidate.
+	err = m.Matches([]uint16(nil))
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("[]uint16")))
 }
 
 func (t *DeepEqualsTest) NilLiteralValue() {
@@ -155,16 +204,16 @@ func (t *DeepEqualsTest) IntValue() {
 	ExpectThat(err, Error(Equals("")))
 }
 
-func (t *DeepEqualsTest) SliceValue() {
-	x := []uint8{17, 19}
+func (t *DeepEqualsTest) ByteSliceValue() {
+	x := []byte{17, 19}
 	m := DeepEquals(x)
 	ExpectEq("deep equals: [17 19]", m.Description())
 
-	var c []uint8
+	var c []byte
 	var err error
 
 	// Matching.
-	c = make([]uint8, len(x))
+	c = make([]byte, len(x))
 	AssertEq(len(x), copy(c, x))
 
 	err = m.Matches(c)
@@ -172,35 +221,85 @@ func (t *DeepEqualsTest) SliceValue() {
 
 	// Prefix.
 	AssertGt(len(x), 1)
-	c = make([]uint8, len(x)-1)
+	c = make([]byte, len(x)-1)
 	AssertEq(len(x)-1, copy(c, x))
 
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
 
 	// Suffix.
-	c = make([]uint8, len(x)+1)
+	c = make([]byte, len(x)+1)
 	AssertEq(len(x), copy(c, x))
 
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
 }
 
-func (t *DeepEqualsTest) NilSliceValue() {
-	x := []uint8(nil)
+func (t *DeepEqualsTest) OtherSliceValue() {
+	x := []uint16{17, 19}
+	m := DeepEquals(x)
+	ExpectEq("deep equals: [17 19]", m.Description())
+
+	var c []uint16
+	var err error
+
+	// Matching.
+	c = make([]uint16, len(x))
+	AssertEq(len(x), copy(c, x))
+
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Prefix.
+	AssertGt(len(x), 1)
+	c = make([]uint16, len(x)-1)
+	AssertEq(len(x)-1, copy(c, x))
+
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Suffix.
+	c = make([]uint16, len(x)+1)
+	AssertEq(len(x), copy(c, x))
+
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+}
+
+func (t *DeepEqualsTest) NilByteSliceValue() {
+	x := []byte(nil)
 	m := DeepEquals(x)
 	ExpectEq("deep equals: []", m.Description())
 
-	var c []uint8
+	var c []byte
 	var err error
 
 	// Nil slice.
-	c = []uint8(nil)
+	c = []byte(nil)
 	err = m.Matches(c)
 	ExpectEq(nil, err)
 
 	// Non-nil slice.
-	c = []uint8{}
+	c = []byte{}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+}
+
+func (t *DeepEqualsTest) NilOtherSliceValue() {
+	x := []uint16(nil)
+	m := DeepEquals(x)
+	ExpectEq("deep equals: []", m.Description())
+
+	var c []uint16
+	var err error
+
+	// Nil slice.
+	c = []uint16(nil)
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Non-nil slice.
+	c = []uint16{}
 	err = m.Matches(c)
 	ExpectThat(err, Error(Equals("")))
 }
