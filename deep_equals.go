@@ -37,6 +37,15 @@ func (m *deepEqualsMatcher) Description() string {
 }
 
 func (m *deepEqualsMatcher) Matches(c interface{}) error {
+	// Make sure the types match.
+	ct := reflect.TypeOf(c)
+	xt := reflect.TypeOf(m.x)
+
+	if ct != xt {
+		return NewFatalError(fmt.Sprintf("which is of type %v", ct))
+	}
+
+	// Defer to the reflect package.
 	if reflect.DeepEqual(m.x, c) {
 		return nil
 	}
