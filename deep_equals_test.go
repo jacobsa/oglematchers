@@ -45,6 +45,15 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 	ExpectThat(err, Error(HasSubstr("TODO")))
 	ExpectThat(err, Error(HasSubstr("int")))
 
+	// Int alias candidate.
+	type intAlias int
+	err = m.Matches(intAlias(x))
+	AssertNe(nil, err)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("type")))
+	ExpectThat(err, Error(HasSubstr("intAlias")))
+	ExpectThat(err, Error(HasSubstr("int")))
+
 	// String candidate.
 	err = m.Matches("taco")
 	AssertNe(nil, err)
@@ -154,12 +163,35 @@ func (t *DeepEqualsTest) IntValue() {
 	ExpectThat(err, Error(Equals("")))
 }
 
-func (t *DeepEqualsTest) IntAliasValue() {
-	ExpectEq("TODO", "")
-}
-
 func (t *DeepEqualsTest) SliceValue() {
-	ExpectEq("TODO", "")
+	x := []byte{17, 19}
+	m := DeepEquals(x)
+	ExpectEq("deep equals: [17 19]", m.Description())
+
+	var c []byte
+	var err error
+
+	// Matching.
+	c = make([]byte, len(x))
+	AssertEq(len(x), copy(c, x))
+
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Prefix.
+	AssertGt(len(x), 1)
+	c = make([]byte, len(x)-1)
+	AssertEq(len(x)-1, copy(c, x))
+
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Suffix.
+	c = make([]byte, len(x)+1)
+	AssertEq(len(x), copy(c, x))
+
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
 }
 
 func (t *DeepEqualsTest) NilSliceValue() {
