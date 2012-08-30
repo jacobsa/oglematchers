@@ -42,7 +42,7 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithScalarValue() {
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
-	ExpectThat(err, Error(HasSubstr("TODO")))
+	ExpectThat(err, Error(HasSubstr("<nil>")))
 
 	// Int alias candidate.
 	type intAlias int
@@ -85,7 +85,7 @@ func (t *DeepEqualsTest) WrongTypeCandidateWithSliceValue() {
 	AssertNe(nil, err)
 	ExpectTrue(isFatal(err))
 	ExpectThat(err, Error(HasSubstr("type")))
-	ExpectThat(err, Error(HasSubstr("TODO")))
+	ExpectThat(err, Error(HasSubstr("<nil>")))
 
 	// String candidate.
 	err = m.Matches("taco")
@@ -187,7 +187,7 @@ func (t *DeepEqualsTest) SliceValue() {
 func (t *DeepEqualsTest) NilSliceValue() {
 	var x []byte
 	m := DeepEquals(x)
-	ExpectEq("deep equals: TODO", m.Description())
+	ExpectEq("deep equals: <nil>", m.Description())
 
 	var c []byte
 	var err error
