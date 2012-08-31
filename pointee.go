@@ -16,6 +16,7 @@
 package oglematchers
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 )
@@ -42,8 +43,21 @@ func (m *pointeeMatcher) Matches(c interface{}) (err error) {
 		return NewFatalError("")
 	}
 
-	// Defer to the wrapped matcher.
-	return m.wrapped.Matches(cv.Elem().Interface())
+	// Defer to the wrapped matcher. Fix up empty errors so that failure messages
+	// are more helpful than just printing a pointer for "Actual".
+	pointee := cv.Elem().Interface()
+	err = m.wrapped.Matches(pointee)
+	if err != nil && err.Error() == "" {
+		s := fmt.Sprintf("whose pointee is %v", pointee)
+
+		if _, ok := err.(*FatalError); ok {
+			err = NewFatalError(s)
+		} else {
+			err = errors.New(s)
+		}
+	}
+
+	return err
 }
 
 func (m *pointeeMatcher) Description() string {

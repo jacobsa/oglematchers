@@ -93,7 +93,7 @@ func (t *PointeeTest) WrappedReturnsOkay() {
 	ExpectEq(nil, err)
 }
 
-func (t *PointeeTest) WrappedReturnsNonFatalError() {
+func (t *PointeeTest) WrappedReturnsNonFatalNonEmptyError() {
 	matchFunc := func(c interface{}) error {
 		return errors.New("taco")
 	}
@@ -101,12 +101,28 @@ func (t *PointeeTest) WrappedReturnsNonFatalError() {
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Pointee(wrapped)
 
-	err := matcher.Matches(new(int))
-	ExpectThat(err, Error(Equals("taco")))
+	i := 17
+	err := matcher.Matches(&i)
 	ExpectFalse(isFatal(err))
+	ExpectThat(err, Error(Equals("taco")))
 }
 
-func (t *PointeeTest) WrappedReturnsFatalError() {
+func (t *PointeeTest) WrappedReturnsNonFatalEmptyError() {
+	matchFunc := func(c interface{}) error {
+		return errors.New("")
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Pointee(wrapped)
+
+	i := 17
+	err := matcher.Matches(&i)
+	ExpectFalse(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("whose pointee")))
+	ExpectThat(err, Error(HasSubstr("17")))
+}
+
+func (t *PointeeTest) WrappedReturnsFatalNonEmptyError() {
 	matchFunc := func(c interface{}) error {
 		return NewFatalError("taco")
 	}
@@ -114,7 +130,23 @@ func (t *PointeeTest) WrappedReturnsFatalError() {
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Pointee(wrapped)
 
-	err := matcher.Matches(new(int))
-	ExpectThat(err, Error(Equals("taco")))
+	i := 17
+	err := matcher.Matches(&i)
 	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(Equals("taco")))
+}
+
+func (t *PointeeTest) WrappedReturnsFatalEmptyError() {
+	matchFunc := func(c interface{}) error {
+		return NewFatalError("")
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Pointee(wrapped)
+
+	i := 17
+	err := matcher.Matches(&i)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("whose pointee")))
+	ExpectThat(err, Error(HasSubstr("17")))
 }
