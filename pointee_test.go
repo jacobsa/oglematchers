@@ -101,7 +101,7 @@ func (t *PointeeTest) WrappedReturnsNonFatalError() {
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Pointee(wrapped)
 
-	err := matcher.Matches(0)
+	err := matcher.Matches(new(int))
 	ExpectThat(err, Error(Equals("taco")))
 	ExpectFalse(isFatal(err))
 }
@@ -114,7 +114,7 @@ func (t *PointeeTest) WrappedReturnsFatalError() {
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Pointee(wrapped)
 
-	err := matcher.Matches(0)
+	err := matcher.Matches(new(int))
 	ExpectThat(err, Error(Equals("taco")))
 	ExpectTrue(isFatal(err))
 }

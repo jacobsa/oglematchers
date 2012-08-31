@@ -39,7 +39,7 @@ func (m *pointeeMatcher) Matches(c interface{}) (err error) {
 
 	// Make sure the candidate is non-nil.
 	if cv.IsNil() {
-		return fmt.Errorf("")
+		return NewFatalError("")
 	}
 
 	// Defer to the wrapped matcher.
