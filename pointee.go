@@ -43,7 +43,7 @@ func (m *pointeeMatcher) Matches(c interface{}) (err error) {
 	}
 
 	// Defer to the wrapped matcher.
-	return m.wrapped.Matches(cv.Elem())
+	return m.wrapped.Matches(cv.Elem().Interface())
 }
 
 func (m *pointeeMatcher) Description() string {

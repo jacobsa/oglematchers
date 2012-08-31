@@ -78,7 +78,7 @@ func (t *PointeeTest) CallsWrapped() {
 
 	someSlice := []byte{}
 	matcher.Matches(&someSlice)
-	ExpectEq(someSlice, suppliedCandidate)
+	ExpectThat(suppliedCandidate, IdenticalTo(someSlice))
 }
 
 func (t *PointeeTest) WrappedReturnsOkay() {
