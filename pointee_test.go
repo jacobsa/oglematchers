@@ -35,7 +35,10 @@ func TestPointee(t *testing.T) { RunTests(t) }
 ////////////////////////////////////////////////////////////////////////
 
 func (t *PointeeTest) Description() {
-	ExpectEq("TODO", "")
+	wrapped := &fakeMatcher{nil, "taco"}
+	matcher := Pointee(wrapped)
+
+	ExpectEq("pointee(taco)", matcher.Description())
 }
 
 func (t *PointeeTest) CandidateIsNotAPointer() {
