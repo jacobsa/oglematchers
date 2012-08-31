@@ -49,8 +49,20 @@ func (t *PointeeTest) CandidateIsNotAPointer() {
 	ExpectTrue(isFatal(err))
 }
 
+func (t *PointeeTest) CandidateIsANilLiteral() {
+	matcher := Pointee(HasSubstr(""))
+	err := matcher.Matches(nil)
+
+	ExpectThat(err, Error(Equals("which is not a pointer")))
+	ExpectTrue(isFatal(err))
+}
+
 func (t *PointeeTest) CandidateIsANilPointer() {
-	ExpectEq("TODO", "")
+	matcher := Pointee(HasSubstr(""))
+	err := matcher.Matches((*int)(nil))
+
+	ExpectThat(err, Error(Equals("")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *PointeeTest) CallsWrapped() {
