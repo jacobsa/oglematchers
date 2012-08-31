@@ -66,7 +66,18 @@ func (t *PointeeTest) CandidateIsANilPointer() {
 }
 
 func (t *PointeeTest) CallsWrapped() {
-	ExpectEq("TODO", "")
+	var suppliedCandidate interface{}
+	matchFunc := func(c interface{}) error {
+		suppliedCandidate = c
+		return nil
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Pointee(wrapped)
+
+	candidate := new(int)
+	matcher.Matches(candidate)
+	ExpectEq(candidate, suppliedCandidate)
 }
 
 func (t *PointeeTest) WrappedReturnsTrue() {
