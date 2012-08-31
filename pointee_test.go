@@ -26,7 +26,7 @@ import (
 ////////////////////////////////////////////////////////////////////////
 
 type PointeeTest struct {}
-func init()                     { RegisterTestSuite(&NotTest{}) }
+func init()                     { RegisterTestSuite(&PointeeTest{}) }
 
 func TestPointee(t *testing.T) { RunTests(t) }
 
@@ -34,30 +34,30 @@ func TestPointee(t *testing.T) { RunTests(t) }
 // Tests
 ////////////////////////////////////////////////////////////////////////
 
-func (t *NotTest) Description() {
+func (t *PointeeTest) Description() {
 	ExpectEq("TODO", "")
 }
 
-func (t *NotTest) CandidateIsNotAPointer() {
+func (t *PointeeTest) CandidateIsNotAPointer() {
 	ExpectEq("TODO", "")
 }
 
-func (t *NotTest) CandidateIsANilPointer() {
+func (t *PointeeTest) CandidateIsANilPointer() {
 	ExpectEq("TODO", "")
 }
 
-func (t *NotTest) CallsWrapped() {
+func (t *PointeeTest) CallsWrapped() {
 	ExpectEq("TODO", "")
 }
 
-func (t *NotTest) WrappedReturnsTrue() {
+func (t *PointeeTest) WrappedReturnsTrue() {
 	ExpectEq("TODO", "")
 }
 
-func (t *NotTest) WrappedReturnsNonFatalError() {
+func (t *PointeeTest) WrappedReturnsNonFatalError() {
 	ExpectEq("TODO", "")
 }
 
-func (t *NotTest) WrappedReturnsFatalError() {
+func (t *PointeeTest) WrappedReturnsFatalError() {
 	ExpectEq("TODO", "")
 }
