@@ -42,7 +42,11 @@ func (t *PointeeTest) Description() {
 }
 
 func (t *PointeeTest) CandidateIsNotAPointer() {
-	ExpectEq("TODO", "")
+	matcher := Pointee(HasSubstr(""))
+	err := matcher.Matches([]byte{})
+
+	ExpectThat(err, Error(Equals("which is not a pointer")))
+	ExpectTrue(isFatal(err))
 }
 
 func (t *PointeeTest) CandidateIsANilPointer() {
