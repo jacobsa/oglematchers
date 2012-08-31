@@ -16,10 +16,36 @@
 package oglematchers
 
 import (
+	"fmt"
+	"reflect"
 )
 
 // Return a matcher that matches non-nil pointers whose pointee matches the
 // wrapped matcher.
 func Pointee(m Matcher) Matcher {
 	return Not(m)
+}
+
+type pointeeMatcher struct {
+	wrapped Matcher
+}
+
+func (m *pointeeMatcher) Matches(c interface{}) (err error) {
+	// Make sure the candidate is of the appropriate type.
+	cv := reflect.ValueOf(c)
+	if !cv.IsValid() || cv.Kind() != reflect.Ptr {
+		return NewFatalError("which is not a pointer")
+	}
+
+	// Make sure the candidate is non-nil.
+	if cv.IsNil() {
+		return fmt.Errorf("")
+	}
+
+	// Defer to the wrapped matcher.
+	return m.wrapped.Matches(cv.Elem())
+}
+
+func (m *pointeeMatcher) Description() string {
+	return fmt.Sprintf("pointee(%s)", m.wrapped.Description())
 }
