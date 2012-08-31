@@ -21,5 +21,5 @@ import (
 // Return a matcher that matches non-nil pointers whose pointee matches the
 // wrapped matcher.
 func Pointee(m Matcher) Matcher {
-	return nil
+	return Not(m)
 }
