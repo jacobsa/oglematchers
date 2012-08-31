@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	"errors"
 	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 	"testing"
@@ -75,19 +76,45 @@ func (t *PointeeTest) CallsWrapped() {
 	wrapped := &fakeMatcher{matchFunc, ""}
 	matcher := Pointee(wrapped)
 
-	candidate := new(int)
-	matcher.Matches(candidate)
-	ExpectEq(candidate, suppliedCandidate)
+	someSlice := []byte{}
+	matcher.Matches(&someSlice)
+	ExpectEq(someSlice, suppliedCandidate)
 }
 
-func (t *PointeeTest) WrappedReturnsTrue() {
-	ExpectEq("TODO", "")
+func (t *PointeeTest) WrappedReturnsOkay() {
+	matchFunc := func(c interface{}) error {
+		return nil
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Pointee(wrapped)
+
+	err := matcher.Matches(new(int))
+	ExpectEq(nil, err)
 }
 
 func (t *PointeeTest) WrappedReturnsNonFatalError() {
-	ExpectEq("TODO", "")
+	matchFunc := func(c interface{}) error {
+		return errors.New("taco")
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Pointee(wrapped)
+
+	err := matcher.Matches(0)
+	ExpectThat(err, Error(Equals("taco")))
+	ExpectFalse(isFatal(err))
 }
 
 func (t *PointeeTest) WrappedReturnsFatalError() {
-	ExpectEq("TODO", "")
+	matchFunc := func(c interface{}) error {
+		return NewFatalError("taco")
+	}
+
+	wrapped := &fakeMatcher{matchFunc, ""}
+	matcher := Pointee(wrapped)
+
+	err := matcher.Matches(0)
+	ExpectThat(err, Error(Equals("taco")))
+	ExpectTrue(isFatal(err))
 }
