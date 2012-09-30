@@ -100,10 +100,65 @@ func (t *ContainsTest) NilArgument() {
 	c = []*int{new(int), nil, new(int)}
 	err = m.Matches(c)
 	ExpectEq(nil, err)
+
+	// Non-matching slice of pointers from matching array
+	someArray := [...]*int{new(int), nil, new(int)}
+	c = someArray[0:1]
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
 }
 
 func (t *ContainsTest) IntegerArgument() {
-	ExpectFalse(true, "TODO")
+	m := Contains(int(17))
+
+	var c interface{}
+	var err error
+
+	// Non-matching array of integers
+	c = [...]int{13, 19}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-matching slice of integers
+	c = []int{13, 19}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Matching array of integers
+	c = [...]int{13, 17, 19}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Matching slice of integers
+	c = []int{13, 17, 19}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Non-matching slice of integers from matching array
+	someArray := [...]int{13, 17, 19}
+	c = someArray[0:1]
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-matching array of floats
+	c = [...]float32{13, 17.5, 19}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-matching slice of floats
+	c = []float32{13, 17.5, 19}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Matching array of floats
+	c = [...]float32{13, 17, 19}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Matching slice of floats
+	c = []float32{13, 17, 19}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
 }
 
 func (t *ContainsTest) StringArgument() {
