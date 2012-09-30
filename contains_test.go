@@ -108,6 +108,39 @@ func (t *ContainsTest) NilArgument() {
 	ExpectThat(err, Error(Equals("")))
 }
 
+func (t *ContainsTest) StringArgument() {
+	m := Contains("taco")
+
+	var c interface{}
+	var err error
+
+	// Non-matching array of strings
+	c = [...]string{"burrito", "enchilada"}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-matching slice of strings
+	c = []string{"burrito", "enchilada"}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Matching array of strings
+	c = [...]string{"burrito", "taco", "enchilada"}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Matching slice of strings
+	c = []string{"burrito", "taco", "enchilada"}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Non-matching slice of strings from matching array
+	someArray := [...]string{"burrito", "taco", "enchilada"}
+	c = someArray[0:1]
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+}
+
 func (t *ContainsTest) IntegerArgument() {
 	m := Contains(int(17))
 
@@ -159,10 +192,6 @@ func (t *ContainsTest) IntegerArgument() {
 	c = []float32{13, 17, 19}
 	err = m.Matches(c)
 	ExpectEq(nil, err)
-}
-
-func (t *ContainsTest) StringArgument() {
-	ExpectFalse(true, "TODO")
 }
 
 func (t *ContainsTest) MatcherArgument() {
