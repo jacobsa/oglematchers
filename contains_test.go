@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 
@@ -31,7 +32,27 @@ func init() { RegisterTestSuite(&ContainsTest{}) }
 ////////////////////////////////////////////////////////////////////////
 
 func (t *ContainsTest) WrongTypeCandidates() {
-	ExpectFalse(true, "TODO")
+	m := Contains("")
+
+	var err error
+
+	// Nil candidate
+	err = m.Matches(nil)
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("array")))
+	ExpectThat(err, Error(HasSubstr("slice")))
+
+	// String candidate
+	err = m.Matches("")
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("array")))
+	ExpectThat(err, Error(HasSubstr("slice")))
+
+	// Map candidate
+	err = m.Matches(make(map[string]string))
+	ExpectTrue(isFatal(err))
+	ExpectThat(err, Error(HasSubstr("array")))
+	ExpectThat(err, Error(HasSubstr("slice")))
 }
 
 func (t *ContainsTest) NilArgument() {
