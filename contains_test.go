@@ -30,6 +30,22 @@ func init() { RegisterTestSuite(&ContainsTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////////////////
 
-func (t *ContainsTest) DoesFoo() {
+func (t *ContainsTest) WrongTypeCandidates() {
+	ExpectFalse(true, "TODO")
+}
+
+func (t *ContainsTest) NilArgument() {
+	ExpectFalse(true, "TODO")
+}
+
+func (t *ContainsTest) IntegerArgument() {
+	ExpectFalse(true, "TODO")
+}
+
+func (t *ContainsTest) StringArgument() {
+	ExpectFalse(true, "TODO")
+}
+
+func (t *ContainsTest) MatcherArgument() {
 	ExpectFalse(true, "TODO")
 }

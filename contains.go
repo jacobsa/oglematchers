@@ -15,9 +15,9 @@
 
 package oglematchers
 
-// Return a matcher that matches slices with at least one element that matches
-// the supplied argument. If the argument x is not itself a Matcher, this is
-// equivalent to Contains(Equals(x)).
+// Return a matcher that matches arrays slices with at least one element that
+// matches the supplied argument. If the argument x is not itself a Matcher,
+// this is equivalent to Contains(Equals(x)).
 func Contains(x interface{}) Matcher {
 	return nil
 }
