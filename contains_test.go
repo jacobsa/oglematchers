@@ -56,7 +56,50 @@ func (t *ContainsTest) WrongTypeCandidates() {
 }
 
 func (t *ContainsTest) NilArgument() {
-	ExpectFalse(true, "TODO")
+	m := Contains(nil)
+
+	var c interface{}
+	var err error
+
+	// Empty array of pointers
+	c = [...]*int{}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Empty slice of pointers
+	c = []*int{}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-empty array of integers
+	c = [...]int{17, 0, 19}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-empty slice of integers
+	c = []int{17, 0, 19}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-matching array of pointers
+	c = [...]*int{new(int), new(int)}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Non-matching slice of pointers
+	c = []*int{new(int), new(int)}
+	err = m.Matches(c)
+	ExpectThat(err, Error(Equals("")))
+
+	// Matching array of pointers
+	c = [...]*int{new(int), nil, new(int)}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
+
+	// Matching slice of pointers
+	c = []*int{new(int), nil, new(int)}
+	err = m.Matches(c)
+	ExpectEq(nil, err)
 }
 
 func (t *ContainsTest) IntegerArgument() {
