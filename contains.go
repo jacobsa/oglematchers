@@ -15,9 +15,47 @@
 
 package oglematchers
 
+import (
+	"fmt"
+	"reflect"
+)
+
 // Return a matcher that matches arrays slices with at least one element that
 // matches the supplied argument. If the argument x is not itself a Matcher,
 // this is equivalent to Contains(Equals(x)).
 func Contains(x interface{}) Matcher {
-	return Equals(x)
+	var result containsMatcher
+	var ok bool
+
+	if result.elementMatcher, ok = x.(Matcher); !ok {
+		result.elementMatcher = Equals(x)
+	}
+
+	return &result
+}
+
+type containsMatcher struct {
+	elementMatcher Matcher
+}
+
+func (m *containsMatcher) Description() string {
+	return fmt.Sprintf("contains: %s", m.elementMatcher.Description())
+}
+
+func (m *containsMatcher) Matches(candidate interface{}) error {
+	// The candidate must be a slice or an array.
+	v := reflect.ValueOf(candidate)
+	if v.Kind() != reflect.Slice && v.Kind() != reflect.Array {
+		return NewFatalError("which is not a slice or array")
+	}
+
+	// Check each element.
+	for i := 0; i < v.Len(); i++ {
+		elem := v.Index(i)
+		if matchErr := m.elementMatcher.Matches(elem.Interface()); matchErr == nil {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("")
 }
