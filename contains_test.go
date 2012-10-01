@@ -33,7 +33,7 @@ func init() { RegisterTestSuite(&ContainsTest{}) }
 
 func (t *ContainsTest) WrongTypeCandidates() {
 	m := Contains("")
-	ExpectEq("contains: \"\"", m.Description())
+	ExpectEq("contains: ", m.Description())
 
 	var err error
 
@@ -58,7 +58,7 @@ func (t *ContainsTest) WrongTypeCandidates() {
 
 func (t *ContainsTest) NilArgument() {
 	m := Contains(nil)
-	ExpectEq("contains: nil", m.Description())
+	ExpectEq("contains: is nil", m.Description())
 
 	var c interface{}
 	var err error
@@ -112,7 +112,7 @@ func (t *ContainsTest) NilArgument() {
 
 func (t *ContainsTest) StringArgument() {
 	m := Contains("taco")
-	ExpectEq("contains: \"taco\"", m.Description())
+	ExpectEq("contains: taco", m.Description())
 
 	var c interface{}
 	var err error
