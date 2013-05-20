@@ -107,8 +107,8 @@ func (t *IdenticalToTest) Slices() {
 	ExpectThat(err, Error(Equals("which is not an identical reference")))
 
 	// Non-nil expected value
-	o1 := []int{}
-	o2 := []int{}
+	o1 := make([]int, 1)
+	o2 := make([]int, 1)
 	m = IdenticalTo(o1)
 	ExpectEq(fmt.Sprintf("identical to <[]int> %v", o1), m.Description())
 
