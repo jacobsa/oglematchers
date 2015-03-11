@@ -137,7 +137,30 @@ func (t *HasSameTypeAsTest) CandidateIsNilInInterfaceVariable() {
 }
 
 func (t *HasSameTypeAsTest) CandidateIsString() {
-	AssertTrue(false, "TODO")
+	matcher := HasSameTypeAs("")
+	var err error
+
+	// Description
+	ExpectEq("has type string", matcher.Description())
+
+	// string
+	err = matcher.Matches("taco")
+	ExpectEq(nil, err)
+
+	// string alias
+	type Foo string
+	err = matcher.Matches(Foo("taco"))
+	ExpectThat(err, Error(MatchesRegexp("which has type .*Foo")))
+
+	// Literal nil
+	err = matcher.Matches(nil)
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type <nil>")))
+
+	// int
+	err = matcher.Matches(17)
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type int")))
 }
 
 func (t *HasSameTypeAsTest) CandidateIsStringAlias() {
