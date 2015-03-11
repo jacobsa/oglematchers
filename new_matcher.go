@@ -22,4 +22,22 @@ package oglematchers
 // implements Matcher if you do not need any logic in your Description method.
 func NewMatcher(
 	predicate func(interface{}) error,
-	description string) Matcher
+	description string) Matcher {
+	return &predicateMatcher{
+		predicate:   predicate,
+		description: description,
+	}
+}
+
+type predicateMatcher struct {
+	predicate   func(interface{}) error
+	description string
+}
+
+func (pm *predicateMatcher) Matches(c interface{}) error {
+	return pm.predicate(c)
+}
+
+func (pm *predicateMatcher) Description() string {
+	return pm.description
+}
