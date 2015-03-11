@@ -18,6 +18,7 @@ package oglematchers_test
 import (
 	"testing"
 
+	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 
@@ -36,12 +37,40 @@ func init() { RegisterTestSuite(&HasSameTypeAsTest{}) }
 // Tests
 ////////////////////////////////////////////////////////////////////////
 
-func (t *HasSameTypeAsTest) Description() {
-	AssertTrue(false, "TODO")
-}
-
 func (t *HasSameTypeAsTest) CandidateIsLiteralNil() {
-	AssertTrue(false, "TODO")
+	matcher := HasSameTypeAs(nil)
+	var err error
+
+	// Description
+	ExpectEq("has type <nil>", matcher.Description())
+
+	// Literal nil
+	err = matcher.Matches(nil)
+	ExpectEq(nil, err)
+
+	// int
+	err = matcher.Matches(17)
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type int")))
+
+	// string
+	err = matcher.Matches("")
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type string")))
+
+	// nil map
+	var m map[string]string
+	err = matcher.Matches(m)
+
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type map[string]string")))
+
+	// Non-nil map
+	m = make(map[string]string)
+	err = matcher.Matches(m)
+
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type map[string]string")))
 }
 
 func (t *HasSameTypeAsTest) CandidateIsNilMap() {
