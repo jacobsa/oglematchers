@@ -74,7 +74,37 @@ func (t *HasSameTypeAsTest) CandidateIsLiteralNil() {
 }
 
 func (t *HasSameTypeAsTest) CandidateIsNilMap() {
-	AssertTrue(false, "TODO")
+	var m map[string]string
+	matcher := HasSameTypeAs(m)
+	var err error
+
+	// Description
+	ExpectEq("has type map[string]string", matcher.Description())
+
+	// nil map
+	m = nil
+	err = matcher.Matches(m)
+	ExpectEq(nil, err)
+
+	// Non-nil map
+	m = make(map[string]string)
+	err = matcher.Matches(m)
+	ExpectEq(nil, err)
+
+	// Literal nil
+	err = matcher.Matches(nil)
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type <nil>")))
+
+	// int
+	err = matcher.Matches(17)
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type int")))
+
+	// string
+	err = matcher.Matches("")
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type string")))
 }
 
 func (t *HasSameTypeAsTest) CandidateIsNilInterface() {
