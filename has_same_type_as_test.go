@@ -164,5 +164,18 @@ func (t *HasSameTypeAsTest) CandidateIsString() {
 }
 
 func (t *HasSameTypeAsTest) CandidateIsStringAlias() {
-	AssertTrue(false, "TODO")
+	type Foo string
+	matcher := HasSameTypeAs(Foo(""))
+	var err error
+
+	// Description
+	ExpectThat(matcher.Description(), MatchesRegexp("has type .*Foo"))
+
+	// string alias
+	err = matcher.Matches(Foo("taco"))
+	ExpectEq(nil, err)
+
+	// string
+	err = matcher.Matches("taco")
+	ExpectThat(err, Error(Equals("which has type string")))
 }
