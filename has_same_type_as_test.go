@@ -18,7 +18,6 @@ package oglematchers_test
 import (
 	"testing"
 
-	. "github.com/jacobsa/oglematchers"
 	. "github.com/jacobsa/ogletest"
 )
 

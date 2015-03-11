@@ -17,4 +17,6 @@ package oglematchers
 
 // HasSameTypeAs returns a matcher that matches values with exactly the same
 // type as the supplied prototype.
-func HasSameTypeAs(p interface{}) Matcher
+func HasSameTypeAs(p interface{}) Matcher {
+	panic("TODO")
+}
