@@ -16,6 +16,7 @@
 package oglematchers_test
 
 import (
+	"io"
 	"testing"
 
 	. "github.com/jacobsa/oglematchers"
@@ -46,6 +47,11 @@ func (t *HasSameTypeAsTest) CandidateIsLiteralNil() {
 
 	// Literal nil
 	err = matcher.Matches(nil)
+	ExpectEq(nil, err)
+
+	// nil in interface variable
+	var r io.Reader
+	err = matcher.Matches(r)
 	ExpectEq(nil, err)
 
 	// int
@@ -107,8 +113,27 @@ func (t *HasSameTypeAsTest) CandidateIsNilMap() {
 	ExpectThat(err, Error(Equals("which has type string")))
 }
 
-func (t *HasSameTypeAsTest) CandidateIsNilInterface() {
-	AssertTrue(false, "TODO")
+func (t *HasSameTypeAsTest) CandidateIsNilInInterfaceVariable() {
+	var r io.Reader
+	matcher := HasSameTypeAs(r)
+	var err error
+
+	// Description
+	ExpectEq("has type <nil>", matcher.Description())
+
+	// nil in interface variable
+	r = nil
+	err = matcher.Matches(r)
+	ExpectEq(nil, err)
+
+	// Literal nil
+	err = matcher.Matches(nil)
+	ExpectEq(nil, err)
+
+	// int
+	err = matcher.Matches(17)
+	AssertNe(nil, err)
+	ExpectThat(err, Error(Equals("which has type int")))
 }
 
 func (t *HasSameTypeAsTest) CandidateIsString() {
