@@ -15,8 +15,23 @@
 
 package oglematchers
 
+import (
+	"fmt"
+	"reflect"
+)
+
 // HasSameTypeAs returns a matcher that matches values with exactly the same
 // type as the supplied prototype.
 func HasSameTypeAs(p interface{}) Matcher {
-	panic("TODO")
+	expected := reflect.TypeOf(p)
+	pred := func(c interface{}) error {
+		actual := reflect.TypeOf(c)
+		if actual != expected {
+			return fmt.Errorf("which has type %v", actual)
+		}
+
+		return nil
+	}
+
+	return NewMatcher(pred, fmt.Sprintf("has type %v", expected))
 }
