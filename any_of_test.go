@@ -103,7 +103,7 @@ func (t *AnyOfTest) OneNil() {
 	)
 
 	// No match
-	err = matcher.Matches(13)
+	err = matcher.Matches(14)
 	ExpectNe(nil, err)
 
 	// Match
