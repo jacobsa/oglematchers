@@ -125,6 +125,7 @@ func (t *EqualsTest) NegativeIntegerLiteral() {
 		equalsTestCase{uint((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint32((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint64((1 << 64) - 1073741824), false, false, ""},
+		equalsTestCase{uintptr((1 << 64) - 1073741824), false, false, ""},
 
 		// Non-equal values of signed integer type.
 		equalsTestCase{int(-1073741823), false, false, ""},
@@ -138,7 +139,6 @@ func (t *EqualsTest) NegativeIntegerLiteral() {
 		equalsTestCase{complex128(-1073741824 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -169,6 +169,7 @@ func (t *EqualsTest) PositiveIntegerLiteral() {
 		equalsTestCase{int64(1073741824), true, false, ""},
 		equalsTestCase{uint32(1073741824), true, false, ""},
 		equalsTestCase{uint64(1073741824), true, false, ""},
+		equalsTestCase{uintptr(1073741824), true, false, ""},
 		equalsTestCase{float32(1073741824), true, false, ""},
 		equalsTestCase{float64(1073741824), true, false, ""},
 		equalsTestCase{complex64(1073741824), true, false, ""},
@@ -186,7 +187,6 @@ func (t *EqualsTest) PositiveIntegerLiteral() {
 		equalsTestCase{complex128(1073741824 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -229,6 +229,7 @@ func (t *EqualsTest) NegativeIntegralFloatingPointLiteral() {
 		equalsTestCase{uint((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint32((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint64((1 << 64) - 1073741824), false, false, ""},
+		equalsTestCase{uintptr((1 << 64) - 1073741824), false, false, ""},
 
 		// Non-equal values of signed integer type.
 		equalsTestCase{int(-1073741823), false, false, ""},
@@ -242,7 +243,6 @@ func (t *EqualsTest) NegativeIntegralFloatingPointLiteral() {
 		equalsTestCase{complex128(-1073741824 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -284,6 +284,7 @@ func (t *EqualsTest) PositiveIntegralFloatingPointLiteral() {
 		equalsTestCase{uint((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint32((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint64((1 << 64) - 1073741824), false, false, ""},
+		equalsTestCase{uintptr((1 << 64) - 1073741824), false, false, ""},
 
 		// Non-equal values of numeric type.
 		equalsTestCase{int(1073741823), false, false, ""},
@@ -298,7 +299,6 @@ func (t *EqualsTest) PositiveIntegralFloatingPointLiteral() {
 		equalsTestCase{complex128(1073741824 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -338,10 +338,10 @@ func (t *EqualsTest) NonIntegralFloatingPointLiteral() {
 		equalsTestCase{uint(17), false, false, ""},
 		equalsTestCase{uint32(17), false, false, ""},
 		equalsTestCase{uint64(17), false, false, ""},
+		equalsTestCase{uintptr(17), false, false, ""},
 		equalsTestCase{complex128(17.1 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -461,6 +461,7 @@ func (t *EqualsTest) NegativeInt() {
 		equalsTestCase{uint((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint32((1 << 32) - 1073741824), false, false, ""},
 		equalsTestCase{uint64((1 << 64) - 1073741824), false, false, ""},
+		equalsTestCase{uintptr((1 << 64) - 1073741824), false, false, ""},
 
 		// Non-equal values of signed integer type.
 		equalsTestCase{int(-1073741823), false, false, ""},
@@ -474,7 +475,6 @@ func (t *EqualsTest) NegativeInt() {
 		equalsTestCase{complex128(-1073741824 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -505,6 +505,7 @@ func (t *EqualsTest) PositiveInt() {
 		equalsTestCase{int64(1073741824), true, false, ""},
 		equalsTestCase{uint32(1073741824), true, false, ""},
 		equalsTestCase{uint64(1073741824), true, false, ""},
+		equalsTestCase{uintptr(1073741824), true, false, ""},
 		equalsTestCase{float32(1073741824), true, false, ""},
 		equalsTestCase{float64(1073741824), true, false, ""},
 		equalsTestCase{complex64(1073741824), true, false, ""},
@@ -522,7 +523,6 @@ func (t *EqualsTest) PositiveInt() {
 		equalsTestCase{complex128(1073741824 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr(0), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
@@ -567,6 +567,7 @@ func (t *EqualsTest) NegativeInt8() {
 		equalsTestCase{uint16((1 << 16) - 17), false, false, ""},
 		equalsTestCase{uint32((1 << 32) - 17), false, false, ""},
 		equalsTestCase{uint64((1 << 64) - 17), false, false, ""},
+		equalsTestCase{uintptr((1 << 64) - 17), false, false, ""},
 
 		// Non-equal values of signed integer type.
 		equalsTestCase{int(-16), false, false, ""},
@@ -582,7 +583,6 @@ func (t *EqualsTest) NegativeInt8() {
 		equalsTestCase{complex64(-17 + 2i), false, false, ""},
 
 		// Non-numeric types.
-		equalsTestCase{uintptr((1 << 32) - 17), false, true, "which is not numeric"},
 		equalsTestCase{true, false, true, "which is not numeric"},
 		equalsTestCase{[...]int{-17}, false, true, "which is not numeric"},
 		equalsTestCase{make(chan int), false, true, "which is not numeric"},
