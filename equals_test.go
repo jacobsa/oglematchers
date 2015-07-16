@@ -17,10 +17,11 @@ package oglematchers_test
 
 import (
 	"fmt"
-	. "github.com/jacobsa/oglematchers"
-	. "github.com/jacobsa/ogletest"
 	"math"
 	"unsafe"
+
+	. "github.com/jacobsa/oglematchers"
+	. "github.com/jacobsa/ogletest"
 )
 
 var someInt int = -17
@@ -1771,79 +1772,95 @@ func (t *EqualsTest) Uint64NotExactlyRepresentableByDoublePrecision() {
 // uintptr
 ////////////////////////////////////////////////////////////////////////
 
-func (t *EqualsTest) NilUintptr() {
-	var ptr1 uintptr
-	var ptr2 uintptr
-
-	matcher := Equals(ptr1)
-	ExpectEq("0", matcher.Description())
+func (t *EqualsTest) SmallUintptr() {
+	const kExpected = 17
+	matcher := Equals(uintptr(kExpected))
+	ExpectEq("17", matcher.Description())
 
 	cases := []equalsTestCase{
-		// uintptrs
-		equalsTestCase{ptr1, true, false, ""},
-		equalsTestCase{ptr2, true, false, ""},
-		equalsTestCase{uintptr(0), true, false, ""},
-		equalsTestCase{uintptr(17), false, false, ""},
+		// Various types of the expected value.
+		equalsTestCase{17, true, false, ""},
+		equalsTestCase{17.0, true, false, ""},
+		equalsTestCase{17 + 0i, true, false, ""},
+		equalsTestCase{int(kExpected), true, false, ""},
+		equalsTestCase{int8(kExpected), true, false, ""},
+		equalsTestCase{int16(kExpected), true, false, ""},
+		equalsTestCase{int32(kExpected), true, false, ""},
+		equalsTestCase{int64(kExpected), true, false, ""},
+		equalsTestCase{uint(kExpected), true, false, ""},
+		equalsTestCase{uint8(kExpected), true, false, ""},
+		equalsTestCase{uint16(kExpected), true, false, ""},
+		equalsTestCase{uint32(kExpected), true, false, ""},
+		equalsTestCase{uint64(kExpected), true, false, ""},
+		equalsTestCase{uintptr(kExpected), true, false, ""},
+		equalsTestCase{float32(kExpected), true, false, ""},
+		equalsTestCase{float64(kExpected), true, false, ""},
+		equalsTestCase{complex64(kExpected), true, false, ""},
+		equalsTestCase{complex128(kExpected), true, false, ""},
 
-		// Other types.
-		equalsTestCase{0, false, true, "which is not a uintptr"},
-		equalsTestCase{bool(false), false, true, "which is not a uintptr"},
-		equalsTestCase{int(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int8(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int16(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int32(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int64(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint8(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint16(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint32(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint64(0), false, true, "which is not a uintptr"},
-		equalsTestCase{true, false, true, "which is not a uintptr"},
-		equalsTestCase{[...]int{}, false, true, "which is not a uintptr"},
-		equalsTestCase{make(chan int), false, true, "which is not a uintptr"},
-		equalsTestCase{func() {}, false, true, "which is not a uintptr"},
-		equalsTestCase{map[int]int{}, false, true, "which is not a uintptr"},
-		equalsTestCase{&someInt, false, true, "which is not a uintptr"},
-		equalsTestCase{[]int{}, false, true, "which is not a uintptr"},
-		equalsTestCase{"taco", false, true, "which is not a uintptr"},
-		equalsTestCase{equalsTestCase{}, false, true, "which is not a uintptr"},
+		// Non-equal values of numeric types.
+		equalsTestCase{kExpected + 1, false, false, ""},
+		equalsTestCase{int(kExpected + 1), false, false, ""},
+		equalsTestCase{int8(kExpected + 1), false, false, ""},
+		equalsTestCase{int16(kExpected + 1), false, false, ""},
+		equalsTestCase{int32(kExpected + 1), false, false, ""},
+		equalsTestCase{int64(kExpected + 1), false, false, ""},
+		equalsTestCase{uint(kExpected + 1), false, false, ""},
+		equalsTestCase{uint8(kExpected + 1), false, false, ""},
+		equalsTestCase{uint16(kExpected + 1), false, false, ""},
+		equalsTestCase{uint32(kExpected + 1), false, false, ""},
+		equalsTestCase{uint64(kExpected + 1), false, false, ""},
+		equalsTestCase{uintptr(kExpected + 1), false, false, ""},
+		equalsTestCase{float32(kExpected + 1), false, false, ""},
+		equalsTestCase{float64(kExpected + 1), false, false, ""},
+		equalsTestCase{complex64(kExpected + 2i), false, false, ""},
+		equalsTestCase{complex64(kExpected + 1), false, false, ""},
+		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
+		equalsTestCase{complex128(kExpected + 1), false, false, ""},
+
+		// Non-numeric types.
+		equalsTestCase{true, false, true, "which is not numeric"},
+		equalsTestCase{[...]int{}, false, true, "which is not numeric"},
+		equalsTestCase{make(chan int), false, true, "which is not numeric"},
+		equalsTestCase{func() {}, false, true, "which is not numeric"},
+		equalsTestCase{map[int]int{}, false, true, "which is not numeric"},
+		equalsTestCase{&someInt, false, true, "which is not numeric"},
+		equalsTestCase{[]int{}, false, true, "which is not numeric"},
+		equalsTestCase{"taco", false, true, "which is not numeric"},
+		equalsTestCase{equalsTestCase{}, false, true, "which is not numeric"},
 	}
 
 	t.checkTestCases(matcher, cases)
 }
 
-func (t *EqualsTest) NonNilUintptr() {
-	matcher := Equals(uintptr(17))
-	ExpectEq("17", matcher.Description())
+func (t *EqualsTest) LargeUintptr() {
+	const kExpected = (1 << 32) + 17
+	matcher := Equals(uintptr(kExpected))
+	ExpectEq("4294967313", matcher.Description())
 
 	cases := []equalsTestCase{
-		// uintptrs
-		equalsTestCase{uintptr(17), true, false, ""},
-		equalsTestCase{uintptr(16), false, false, ""},
-		equalsTestCase{uintptr(0), false, false, ""},
+		// Various types of the expected value.
+		equalsTestCase{4294967313.0, true, false, ""},
+		equalsTestCase{4294967313 + 0i, true, false, ""},
+		equalsTestCase{int64(kExpected), true, false, ""},
+		equalsTestCase{uint64(kExpected), true, false, ""},
+		equalsTestCase{uintptr(kExpected), true, false, ""},
+		equalsTestCase{float32(kExpected), true, false, ""},
+		equalsTestCase{float64(kExpected), true, false, ""},
+		equalsTestCase{complex64(kExpected), true, false, ""},
+		equalsTestCase{complex128(kExpected), true, false, ""},
 
-		// Other types.
-		equalsTestCase{0, false, true, "which is not a uintptr"},
-		equalsTestCase{bool(false), false, true, "which is not a uintptr"},
-		equalsTestCase{int(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int8(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int16(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int32(0), false, true, "which is not a uintptr"},
-		equalsTestCase{int64(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint8(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint16(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint32(0), false, true, "which is not a uintptr"},
-		equalsTestCase{uint64(0), false, true, "which is not a uintptr"},
-		equalsTestCase{true, false, true, "which is not a uintptr"},
-		equalsTestCase{[...]int{}, false, true, "which is not a uintptr"},
-		equalsTestCase{make(chan int), false, true, "which is not a uintptr"},
-		equalsTestCase{func() {}, false, true, "which is not a uintptr"},
-		equalsTestCase{map[int]int{}, false, true, "which is not a uintptr"},
-		equalsTestCase{&someInt, false, true, "which is not a uintptr"},
-		equalsTestCase{[]int{}, false, true, "which is not a uintptr"},
-		equalsTestCase{"taco", false, true, "which is not a uintptr"},
-		equalsTestCase{equalsTestCase{}, false, true, "which is not a uintptr"},
+		// Non-equal values of numeric types.
+		equalsTestCase{int(17), false, false, ""},
+		equalsTestCase{int32(17), false, false, ""},
+		equalsTestCase{int64(kExpected + 1), false, false, ""},
+		equalsTestCase{uint(17), false, false, ""},
+		equalsTestCase{uint32(17), false, false, ""},
+		equalsTestCase{uint64(kExpected + 1), false, false, ""},
+		equalsTestCase{uintptr(kExpected + 1), false, false, ""},
+		equalsTestCase{float64(kExpected + 1), false, false, ""},
+		equalsTestCase{complex128(kExpected + 2i), false, false, ""},
+		equalsTestCase{complex128(kExpected + 1), false, false, ""},
 	}
 
 	t.checkTestCases(matcher, cases)
@@ -3212,7 +3229,7 @@ func (t *EqualsTest) ArrayOfComparableType() {
 	ExpectEq("[17 19 23]", matcher.Description())
 
 	// To defeat constant de-duping by the compiler.
-	makeArray := func(i, j, k uint) [3]uint { return [3]uint{ i, j, k} }
+	makeArray := func(i, j, k uint) [3]uint { return [3]uint{i, j, k} }
 
 	type arrayAlias [3]uint
 	type uintAlias uint
